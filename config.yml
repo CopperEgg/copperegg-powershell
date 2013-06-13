@@ -1,0 +1,181 @@
+copperegg:
+  apikey: 'uADqMEeNdgw1kL59'
+  frequency: 60
+  local_remote: local
+  metricgroups:
+  - MS_System_Memory
+  - MS_Storage
+  - MS_System
+  - MS_NET_CLR
+  - MS_MSSQL
+  dashboards:
+  - MS_Memory_Dash
+  - MS_Storage_Dash
+  - MS_System_Dash
+  - MS_NETCLR_Dash
+  - MSSQL_Dash
+  servers:
+ # - mikes_lap
+  - scotts-vm1
+
+# metric groups included in the copperegg list
+
+MS_System:
+  group_name: 'MSSystem'
+  group_label: 'MS_System'
+  dashboard: MS_System_Dash
+  mspaths:
+  - '\Paging File(*)\% Usage'
+  - '\Paging File(*)\% Usage Peak'
+  - '\System\File Read Operations/sec'
+  - '\System\File Write Operations/sec'
+  - '\System\File Control Operations/sec'
+  - '\System\Context Switches/sec'
+  - '\System\System Calls/sec'
+  - '\System\System Up Time'
+  - '\System\Processor Queue Length'
+  - '\System\Processes'
+  - '\System\Threads'
+  - '\System\Exception Dispatches/sec'
+
+MS_System_Memory:
+  group_name: 'MSSystem_Memory'
+  group_label: 'MS_System_Memory'
+  dashboard: MS_Memory_Dash
+  mspaths:
+  - '\Memory\Page Faults/sec'
+  - '\Memory\Available Bytes'
+  - '\Memory\Committed Bytes'
+  - '\Memory\Commit Limit'
+  - '\Memory\Write Copies/sec'
+  - '\Memory\Cache Faults/sec'
+
+MS_Storage:
+  group_name: 'MSStorage'
+  group_label: 'MS_Storage'
+  dashboard: MS_Storage_Dash
+  mspaths:
+  - '\LogicalDisk(*)\% Free Space'
+  - '\LogicalDisk(*)\Current Disk Queue Length'
+  - '\LogicalDisk(*)\% Disk Time'
+  - '\LogicalDisk(*)\Avg. Disk Queue Length'
+  - '\LogicalDisk(*)\% Disk Read Time'
+  - '\LogicalDisk(*)\Avg. Disk Read Queue Length'
+  - '\LogicalDisk(*)\% Disk Write Time'
+  - '\LogicalDisk(*)\Avg. Disk Write Queue Length'
+  - '\PhysicalDisk(*)\Current Disk Queue Length'
+  - '\PhysicalDisk(*)\% Disk Time'
+  - '\PhysicalDisk(*)\Avg. Disk Queue Length'
+  - '\PhysicalDisk(*)\% Disk Read Time'
+  - '\PhysicalDisk(*)\Avg. Disk Read Queue Length'
+  - '\PhysicalDisk(*)\% Disk Write Time'
+  - '\PhysicalDisk(*)\Avg. Disk Write Queue Length'
+
+
+MS_NET_CLR:
+  group_name: 'MS_NETCLR'
+  group_label: 'MS_NET_CLR'
+  dashboard: MS_NETCLR_Dash
+  mspaths:
+  - '\.NET CLR Exceptions(*)\# of Exceps Thrown'
+  - '\.NET CLR Exceptions(*)\# of Exceps Thrown / sec'
+  - '\.NET CLR Memory(*)\# GC Handles'
+  - '\.NET CLR Memory(*)\Allocated Bytes/sec'
+  - '\.NET CLR Memory(*)\# Total committed Bytes'
+
+MS_ASP_NET:
+  group_name: 'MS_ASPNET'
+  group_label: 'MS_ASP_NET'
+  dashboard:  MS_ASPNET_Dash
+  mspaths:
+  - '\ASP.NET\Applications Running'
+  - '\ASP.NET\Requests Rejected'
+  - '\ASP.NET\Requests Queued'
+  - '\ASP.NET\Worker Processes Running'
+  - '\ASP.NET\Worker Process Restarts'
+  - '\ASP.NET\Request Wait Time'
+  - '\ASP.NET\Requests Current'
+  - '\ASP.NET\Error Events Raised'
+  - '\ASP.NET\Request Error Events Raised'
+  - '\ASP.NET\Infrastructure Error Events Raised'
+  - '\ASP.NET\Requests In Native Queue'
+
+MS_Web_Services:
+  group_name: 'MS_Web'
+  group_label: 'MS_Web'
+  dashboard: MS_Web_Dash
+  mspaths:
+  - '\Web Service(*)\Current Connections'
+  - '\Web Service(*)\Get Requests/sec'
+  - '\Web Service(*)\Post Requests/sec'
+  - '\Web Service(*)\Put Requests/sec'
+  - '\Web Service(*)\Delete Requests/sec'
+  - '\Web Service(*)\Trace Requests/sec'
+
+MS_MSSQL:
+  group_name: 'MS_SQL'
+  group_label: 'MSSQL'
+  dashboard: MSSQL_Dash
+  mspaths:
+  - 'Buffer Manager\Buffer cache hit ratio'
+  - 'Buffer Manager\Checkpoint pages/sec'
+  - 'Buffer Manager\Page life expectancy'
+  - 'General Statistics\User Connections'
+  - 'Access Methods\Page Splits/sec'
+  - 'General Statistics\Processes blocked'
+  - 'SQL Statistics\Batch Requests/sec'
+  - 'SQL Statistics\SQL Compilations/sec'
+  - 'SQL Statistics\SQL Re-Compilations/sec'
+
+UserDefined:
+  group_name: 'UserDefined'
+  group_label: 'User Defined Metrics'
+  dashboard: My_Metrics_Dash
+  custom:
+  - 'Hours_From_Last_Backup'
+  - 'Last_Backup_Result'
+
+# dashboards included in the copperegg list
+
+MS_Memory_Dash:
+  dash_name: 'MS System Memory'
+
+MS_Storage_Dash:
+  dash_name: 'MS Storage'
+
+MS_System_Dash:
+  dash_name: 'MS System'
+
+MS_NETCLR_Dash:
+  dash_name: 'MS .NET CLR'
+
+MS_ASPNET_Dash:
+  dash_name: 'MS ASP.NET'
+
+MS_Web_Dash:
+  dash_name: 'MS Web Services'
+
+MSSQL_Dash:
+  dash_name: 'MS SQL Server'
+
+
+# servers included in the copperegg list
+mikes_lap:
+    hostname: SJOHNSON-PC
+    username:
+    password:
+    metricgroups:
+    - MS_System
+    - MS_System_Memory
+
+scotts-vm1:
+    hostname: WIN-1M8N94S69C8
+    username:
+    password:
+    mssql_instancenames: 
+    - 'SQLServer'
+    metricgroups:
+    - MS_Storage
+    - MS_System
+    - MS_NET_CLR
+    - MS_MSSQL
