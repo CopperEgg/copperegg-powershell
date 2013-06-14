@@ -1,5 +1,5 @@
 copperegg:
-  apikey: 'uADqMEeNdgw1kL59'
+  apikey: ''
   frequency: 60
   local_remote: local
   metricgroups:
@@ -21,11 +21,28 @@ copperegg:
   - MSSQL_Dash
   - My_Metrics_Dash
   servers:
-  - vm1_win764
-  - vm2_win764
-  - vm3_win764
+  - Server1
 
-# metric groups included in the copperegg list
+
+# metric groups included in the copperegg list above
+
+MS_System:
+  group_name: 'MSSystem'
+  group_label: 'MS_System'
+  dashboard: MS_System_Dash
+  mspaths:
+  - '\Paging File(*)\% Usage'
+  - '\Paging File(*)\% Usage Peak'
+  - '\System\File Read Operations/sec'
+  - '\System\File Write Operations/sec'
+  - '\System\File Control Operations/sec'
+  - '\System\Context Switches/sec'
+  - '\System\System Calls/sec'
+  - '\System\System Up Time'
+  - '\System\Processor Queue Length'
+  - '\System\Processes'
+  - '\System\Threads'
+  - '\System\Exception Dispatches/sec'
 
 MS_System_Memory:
   group_name: 'MSSystem_Memory'
@@ -59,24 +76,6 @@ MS_Storage:
   - '\PhysicalDisk(*)\Avg. Disk Read Queue Length'
   - '\PhysicalDisk(*)\% Disk Write Time'
   - '\PhysicalDisk(*)\Avg. Disk Write Queue Length'
-
-MS_System:
-  group_name: 'MSSystem'
-  group_label: 'MS_System'
-  dashboard: MS_System_Dash
-  mspaths:
-  - '\Paging File(*)\% Usage'
-  - '\Paging File(*)\% Usage Peak'
-  - '\System\File Read Operations/sec'
-  - '\System\File Write Operations/sec'
-  - '\System\File Control Operations/sec'
-  - '\System\Context Switches/sec'
-  - '\System\System Calls/sec'
-  - '\System\System Up Time'
-  - '\System\Processor Queue Length'
-  - '\System\Processes'
-  - '\System\Threads'
-  - '\System\Exception Dispatches/sec'
 
 
 MS_NET_CLR:
@@ -134,13 +133,12 @@ MS_MSSQL:
   - 'SQL Statistics\SQL Compilations/sec'
   - 'SQL Statistics\SQL Re-Compilations/sec'
 
-UserDefined:
-  group_name: 'UserDefined'
+User_Defined:
+  group_name: 'User_Defined'
   group_label: 'User Defined Metrics'
   dashboard: My_Metrics_Dash
   custom:
-  - 'Hours_From_Last_Backup'
-  - 'Last_Backup_Result'
+  - 'LogExists'
 
 # dashboards included in the copperegg list
 
@@ -168,33 +166,15 @@ MSSQL_Dash:
 My_Metrics_Dash:
   dash_name: 'My Metrics'
 
-# servers included in the copperegg list
-vm1_win764:
-    hostname: WIN-1M8N94S69C8-1
-    username:
-    password:
+
+# server definitions, at least those that are included in the copperegg list above.
+
+Server1:
+    hostname: 'MS machine name of Server1'
     mssql_instancenames:
       - 'SQLServer'
     metricgroups:
     - MS_System
-    - MS_MSSQL
-
-vm2_win764:
-    hostname: WIN-1M8N94S69C8-2
-    username:
-    password:
-    metricgroups:
     - MS_System_Memory
     - MS_Storage
-    - MS_NET_CLR
-    - MS_System
-    - MS_ASP_NET
-
-vm3_win764:
-    hostname: WIN-1M8N94S69C8-3
-    username: Administrator
-    password: password
-    mssql_instancenames:
-    - 'SQLServer'
-    metricgroups:
     - MS_MSSQL

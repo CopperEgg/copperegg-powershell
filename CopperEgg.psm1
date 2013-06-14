@@ -1,6 +1,6 @@
 #
 # CopperEgg.psm1 contains the core components of the CopperEgg powershell module.
-# Copyright (c) 2012 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
 #
 # The where_am_i functions provides a simple way to avoid path issues
 function where_am_i {$myInvocation}
@@ -57,32 +57,30 @@ trap
 Write-CuEggLog "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
 }
 
-
-
 # Convert MS Counter path to CopperEgg metric name
 function ConvertTo-CEName {
 param(
     [string]$counter
   )
-    $a = $counter
-    $a = $a.replace( '*','_total')
-    $a = $a.replace( '#','Number')
-    $a = $a.replace( '%','Percent')
-    $a = $a.replace( '$','_')
-    $a = $a.replace(' / ','/')
-    $a = $a.replace('/','_per_')
-    $a = $a.replace('\','_')
-    $a = $a.replace( ' ','_')
-    $a = $a.replace( '.','')
-    $a = $a.replace( ':','_')
-    $a = $a.replace( '(','_')
-    $a = $a.replace( ')','_')
-    $a = $a.replace( '___','_')
-    $a = $a.replace( '__','_')
+  $a = $counter
+  $a = $a.replace( '*','_total')
+  $a = $a.replace( '#','Number')
+  $a = $a.replace( '%','Percent')
+  $a = $a.replace( '$','_')
+  $a = $a.replace(' / ','/')
+  $a = $a.replace('/','_per_')
+  $a = $a.replace('\','_')
+  $a = $a.replace( ' ','_')
+  $a = $a.replace( '.','')
+  $a = $a.replace( ':','_')
+  $a = $a.replace( '(','_')
+  $a = $a.replace( ')','_')
+  $a = $a.replace( '___','_')
+  $a = $a.replace( '__','_')
   if($a.StartsWith("_") -eq $TRUE){
     $a = $a.Substring(1)
   }
-    return [string]$a
+  return [string]$a
 }
 export-modulemember -function ConvertTo-CEName
 
@@ -91,12 +89,12 @@ function Remove-CounterInstances {
 param(
   [string]$counter
   )
-    $a = $counter
-    if ( $a.Contains("NET") )
-    {  $a = $a.replace( '*','_global_') }
-    else
-    { $a = $a.replace( '*','_total') }
-    return [string]$a
+  $a = $counter
+  if ( $a.Contains("NET") )
+  {  $a = $a.replace( '*','_global_') }
+  else
+  { $a = $a.replace( '*','_total') }
+  return [string]$a
 }
 export-modulemember -function Remove-CounterInstances
 
@@ -119,7 +117,7 @@ param(
   $webRequest.Method = "GET"
   [System.Net.WebResponse] $resp = $null
   $rtn.Response = $resp
-  try 
+  try
   {
     $resp = $webRequest.GetResponse();
     $rtn.Return = "Success"
@@ -161,7 +159,7 @@ param(
   $req.Headers.Add('Content-Type', 'application/json')
   $data_json = $data | ConvertTo-JSON -Depth 5
 
-  Try 
+  Try
   {
     $result = $req.UploadString($uri, $data_json)
   }
@@ -331,19 +329,6 @@ param(
   }
 }
 Export-ModuleMember -function Send-CEMetrics
-
-function Get-ServerCounter {
-param(
-  [string[]]$server,
-  [string[]]$counter
-  )
-  if ($env:COMPUTERNAME -eq $server) {
-      Get-Counter -Counter $counter
-  } else {
-      Get-Counter -computername $server -Counter $counter
-  }
-}
-Export-ModuleMember -function Get-ServerCounter
 
 
 function Find-MetricGroup {

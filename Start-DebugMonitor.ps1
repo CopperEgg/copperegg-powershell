@@ -1,5 +1,7 @@
 #
-# Start-DebugMonitor.ps1 does what Start-CopperEggMonitor does, but in the foreground, and only once.
+# Start-DebugMonitor.ps1 does what Start-CopperEggMonitor does, but in the foreground, and is hard-coded to 15 seconds.
+# Run Start-DebugMonitor instead of Start-CopperEggMonitor when you first get started, or when you
+# make serious changes to your config.yml.
 #
 # Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
 #
@@ -186,7 +188,7 @@ function Start-DebugMonitor {
             foreach($h in $hosts) {
               [string[]]$ce_custom = $mg.CE_Variables
               $groupcfg = $mg.gcfg
-              $freq = $groupcfg.frequency 
+              $freq = $groupcfg.frequency
               $metric_data = $null
               $metric_data = new-object @{}
 

@@ -1,4 +1,4 @@
-revealmetrics-powershell
+copperegg-powershell
 =============
 
 The CopperEgg Powershell module is a Powershell interface to the CopperEgg API, making it simple to create custom metrics and dashboards for Microsoft Windows systems.
@@ -9,6 +9,7 @@ The module includes:
   - Initialize-MetricGroups ... creates metric groups, and sends them to CopperEgg
   - Initialize-Dashboards ... creates custom dashboards, and sends them to CopperEgg
   - Start-CopperEggMonitor ... starts one or more background jobs that periodicaly transmit your metrics to CopperEgg
+  - Start-DebugMonitor ... performs the same functionality as Start-CopperEggMonitor, but in the foreground, and with debug oputput.
   - and other utilities.
 
 This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboards for
@@ -18,16 +19,12 @@ This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboa
   - IIS
   - and a variety of system-level Microsoft performance counters.
 
-The module was created in response to customer requests for Powershell sample code using the CopperEgg API.
+This module will replace revealmetrics-powershell, which will be deprecated. CopperEgg-Powershell is configured with a yaml configuration
+file, and supports both local and remote monitoring.
 
-## Recent Updates:  
-version 0.9.2 
-Fixed the uncommented-comment in win_ctrs.txt, and updated CopperEgg.psm1 to fix a problem when sending metrics.
-
-version 0.9.1
-This release includes the capability to create user-defined metrics ... metrics that you create to monitor your application or infrastructure.
-A sample dashboard and two metrics are provided to get you started by monitoring any of your background tasks, and their return codes. Check out
-win_counters.txt, and the UserDefined.psm1 module for more info!
+## Recent Updates:
+version 1.0.0
+Is the first release of copperegg-powershell. It supercedes revealmetrics-powershell 0.9.2
 
 ## Requirements
 This release requires Powershell v3.0, which ships with Windows 8 and Windows Server 2012.
@@ -39,29 +36,39 @@ You can download Powershell v3.0 here:
 A CopperEgg account is also required. If you don't have one yet, check it out:
 * [CopperEgg Corporation](http://copperegg.com)
 
+You will also need to install PowerYaml, which is used to parse the config.yml file.
+The procedure will be detailed below.
+
+
 ## Installation
-
-* Clone this repository.
-
-```ruby
-git clone git://github.com/CopperEgg/revealmetrics-powershell.git
-```
-* Copy the CopperEgg-powershell.zip to the system you want to monitor. Before unzipping the archive, Right-click on Properties, and 'Unblock' the archive.
 
 * Start Windows Powershell, running as Administrator
 
-* Set the ExecutionPolicy to RemoteSigned (if you haven't already):
+* Set the ExecutionPolicy to Unrestricted or RemoteSigned:
 
 ```ruby
-Set-ExecutionPolicy RemoteSigned
+Set-ExecutionPolicy Unrestricted
 ```
-* Create the installation directory, and cd to that directory:
+* Create installation directories for PowerYaml and CopperEgg.
+
+The following instructions assume that you will install PowerYaml in this directory:
+
+```ruby
+"c:\Program Files (x86)\CopperEgg\Modules\PowerYaml"
+```
+
+... and copperegg-powershell in this directory:
+
+```ruby
+"c:\Program Files (x86)\CopperEgg\Modules\CopperEgg"
+```
 
 ```ruby
 New-Item 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg' -type directory
+New-Item 'c:\Program Files (x86)\CopperEgg\Modules\PowerYaml' -type directory
 cd 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg'
 ```
-* Create a Powershell profile. If you have already set up a Powershell profile, skip this step.
+* Create a Powershell profile. If you have already set up a Powershell profile, you can skip to 'Edit your powershell profile'
 
 There are a number of different profiles used by Powershell and PowershellISE, and they are in different places. :(
 To see the choices, enter the following:
@@ -74,16 +81,57 @@ The following instructions assume that you will create and edit the AllUsersAllH
 ```ruby
 new-item $PROFILE.AllUsersAllHosts -ItemType file -Force
 ```
-* Edit your powershell profile to include a path to the CopperEgg module directory. Add the following line to your powershell profile:
+* Edit your powershell profile to include a path to the CopperEgg and PowerYaml module directories.
+Add the following lines to your powershell profile:
 
 ```ruby
 Set-Location "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg"
-$env:PSModulePath = $env:PSModulePath + ";c:\Program Files (x86)\CopperEgg\Modules\CopperEgg\"
+$env:PSModulePath = $env:PSModulePath +  ";c:\Program Files (x86)\CopperEgg\Modules\CopperEgg" + ";c:\Program Files (x86)\CopperEgg\Modules\PowerYaml"
+import-module ..\PowerYaml\PowerYaml.psm1
 ```
 
-* Unzip the CopperEgg-powershell.zip file to "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg".
+* Clone the following repositories:
 
-* Edit the CopperEgg_APIKEY.txt file, and replace the text therein with your CopperEgg API key, which you will find in the CopperEgg UI, under Settings.
+```ruby
+git clone https://github.com/CopperEgg/copperegg-powershell.git
+
+git clone https://github.com/scottmuc/PowerYaml.git
+```
+
+"c:\Program Files (x86)\CopperEgg\Modules\PowerYaml"
+```
+
+... and copperegg-powershell in this directory:
+
+```ruby
+
+
+* Copy the contents of the newly-cloned copperegg-powershell directory to "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg".
+
+* Copy the contents of the newly-cloned poweryaml directory to "c:\Program Files (x86)\CopperEgg\Modules\PowerYaml".
+
+* If the archive flags are set on any of the files in either of tese two directories, clear them.
+
+* At this point, you will need to create your config.yml file. Copy the config-sample.yml file to config.yml.
+
+* Edit the config.yml file :
+
+** in the copperegg section:
+*** enter your CopperEgg APIKEY in the the apikey field,
+*** set the frequency (actually the sampling period ... a value of 60 means obtain a sample every 60 seconds.)
+*** set the 'local_remote' flag as desired; local means the machine running copperegg-powershell will only monitor
+those metricgroups called out in the server definition with hostname equal to that of the local host. remote means the
+machine running copperegg-powershell will only monitor metricgroups called out in the server definitions with hostnames
+NOT equal to that of the local host. Finally, if set to all, the machine running copperegg-powershell will monitor
+metricgroups in server definitions of both local and remote machines.
+*** replace 'Server1' with your server name. This name field allows you to name your servers as you like; the associated
+Server definition must contain the Windows machine name. (see below)
+
+** Update the Server Definition (in config-sample.yml, the block at the end of the file beginning with Server1:)
+Each Server Definition block must have a valid hostname, and a metricgroups section, listing which of the metric groups defined
+earlier in the file to monitor. If this instance will monitor MSSQL (locally or remotely), you must also add a
+a mssql_instancenames: section, and list one (or more) instances to monitor.
+
 Save the file, and close it.
 
 ## Usage
@@ -118,15 +166,15 @@ Remove-AllCopperEgg
 
 ##Next Steps
 
-The metrics monitored are selected using the win_counters.txt file. You will find notes there about the formatting, and additional detail will be found in Initialize-MetricGroups.ps1
-The dashboards are built in Initialize-Dashboards.ps1. Use that code as a starting point for creating views exactly as you want them.
-
+The servers, metricgroups and dashboards are specified in the config.yml file.
+The metricgroups are built in Initialize-MetricGroups.ps1
+The dashboards are built in Initialize-Dashboards.ps1.
 
 ##To Run Your CopperEgg-StartMonitor.ps1 script 'as a service'
 
 Specifically, these instructions are for ensuring that your monitoring powershell scripts resume running after restart or power-cycle. At this point, we do not support running the Powershell scripts as a Windows Service ... but using the Windows Task Scheduler, you can do very close to the same thing.
 
-* As Administrator, enter the Task Scheduler (COntrol Panel-> Administrative Tools->Task Scheduler)
+* As Administrator, enter the Task Scheduler (Control Panel-> Administrative Tools->Task Scheduler)
 
 * Create Task General
   - Name CopperEggTask
