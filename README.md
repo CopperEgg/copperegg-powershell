@@ -93,7 +93,7 @@ import-module ..\PowerYaml\PowerYaml.psm1
 * Clone the following repositories:
 
 ```ruby
-git clone https://github.com/CopperEgg/copperegg-powershell.git
+git clone https://github.com/rdickey/copperegg-powershell.git
 
 git clone https://github.com/scottmuc/PowerYaml.git
 ```
