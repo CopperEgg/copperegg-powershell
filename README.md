@@ -117,7 +117,8 @@ those metricgroups called out in the server definition with hostname equal to th
 machine running copperegg-powershell will only monitor metricgroups called out in the server definitions with hostnames
 NOT equal to that of the local host. Finally, if set to all, the machine running copperegg-powershell will monitor
 metricgroups in server definitions of both local and remote machines.
-#### replace 'Server1' with your server name. This name field allows you to name your servers as you like; the associated
+
+* replace 'Server1' with your server name. This name field allows you to name your servers as you like; the associated
 Server definition must contain the Windows machine name. (see below)
 
 * Update the Server Definition (in config-sample.yml, the block at the end of the file beginning with Server1:)
@@ -157,13 +158,13 @@ Stop-CopperEggMonitor
 Remove-AllCopperEgg
 ```
 
-##Next Steps
+###Next Steps
 
 The servers, metricgroups and dashboards are specified in the config.yml file.
 The metricgroups are built in Initialize-MetricGroups.ps1
 The dashboards are built in Initialize-Dashboards.ps1.
 
-##To Run Your CopperEgg-StartMonitor.ps1 script 'as a service'
+###To Run Your CopperEgg-StartMonitor.ps1 script 'as a service'
 
 Specifically, these instructions are for ensuring that your monitoring powershell scripts resume running after restart or power-cycle. At this point, we do not support running the Powershell scripts as a Windows Service ... but using the Windows Task Scheduler, you can do very close to the same thing.
 
