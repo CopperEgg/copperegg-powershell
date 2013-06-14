@@ -102,24 +102,25 @@ git clone https://github.com/scottmuc/PowerYaml.git
 
 * Copy the contents of the newly-cloned poweryaml directory to "c:\Program Files (x86)\CopperEgg\Modules\PowerYaml".
 
-* If the archive flags are set on any of the files in either of tese two directories, clear them.
+* If the archive flags are set on any of the files in either of these two directories, clear them.
 
 * At this point, you will need to create your config.yml file. Copy the config-sample.yml file to config.yml.
 
-* Edit the config.yml file :
+## Edit the config.yml file :
 
-** in the copperegg section:
-*** enter your CopperEgg APIKEY in the the apikey field,
-*** set the frequency (actually the sampling period ... a value of 60 means obtain a sample every 60 seconds.)
-*** set the 'local_remote' flag as desired; local means the machine running copperegg-powershell will only monitor
+### in the copperegg section:
+#### enter your CopperEgg APIKEY in the the apikey field,
+#### set the frequency (actually the sampling period ... a value of 60 means obtain a sample every 60 seconds.)
+#### set the 'local_remote' flag as desired; local means the machine running copperegg-powershell will only monitor
 those metricgroups called out in the server definition with hostname equal to that of the local host. remote means the
 machine running copperegg-powershell will only monitor metricgroups called out in the server definitions with hostnames
 NOT equal to that of the local host. Finally, if set to all, the machine running copperegg-powershell will monitor
 metricgroups in server definitions of both local and remote machines.
-*** replace 'Server1' with your server name. This name field allows you to name your servers as you like; the associated
+#### replace 'Server1' with your server name. This name field allows you to name your servers as you like; the associated
 Server definition must contain the Windows machine name. (see below)
 
-** Update the Server Definition (in config-sample.yml, the block at the end of the file beginning with Server1:)
+### in the remaining sections
+#### Update the Server Definition (in config-sample.yml, the block at the end of the file beginning with Server1:)
 Each Server Definition block must have a valid hostname, and a metricgroups section, listing which of the metric groups defined
 earlier in the file to monitor. If this instance will monitor MSSQL (locally or remotely), you must also add a
 a mssql_instancenames: section, and list one (or more) instances to monitor.
