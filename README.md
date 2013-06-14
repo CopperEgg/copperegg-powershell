@@ -8,8 +8,8 @@ The module includes:
   - CopperEgg.psm1... contains Powershell functions that are wrappers for the CopperEgg API
   - Initialize-MetricGroups ... creates metric groups, and sends them to CopperEgg
   - Initialize-Dashboards ... creates custom dashboards, and sends them to CopperEgg
-  - Start-CopperEggMonitor ... starts one or more background jobs that periodicaly transmit your metrics to CopperEgg
-  - Start-DebugMonitor ... performs the same functionality as Start-CopperEggMonitor, but in the foreground, and with debug oputput.
+  - Start-CopperEggMonitor ... starts one or more background jobs that periodically transmit your metrics to CopperEgg
+  - Start-DebugMonitor ... performs the same functionality as Start-CopperEggMonitor, but in the foreground, and with debug output.
   - and other utilities.
 
 This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboards for
@@ -24,7 +24,7 @@ file, and supports both local and remote monitoring.
 
 ## Recent Updates:
 version 1.0.0
-Is the first release of copperegg-powershell. It supercedes revealmetrics-powershell 0.9.2
+Is the first release of copperegg-powershell. It supersedes revealmetrics-powershell 0.9.2
 
 ## Requirements
 This release requires Powershell v3.0, which ships with Windows 8 and Windows Server 2012.
@@ -97,14 +97,6 @@ git clone https://github.com/CopperEgg/copperegg-powershell.git
 
 git clone https://github.com/scottmuc/PowerYaml.git
 ```
-
-"c:\Program Files (x86)\CopperEgg\Modules\PowerYaml"
-```
-
-... and copperegg-powershell in this directory:
-
-```ruby
-
 
 * Copy the contents of the newly-cloned copperegg-powershell directory to "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg".
 
@@ -180,7 +172,7 @@ Specifically, these instructions are for ensuring that your monitoring powershel
   - Name CopperEggTask
   - When running the task, use the Administrator account.
   - Run whether user is logged in or not
-  - Run with Highest Privelages
+  - Run with Highest Privileges
   - Configure for the OS you are using
 
 * Create Task Trigger
