@@ -158,12 +158,6 @@ Stop-CopperEggMonitor
 Remove-AllCopperEgg
 ```
 
-###Next Steps
-
-The servers, metricgroups and dashboards are specified in the config.yml file.
-The metricgroups are built in Initialize-MetricGroups.ps1
-The dashboards are built in Initialize-Dashboards.ps1.
-
 ###To Run Your CopperEgg-StartMonitor.ps1 script 'as a service'
 
 Specifically, these instructions are for ensuring that your monitoring powershell scripts resume running after restart or power-cycle. At this point, we do not support running the Powershell scripts as a Windows Service ... but using the Windows Task Scheduler, you can do very close to the same thing.
