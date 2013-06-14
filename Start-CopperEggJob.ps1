@@ -20,7 +20,7 @@ param(
     # ms sql has to be handled separately to support multiple instance names per host
     $hostmap = $mg.host_map
 
-    Write-Host "Monitoring $group_name,  Hosts to monitor:"
+    Write-CuEggLog "Monitoring $group_name,  Hosts to monitor:"
     $hosts
 
     $metric_data = @{}
@@ -34,7 +34,7 @@ param(
         foreach($hh in $hh_array){
           $hh
           $iname = $hh.instancename
-          Write-Host "instance name is $iname"
+          Write-CuEggLog "instance name is $iname"
           [string[]]$MSCounters = $hh.mspaths
           [string[]]$result = $MSCounters.replace(",","`n")
 
@@ -55,7 +55,7 @@ param(
             $epochtime=($utc - $unixEpochStart).TotalSeconds
             foreach($sample in $counter.CounterSamples){
               [string]$path = $sample.Path.ToString()
-              Write-Host "Sample path is $path"
+              Write-CuEggLog "Sample path is $path"
               if ($path.StartsWith('\\') -eq 'True'){
                 [int]$off = $path.IndexOfAny('\', 2)
                 [string]$path = $path.Substring($off).ToString()
@@ -66,7 +66,7 @@ param(
               [int]$off = $path.IndexOfAny(':', 1)
               $off += 1
               [string]$cepath = $path.Substring($off).ToString()
-              Write-Host "cepath is $cepath"
+              Write-CuEggLog "cepath is $cepath"
               $metric_data.Add( ($newhash | Select-Object $cepath).$cepath.ToString(), $sample.CookedValue )
             }
             $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
@@ -87,7 +87,7 @@ param(
             [System.Net.ServicePointManager]::Expect100Continue = $false
             $req.Headers.Add('Content-Type', 'application/json')
             $data_json = $data | ConvertTo-JSON -Depth 5
-            Write-Host "sending sample data: server is $h; instance is $iname, uri is $uri; json_data is $data_json"
+            Write-CuEggLog "sending sample data: server is $h; instance is $iname, uri is $uri; json_data is $data_json"
             $rslt = $req.UploadString($uri, $data_json)
           }
         }
@@ -96,7 +96,7 @@ param(
     }
   } else {
     # Windows Performance Counter Service, NOT MS_MSSQL
-    Write-Host "Monitoring $group_name,  Hosts to monitor:"
+    Write-CuEggLog "Monitoring $group_name,  Hosts to monitor:"
     $hosts
 
     $metric_data = @{}
@@ -129,7 +129,7 @@ param(
           $epochtime=($utc - $unixEpochStart).TotalSeconds
           foreach($sample in $counter.CounterSamples){
             [string]$path = $sample.Path.ToString()
-            Write-Host "Sample path is $path"
+            Write-CuEggLog "Sample path is $path"
             if ($path.StartsWith('\\') -eq 'True'){
               [int]$off = $path.IndexOfAny('\', 2)
               [string]$path = $path.Substring($off).ToString()
@@ -137,7 +137,7 @@ param(
             if ($path.StartsWith('\\') -eq 'True'){
               [string]$path = $path.Substring(1).ToString()
             }
-            Write-Host "path is $path"
+            Write-CuEggLog "path is $path"
             $metric_data.Add( ($newhash | Select-Object $path).$path.ToString(), $sample.CookedValue )
           }
         }
@@ -159,7 +159,7 @@ param(
         [System.Net.ServicePointManager]::Expect100Continue = $false
         $req.Headers.Add('Content-Type', 'application/json')
         $data_json = $data | ConvertTo-JSON -Depth 5
-        Write-Host "sending sample data: server is $h; uri is $uri; json_data is $data_json"
+        Write-CuEggLog "sending sample data: server is $h; uri is $uri; json_data is $data_json"
         $rslt = $req.UploadString($uri, $data_json)
       }
       Start-Sleep -s $freq

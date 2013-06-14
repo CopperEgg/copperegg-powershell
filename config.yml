@@ -8,15 +8,19 @@ copperegg:
   - MS_System
   - MS_NET_CLR
   - MS_MSSQL
+  - MS_Web_Services
+  - User_Defined
   dashboards:
   - MS_Memory_Dash
   - MS_Storage_Dash
   - MS_System_Dash
   - MS_NETCLR_Dash
+  - MS_Web_Dash
   - MSSQL_Dash
+  - My_Metrics_Dash
   servers:
  # - mikes_lap
-  - scotts-vm1
+  - scotts-vm2
 
 # metric groups included in the copperegg list
 
@@ -127,13 +131,12 @@ MS_MSSQL:
   - 'SQL Statistics\SQL Compilations/sec'
   - 'SQL Statistics\SQL Re-Compilations/sec'
 
-UserDefined:
-  group_name: 'UserDefined'
+User_Defined:
+  group_name: 'User_Defined'
   group_label: 'User Defined Metrics'
   dashboard: My_Metrics_Dash
   custom:
-  - 'Hours_From_Last_Backup'
-  - 'Last_Backup_Result'
+  - 'LogExists'
 
 # dashboards included in the copperegg list
 
@@ -158,24 +161,45 @@ MS_Web_Dash:
 MSSQL_Dash:
   dash_name: 'MS SQL Server'
 
+My_Metrics_Dash:
+  dash_name: 'My Metrics'
+
 
 # servers included in the copperegg list
 mikes_lap:
     hostname: SJOHNSON-PC
     username:
     password:
-    metricgroups:
-    - MS_System
-    - MS_System_Memory
-
-scotts-vm1:
-    hostname: WIN-1M8N94S69C8
-    username:
-    password:
     mssql_instancenames: 
     - 'SQLServer'
     metricgroups:
+    - MS_System_Memory
     - MS_Storage
     - MS_System
     - MS_NET_CLR
     - MS_MSSQL
+
+scotts-vm2:
+   hostname: WIN-1M8N94S69C8
+   username:
+   password:
+   metricgroups:
+   - MS_System_Memory
+   - MS_Storage
+   - MS_System
+   - User_Defined
+   - MS_NET_CLR
+   - MS_Web_Services
+
+scotts-vm1:
+    hostname: SJOHNSON-PC
+    username:
+    password:
+    mssql_instancenames: 
+    - 'MSSQL$SQLEXPRESS'
+    metricgroups:
+    - MS_System_Memory
+    - MS_Storage
+    - MS_System
+    - MS_MSSQL
+

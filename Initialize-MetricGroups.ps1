@@ -313,10 +313,9 @@ function Initialize-MetricGroups {
 
   # create UserDefined metric group
   $marray = @(
-    @{"type"="ce_gauge_f";   "name"="UserDefined_Hours_From_Last_Backup";   "label"="Hours from Last Backup";    "unit"="Hours" },
-    @{"type"="ce_gauge";      "name"="UserDefined_Last_Backup_Result";       "label"="Last Backup Result";  }
+    @{"type"="ce_gauge";     "name"="LogExists";       "label"="Non-Zero if log.txt exists";  }
   )
-  $metricgroup_id = 'UserDefined'
+  $metricgroup_id = 'User_Defined'
   $gname = $global:cuconfig.$metricgroup_id.group_name
   $glabel = $global:cuconfig.$metricgroup_id.group_label
   $gdash = $global:cuconfig.$metricgroup_id.dashboard
@@ -404,7 +403,7 @@ function Initialize-MetricGroups {
           $global:master_hash.Add($name, $fxn)
           $ce_custom =  $ce_custom + $name
         }
-        mg.add("CE_Variables",[string[]]$ce_custom)
+        $mg["CE_Variables"] = $ce_custom
       }
     }
   }

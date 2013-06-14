@@ -6,8 +6,8 @@
 $global:CopperEggJobs = @()
 $global:CopperEggJobCount = 0
 function Start-CopperEggMonitor {
-  $cmd = 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg\Start-CopperEggJob.ps1'
-  $cmdCustom = 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg\Start-CustomCopperEggJob.ps1'
+  $cmd = "$global:mypath\Start-CopperEggJob.ps1"
+  $cmdCustom = "$global:mypath\Start-CustomCopperEggJob.ps1"
   $mhj = $global:master_hash | ConvertTo-Json -Depth 5
 
   foreach( $id in $global:all_metricgroupids ) {
@@ -59,18 +59,16 @@ function Start-CopperEggMonitor {
       }
     } else {
       # handle the user-defined metric groups
-      $id = 'UserDefined'
       $required_mg = $global:cuconfig.$id.group_name
       $mg = Find-MetricGroup $required_mg
-      $mg = $null
       if( $mg -ne $null ){
         $gname = $mg.name
         $groupcfg = $mg.gcfg
-        $freq = 600
+        $freq = $groupcfg.frequency
         [string[]]$cpath = $mg.CE_Variables
-        [string]$host = $global:computer
+        [string[]]$hosts = $mg.hosts
         Write-CuEggLog "Starting Custom job, monitoring $gname at an interval of $freq seconds"
-        $j = Start-Job -ScriptBlock {param($cmdCustom,$cpath,$gname,$mhj,$global:apikey,$host,$global:mypath,$mg) & $cmdCustom $cpath $gname $mhj $global:apikey $host $global:mypath $mg} -ArgumentList @($cmdCustom,$cpath,$gname,$mhj,$global:apikey,$host,$global:mypath,$mg)
+        $j = Start-Job -ScriptBlock {param($cmdCustom,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg) & $cmdCustom $cpath $gname $mhj $global:apikey $hosts $global:mypath $mg} -ArgumentList @($cmdCustom,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg)
         $global:CopperEggJobs = $global:CopperEggJobs + $j
         $global:CopperEggJobCount++
       }

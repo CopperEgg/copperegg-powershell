@@ -54,7 +54,7 @@ Export-ModuleMember -function Write-CuEggLog
 
 trap
 [Exception] {
-LogWrite "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+Write-CuEggLog "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
 }
 
 
@@ -107,26 +107,37 @@ param(
     [string]$apicmd,
     $data
   )
-  $uri = 'https://api.copperegg.com/v2' + $apicmd
+  $rtn = ""|select Response,Return
+  $uri = "https://api.copperegg.com/v2$apicmd"
+  $webRequest = [System.Net.WebRequest]::Create($uri)
+  $webRequest.ContentType = "application/json"
   $authinfo = $apikey + ':U'
   $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
-  $req = New-Object System.Net.WebClient
-  $req.Headers.Add('Authorization', $auth )
-  $req.Headers.Add('Accept', 'application/json')
-  $req.Headers.Add("user-agent", "PowerShell")
+  $webRequest.Headers.Add('Authorization', $auth )
   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
   [System.Net.ServicePointManager]::Expect100Continue = $false
-  $req.Headers.Add('Content-Type', 'application/json')
+  $webRequest.Method = "GET"
+  [System.Net.WebResponse] $resp = $null
+  $rtn.Response = $resp
   try 
   {
-    $result = $req.DownloadString($uri)
+    $resp = $webRequest.GetResponse();
+    $rtn.Return = "Success"
   }
-  catch [Exception] 
+  catch
   {
-    Write-CuEggLog "*** System Exception: Unable to send GET to CopperEgg. Please Check Internet Connectivity. ***"
-    $result = $null
+    $rtn.Return =  "Failed: $($_.exception.innerexception.message)"
+    $rtn.Response = $null
   }
-  return $result
+  if($rtn.Return -eq 'Success'){
+    $rs = $resp.GetResponseStream();
+    [System.IO.StreamReader] $sr = New-Object System.IO.StreamReader -argumentList $rs;
+    [string] $result = $sr.ReadToEnd();
+    $rs.Flush()
+    $rs.Close()
+    $rtn.Response = $result
+  }
+  $rtn
 }
 export-modulemember -function Send-CEGet
 
@@ -156,8 +167,8 @@ param(
   }
   Catch [system.exception]
   {
-    Write-CuEggLog "*** System Exception: Unable to send POST to CopperEgg. Please Check Internet Connectivity. ***"
-    $result =  $null
+    Write-CuEggLog "Exception caught: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+    return $null
   }
   return $result
 }
@@ -191,7 +202,6 @@ param(
   $rs = $resp.GetResponseStream();
   [System.IO.StreamReader] $sr = New-Object System.IO.StreamReader -argumentList $rs;
   [string] $result = $sr.ReadToEnd();
-
   return $result
 }
 export-modulemember -function Send-CEPut
@@ -203,13 +213,12 @@ param(
     $groupcfg
   )
   Write-CuEggLog "Checking for metric group $group_name"
-
+  $rslt = $null
   [string]$cmd =  "/revealmetrics/metric_groups/$group_name.json?show_hidden=1"
   $rslt = Send-CEGet $global:apikey $cmd ""
-  Write-CuEggLog "The get result is $rslt"
 
-  if($rslt -ne $null){
-    $rslt_decode = $rslt | ConvertFrom-Json
+  if($rslt.Return -eq 'Success'){
+    $rslt_decode = $rslt.Response | ConvertFrom-Json
     $mgarray = $rslt_decode | Where-Object {$_.name -eq $group_name}
     if($mgarray -ne $null){
       Write-CuEggLog "Metric group $group_name found; merge and update"
@@ -249,8 +258,8 @@ param(
   [string]$cmd =  '/revealmetrics/dashboards.json'
   $rslt = Send-CEGet $global:apikey $cmd ""
   [int]$found = 0
-  if( $rslt -ne $null ){
-    $new = $rslt | ConvertFrom-Json
+  if( $rslt.Return -eq 'Success' ){
+    $new = $rslt.Response | ConvertFrom-Json
     foreach($name in $new.name) {
       if( $dash_name -eq $name.ToString() ) {
         $found = 1

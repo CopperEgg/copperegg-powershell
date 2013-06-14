@@ -4,6 +4,8 @@
 # Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
 #
 
+$global:usermod_loaded = 0
+
 function Start-DebugMonitor {
   $mhj = $global:master_hash | ConvertTo-Json -Depth 5
   [string]$mhj = $mhj
@@ -168,7 +170,53 @@ function Start-DebugMonitor {
               }
             }
           } else {
-            Write-CuEggLog "Not testing User Defined metric group $gn"
+            # user-defined metrics
+            # NOTE: can only be used on the local machine
+            if( $global:usermod_loaded -eq 0){
+              [string]$fullpath = $mypath + '\UserDefined.psm1'
+              import-module $fullpath
+              $global:usermod_loaded = 1
+            }
+            Write-CuEggLog "Monitoring $gn,  Hosts to monitor:"
+            $hosts
+            $metric_data = @{}
+            [int]$epochtime = 0
+            $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
+            $newhash = $mhj | ConvertFrom-Json
+            foreach($h in $hosts) {
+              [string[]]$ce_custom = $mg.CE_Variables
+              $groupcfg = $mg.gcfg
+              $freq = $groupcfg.frequency 
+              $metric_data = $null
+              $metric_data = new-object @{}
+
+              foreach($var in $ce_custom){
+                $fxn = ($newhash | Select-Object $var).$var.ToString()
+                $fxnrslt  = & $fxn
+                [DateTime]$utc = [System.DateTime]::Now.ToUniversalTime()
+                $epochtime=($utc - $unixEpochStart).TotalSeconds
+                $metric_data.Add($var, $fxnrslt)
+              }
+              $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+              $payload = New-Object PSObject -Property @{
+                "timestamp"=$epochtime;
+                "identifier"=[string]$h;
+                "values"=$metric_data
+              }
+              $data = $payload
+              $uri = 'https://api.copperegg.com/v2' + $apicmd
+              $authinfo = $apikey + ':U'
+              $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
+              $req = New-Object System.Net.WebClient
+              $req.Headers.Add('Authorization', $auth )
+              $req.Headers.Add('Accept', '*/*')
+              $req.Headers.Add("user-agent", "PowerShell")
+              [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+              [System.Net.ServicePointManager]::Expect100Continue = $false
+              $req.Headers.Add('Content-Type', 'application/json')
+              $data_json = $data | ConvertTo-JSON -Depth 5
+              $rslt = $req.UploadString($uri, $data_json)
+            }
           }
         }
       }

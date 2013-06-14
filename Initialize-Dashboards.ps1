@@ -558,7 +558,7 @@ function Initialize-Dashboards {
       #id -eq 'My_Metrics_Dash'
       # This is an example dashboard for UserDefined metrics.
       if($global:dashes_tobuild -contains $id) {
-        $metricgroup_id = 'UserDefined'
+        $metricgroup_id = 'User_Defined'
         $required_mg = $global:cuconfig.$metricgroup_id.group_name
         $dash_name = $dashdef.dash_name
         $mg = Find-MetricGroup $required_mg
@@ -573,15 +573,9 @@ function Initialize-Dashboards {
                   "style"="values";
                   "match"="all";
                   "metric" = @($gname, "0", $warray[0].name);
-                   };
-            "1" = @{
-                  "type"="timeline";
-                  "style"="values";
-                  "match"="all";
-                  "metric" = @($gname, "1", $warray[1].name);
                    }
           }
-          $order = @( "0","1" )
+          $order = @( "0" )
 
           $dashcfg = New-Object PSObject -Property @{
             "name" = $dash_name;
