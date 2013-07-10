@@ -52,6 +52,16 @@ Function Write-CuEggLog
 }
 Export-ModuleMember -function Write-CuEggLog
 
+Function Exit-Now
+{
+   $TimeStamp = Get-Date -Format dd-MM-yyy-hh-mm-ss
+   $message = "$Timestamp Error: Abnormal Exit"
+   Write-Host "$message " -BackgroundColor "Red" -ForegroundColor "Black"
+   exit
+}
+Export-ModuleMember -function Exit-Now
+ 
+
 trap
 [Exception] {
 Write-CuEggLog "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
@@ -253,6 +263,7 @@ param(
     $dashcfg
   )
   Write-CuEggLog "Checking for Dashboard $dash_name"
+  Write-Host "Checking for Dashboard $dash_name"
   [string]$cmd =  '/revealmetrics/dashboards.json'
   $rslt = Send-CEGet $global:apikey $cmd ""
   [int]$found = 0
@@ -267,17 +278,21 @@ param(
   }
   if( $found -eq 0 ){
     Write-CuEggLog "Not Found. Creating Dashboard $dash_name"
+    Write-Host "Not Found. Creating Dashboard $dash_name"
     $rslt = Send-CEPost $global:apikey $cmd $dashcfg
     if($rslt -ne $null){
       $new = ($rslt | ConvertFrom-Json).name.ToString()
       Write-CuEggLog "Created Dashboard $new"
+      Write-Host "Created Dashboard $new"
     }
     else {
       Write-CuEggLog "Error Creating $dash_name"
+      Write-Host "Error Creating $dash_name"
     }
   }
   else {
     Write-CuEggLog "Found $dash_name"
+    Write-Host "Found $dash_name"
   }
   return $rslt
 }
@@ -418,31 +433,34 @@ function Remove-AllCopperEgg {
 Export-ModuleMember -function Remove-AllCopperEgg
 
 # parse the config.yml file
+Write-Host "Parsing config.yml"
 [string]$fullpath = $global:mypath + '\config.yml'
 if((Test-Path $fullpath) -eq $True) {
   $global:cuconfig = Get-Yaml -FromFile $fullpath
   if ($global:cuconfig -eq $null) {
     Write-CuEggLog "Found $fullpath; yaml parse failed"
     Write-CuEggLog "Please create a valid config.yml file"
-    exit
+    Exit-Now
   }
 } else {
   Write-CuEggLog "$fullpath; not found"
   Write-CuEggLog "Please create a config.yml file in $global:mypath"
-  exit
+  Exit-Now
 }
 $global:apikey       = $global:cuconfig.copperegg.apikey
 $global:frequency    = $global:cuconfig.copperegg.frequency
 $global:local_remote = $global:cuconfig.copperegg.local_remote
 Write-CuEggLog "global:frequency is $global:frequency"
+Write-Host "global:frequency is $global:frequency"
 
 # validate the apikey
 if($global:apikey -eq $null) {
   Write-CuEggLog "Please add a valid CopperEgg apikey to your config.yml"
-  exit
+  Exit-Now
 }
 # validate the server list in config.yml
 Write-CuEggLog "Scanning server list"
+Write-Host "Scanning server list"
 $srvrs = $global:cuconfig.copperegg.servers
 foreach( $id in  $srvrs ) {
   $global:all_serverids += $id
@@ -450,7 +468,7 @@ foreach( $id in  $srvrs ) {
   $sdef = $global:cuconfig.$id
   if( $sdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for server $id"
-    exit
+    Exit-Now
   }
   # check that each server that includes the mssql metric group also
   # has an one or more mssql instances names
@@ -460,16 +478,17 @@ foreach( $id in  $srvrs ) {
       $instances = $sdef.mssql_instancenames
       if($instances.length -eq 0){
         Write-CuEggLog "Invalid config.yml: no mssql_instancenames included for server $id"
-        exit
+        Exit-Now
       }
     } else {
       Write-CuEggLog "Invalid config.yml: mssql_instancenames is not included for server $id"
-      exit
+      Exit-Now
     }
   }
 }
 # validate the metricgroup list in config.yml
 Write-CuEggLog "Scanning metricgroups list"
+Write-Host "Scanning metricgroups list"
 $mgroups = $global:cuconfig.copperegg.metricgroups
 foreach( $id in  $mgroups ) {
   $global:all_metricgroupids += $id
@@ -477,11 +496,13 @@ foreach( $id in  $mgroups ) {
   $mdef = $global:cuconfig.$id
   if( $mdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for metric group $id"
-    exit
+    Exit-Now
   }
 }
 # validate the  dashboards list in config.yml
 Write-CuEggLog "Scanning dashboards list"
+Write-Host "Scanning dashboards list"
+
 $dashes = $global:cuconfig.copperegg.dashboards
 foreach( $id in  $dashes ) {
   $global:all_dashboardids += $id
@@ -489,13 +510,15 @@ foreach( $id in  $dashes ) {
   $mdef = $global:cuconfig.$id
   if( $mdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for dashboard $id"
-    exit
+    Exit-Now
   }
 }
 if(($global:local_remote -eq 'local') -or ($global:local_remote -eq 'remote') -or ($global:local_remote -eq 'all')){
   Write-CuEggLog "local_remote flag specified is $global:local_remote"
+  Write-Host "local_remote flag specified is $global:local_remote"
 } else {
   Write-CuEggLog "Invalid or no local_remote flag specified"
   Write-CuEggLog "Defaulting to local"
+  Write-Host "Defaulting to local"
   $global:local_remote = 'local'
 }

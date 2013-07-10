@@ -22,7 +22,13 @@ This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboa
 This module will replace revealmetrics-powershell, which will be deprecated. CopperEgg-Powershell is configured with a yaml configuration
 file, and supports both local and remote monitoring.
 
+As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs 
+
 ## Recent Updates:
+version 1.0.1       July 10, 2013
+Fixed a typo in the config-sample.yml.
+Added console messages during installation to provide some feedback.
+
 version 1.0.0
 Is the first release of copperegg-powershell. It supersedes revealmetrics-powershell 0.9.2
 
@@ -93,7 +99,7 @@ import-module ..\PowerYaml\PowerYaml.psm1
 * Clone the following repositories:
 
 ```ruby
-git clone https://github.com/rdickey/copperegg-powershell.git
+git clone https://github.com/CopperEgg/copperegg-powershell.git
 
 git clone https://github.com/scottmuc/PowerYaml.git
 ```

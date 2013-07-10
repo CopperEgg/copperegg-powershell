@@ -4,11 +4,12 @@
 #
 
 function Initialize-Dashboards {
+
   foreach($id in $global:all_dashboardids){
     $dashdef = $global:cuconfig.$id
     if( $dashdef -eq $null) {
       Write-CuEggLog "Invalid config.yml: no definition for dashboard $id"
-      exit
+      Exit-Now
     }
     if( $id -eq 'MS_Memory_Dash' ) {
       # create System Memory dash
