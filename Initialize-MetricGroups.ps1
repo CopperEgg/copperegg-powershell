@@ -111,7 +111,7 @@ function Initialize-MetricGroups {
       $instances = Find-InstanceNames $h
       if($instances -eq $null) {
         Write-CuEggLog "Found host $h with no mssql instance names!"
-        exit
+        Exit-Now
       } else {
         Write-CuEggLog "Found host $h with mssql instance names $instances"
         foreach($i in $instances) {

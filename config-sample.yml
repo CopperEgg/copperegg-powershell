@@ -133,7 +133,7 @@ MS_MSSQL:
   - 'SQL Statistics\SQL Compilations/sec'
   - 'SQL Statistics\SQL Re-Compilations/sec'
 
-User_Defined:
+UserDefined:
   group_name: 'User_Defined'
   group_label: 'User Defined Metrics'
   dashboard: My_Metrics_Dash
@@ -170,11 +170,11 @@ My_Metrics_Dash:
 # server definitions, at least those that are included in the copperegg list above.
 
 Server1:
-    hostname: 'MS machine name of Server1'
-    mssql_instancenames:
-      - 'SQLServer'
-    metricgroups:
-    - MS_System
-    - MS_System_Memory
-    - MS_Storage
-    - MS_MSSQL
+  hostname: 'REPLACE WITH MS MACHINE NAME'
+  mssql_instancenames:
+  - 'REPLACE WITH MSSQL DATABASE INSTANCE NAME'
+  metricgroups:
+  - MS_System
+  - MS_System_Memory
+  - MS_Storage
+  - MS_MSSQL

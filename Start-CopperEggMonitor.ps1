@@ -25,7 +25,7 @@ function Start-CopperEggMonitor {
             [string[]]$cpath = $mg.mspaths
             $groupcfg = $mg.gcfg
             $freq = $groupcfg.frequency
-            Write-CuEggLog "Starting Monitor of $gn at an interval of $freq seconds; Hosts to monitor:"
+            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor:"
             foreach($h in $hosts) {
               $h
             }
@@ -47,7 +47,7 @@ function Start-CopperEggMonitor {
             [string[]]$cpath = $mg.mspaths
             $groupcfg = $mg.gcfg
             $freq = $groupcfg.frequency
-            Write-CuEggLog "Starting Monitor of $gn at an interval of $freq seconds; Hosts to monitor:"
+            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor:"
             foreach($h in $hosts) {
               $h
             }
