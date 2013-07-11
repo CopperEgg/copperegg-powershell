@@ -201,7 +201,8 @@ Specifically, these instructions are for ensuring that your monitoring powershel
   - Check Allow Task to be run on demand, Run task as soon as possible after scheduled start is missed, and if the task fails, restart every 1 minute
   - Attempt to restart up to 3 times.
   - Leave the remaining boxes un-checked.
-  - If the task is already running,
+  - If the task is already running, then the following rule applies:
+    Do not start a new instance.
 
 Close the Task Scheduler. CopperEggTask.ps1 should start (if not already started) within 5 minutes.
 
