@@ -38,25 +38,25 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    }
@@ -96,79 +96,79 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    };
             "6" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "6", $warray[6].name);
                    };
             "7" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "7", $warray[7].name);
                    };
             "8" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "8", $warray[8].name);
                    };
             "9" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "9", $warray[9].name);
                    };
             "10" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "10", $warray[10].name);
                    };
             "11" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "11", $warray[11].name);
                    };
             "12" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "12", $warray[12].name);
                    };
             "13" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "13", $warray[13].name);
                    };
             "14" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "14", $warray[14].name);
                    }
@@ -209,61 +209,61 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    };
             "6" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "6", $warray[6].name);
                    };
             "7" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "7", $warray[7].name);
                    };
             "8" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "8", $warray[8].name);
                    };
             "9" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "9", $warray[9].name);
                    };
             "10" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "10", $warray[10].name);
                    };
             "11" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "11", $warray[11].name);
                    }
@@ -304,19 +304,19 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    }
@@ -357,55 +357,55 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    };
             "6" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "6", $warray[6].name);
                    };
             "7" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "7", $warray[7].name);
                    };
             "8" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "8", $warray[8].name);
                    };
             "9" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "9", $warray[9].name);
                    };
             "10" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "10", $warray[10].name);
                    }
@@ -446,25 +446,25 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    }
@@ -505,43 +505,43 @@ function Initialize-Dashboards {
                    };
             "2" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "2", $warray[2].name);
                    };
             "3" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "3", $warray[3].name);
                    };
             "4" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "4", $warray[4].name);
                    };
             "5" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "5", $warray[5].name);
                    };
             "6" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "6", $warray[6].name);
                    };
             "7" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "7", $warray[7].name);
                    };
             "8" = @{
                   "type"="timeline";
-                  "style"="value";
+                  "style"="values";
                   "match"="all";
                   "metric" = @($gname, "8", $warray[8].name);
                    }
