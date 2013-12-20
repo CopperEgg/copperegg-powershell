@@ -25,6 +25,14 @@ file, and supports both local and remote monitoring.
 As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs 
 
 ## Recent Updates:
+version 1.1.1       November 20, 2013
+Bug Fixes ... primarily around Windows Perfmon-like counters
+
+
+version 1.1.0       November 14, 2013
+Added the capability to add any Windows Perfmon-like counter
+
+         
 version 1.0.1       July 10, 2013
 Fixed a typo in the config-sample.yml.
 Added console messages during installation to provide some feedback.
