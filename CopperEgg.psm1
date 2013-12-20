@@ -52,16 +52,6 @@ Function Write-CuEggLog
 }
 Export-ModuleMember -function Write-CuEggLog
 
-Function Exit-Now
-{
-   $TimeStamp = Get-Date -Format dd-MM-yyy-hh-mm-ss
-   $message = "$Timestamp Error: Abnormal Exit"
-   Write-Host "$message " -BackgroundColor "Red" -ForegroundColor "Black"
-   exit
-}
-Export-ModuleMember -function Exit-Now
- 
-
 trap
 [Exception] {
 Write-CuEggLog "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
@@ -127,15 +117,21 @@ param(
   $webRequest.Method = "GET"
   [System.Net.WebResponse] $resp = $null
   $rtn.Response = $resp
-  try
+  $rret = ""
+  $rresp = ""
+  try 
   {
     $resp = $webRequest.GetResponse();
     $rtn.Return = "Success"
+    $rret = $rtn.Return
   }
   catch
   {
     $rtn.Return =  "Failed: $($_.exception.innerexception.message)"
     $rtn.Response = $null
+    $rret = $rtn.Return
+    $rresp = $rtn.Response
+    Write-CuEggLog "Exception. resp is $resp rtnreturn is $rret  rtnresp is $rresp"
   }
   if($rtn.Return -eq 'Success'){
     $rs = $resp.GetResponseStream();
@@ -145,6 +141,7 @@ param(
     $rs.Close()
     $rtn.Response = $result
   }
+  $rresp = $rtn.Response
   $rtn
 }
 export-modulemember -function Send-CEGet
@@ -224,6 +221,8 @@ param(
   $rslt = $null
   [string]$cmd =  "/revealmetrics/metric_groups/$group_name.json?show_hidden=1"
   $rslt = Send-CEGet $global:apikey $cmd ""
+  $rret = $rslt.Return
+  $rresp = $rslt.Response
 
   if($rslt.Return -eq 'Success'){
     $rslt_decode = $rslt.Response | ConvertFrom-Json
@@ -345,6 +344,19 @@ param(
 }
 Export-ModuleMember -function Send-CEMetrics
 
+function Get-ServerCounter {
+param(
+  [string[]]$server,
+  [string[]]$counter
+  )
+  if ($env:COMPUTERNAME -eq $server) {
+      Get-Counter -Counter $counter
+  } else {
+      Get-Counter -computername $server -Counter $counter
+  }
+}
+Export-ModuleMember -function Get-ServerCounter
+
 
 function Find-MetricGroup {
  param(
@@ -432,20 +444,22 @@ function Remove-AllCopperEgg {
 }
 Export-ModuleMember -function Remove-AllCopperEgg
 
-# parse the config.yml file
-Write-Host "Parsing config.yml"
+###################################################################################################
+#
+#    parse the config.yml file
+#
 [string]$fullpath = $global:mypath + '\config.yml'
 if((Test-Path $fullpath) -eq $True) {
   $global:cuconfig = Get-Yaml -FromFile $fullpath
   if ($global:cuconfig -eq $null) {
     Write-CuEggLog "Found $fullpath; yaml parse failed"
     Write-CuEggLog "Please create a valid config.yml file"
-    Exit-Now
+    exit
   }
 } else {
   Write-CuEggLog "$fullpath; not found"
   Write-CuEggLog "Please create a config.yml file in $global:mypath"
-  Exit-Now
+  exit
 }
 $global:apikey       = $global:cuconfig.copperegg.apikey
 $global:frequency    = $global:cuconfig.copperegg.frequency
@@ -456,7 +470,7 @@ Write-Host "global:frequency is $global:frequency"
 # validate the apikey
 if($global:apikey -eq $null) {
   Write-CuEggLog "Please add a valid CopperEgg apikey to your config.yml"
-  Exit-Now
+  exit
 }
 # validate the server list in config.yml
 Write-CuEggLog "Scanning server list"
@@ -468,7 +482,7 @@ foreach( $id in  $srvrs ) {
   $sdef = $global:cuconfig.$id
   if( $sdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for server $id"
-    Exit-Now
+    exit
   }
   # check that each server that includes the mssql metric group also
   # has an one or more mssql instances names
@@ -478,11 +492,11 @@ foreach( $id in  $srvrs ) {
       $instances = $sdef.mssql_instancenames
       if($instances.length -eq 0){
         Write-CuEggLog "Invalid config.yml: no mssql_instancenames included for server $id"
-        Exit-Now
+        exit
       }
     } else {
       Write-CuEggLog "Invalid config.yml: mssql_instancenames is not included for server $id"
-      Exit-Now
+      exit
     }
   }
 }
@@ -496,7 +510,7 @@ foreach( $id in  $mgroups ) {
   $mdef = $global:cuconfig.$id
   if( $mdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for metric group $id"
-    Exit-Now
+    exit
   }
 }
 # validate the  dashboards list in config.yml
@@ -510,7 +524,7 @@ foreach( $id in  $dashes ) {
   $mdef = $global:cuconfig.$id
   if( $mdef -eq $null) {
     Write-CuEggLog "Invalid config.yml: no definition for dashboard $id"
-    Exit-Now
+    exit
   }
 }
 if(($global:local_remote -eq 'local') -or ($global:local_remote -eq 'remote') -or ($global:local_remote -eq 'all')){
