@@ -319,7 +319,7 @@ function Initialize-MetricGroups {
           Write-CuEggLog "Successfuly created $gname"
         }
       }
-    } elseif( $id -eq 'User_Defined' ) {
+    } elseif( $id -eq 'UserDefined' ) {
       # create UserDefined metric group
       $metricgroup_id = $id
       Write-CuEggLog "Creating metric group $metricgroup_id"

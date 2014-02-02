@@ -25,6 +25,9 @@ file, and supports both local and remote monitoring.
 As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs 
 
 ## Recent Updates:
+verion 1.1.2        February 2, 2014
+Fixed the 'UserDefined' issue. 
+
 version 1.1.1       November 20, 2013
 Bug Fixes ... primarily around Windows Perfmon-like counters
 
