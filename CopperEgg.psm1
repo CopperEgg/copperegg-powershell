@@ -1,6 +1,6 @@
 #
 # CopperEgg.psm1 contains the core components of the CopperEgg powershell module.
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
 #
 # The where_am_i functions provides a simple way to avoid path issues
 function where_am_i {$myInvocation}
@@ -131,7 +131,8 @@ param(
     $rtn.Response = $null
     $rret = $rtn.Return
     $rresp = $rtn.Response
-    Write-CuEggLog "Exception. resp is $resp rtnreturn is $rret  rtnresp is $rresp"
+    Write-CuEggLog "Exception on Send-CEGet. resp is $resp rtnreturn is $rret  rtnresp is $rresp"
+    Write-CuEggLog "apikey:  $apikey,  uri:  $uri,  data :  $data"
   }
   if($rtn.Return -eq 'Success'){
     $rs = $resp.GetResponseStream();
@@ -164,7 +165,7 @@ param(
   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
   [System.Net.ServicePointManager]::Expect100Continue = $false
   $req.Headers.Add('Content-Type', 'application/json')
-  $data_json = $data | ConvertTo-JSON -Depth 5
+  $data_json = $data | ConvertTo-JSON -compress -Depth 5
 
   Try
   {
@@ -172,12 +173,13 @@ param(
   }
   Catch [system.exception]
   {
-    Write-CuEggLog "Exception caught: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+    Write-CuEggLog "Exception on Send-CEPost: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+    Write-CuEggLog "apikey:  $apikey,  uri:  $uri,  data :  $data_json"
     return $null
   }
   return $result
 }
-export-modulemember -function Send-CEPost
+export-modulemember -function get-Send-CEPost
 
 
 # Send-CEPut formats and sends a CopperEgg API Put command
@@ -196,7 +198,7 @@ param(
   $webRequest.Headers.Add('Authorization', $auth )
   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
   [System.Net.ServicePointManager]::Expect100Continue = $false
-  $data_json = $data | ConvertTo-JSON -Depth 5
+  $data_json = $data | ConvertTo-JSON -compress -Depth 5
   $data_json = [System.Text.Encoding]::UTF8.GetBytes($data_json)
   $webRequest.Method = "PUT"
   $requestStream = $webRequest.GetRequestStream()
@@ -307,8 +309,6 @@ param(
   # Convert the result into an array of strings so it works with get-counter.
   [string[]]$result = $MSCounters.replace(",","`n")
   $metric_data = @{}
-  [int]$epochtime = 0
-  $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
   $i = 1
   While($i -lt 100) {
     $metric_data = $null
@@ -316,12 +316,6 @@ param(
     $samples = Get-Counter -Counter $result
     foreach($counter in $samples){
       $sample=$counter.CounterSamples[0]
-      if($sample.Timestamp.Kind -eq 'Local'){
-        [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-      }else{
-        [DateTime]$utc = $sample.Timestamp
-      }
-      $epochtime=($utc - $unixEpochStart).TotalSeconds
       foreach($sample in $counter.CounterSamples){
         [string]$path = $sample.Path.ToString()
         if ($path.StartsWith('\\') -eq 'True'){
@@ -332,8 +326,9 @@ param(
       }
     }
     $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+    $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
     $payload = New-Object PSObject -Property @{
-      "timestamp"=$epochtime;
+      "timestamp"=$EpochSecs;
       [string]"identifier"=$global:computer.ToString();
       "values"=$metric_data
     }

@@ -1,7 +1,7 @@
 #
 #    Start-CopperEggJob.ps1 : a minimal background monitoring job.
 #
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
 #
 param([string[]]$MSCounters,[string]$group_name,[string]$mhj,[string]$apikey,[string[]]$hosts,[string]$mypath,$mg)
 function Start-CopperEggJob {
@@ -21,8 +21,6 @@ param(
     $hostmap = $mg.host_map
 
     $metric_data = @{}
-    [int]$epochtime = 0
-    $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
     $newhash = $mhj | ConvertFrom-Json
 
     While($True) {
@@ -42,12 +40,6 @@ param(
           }
           foreach($counter in $samples){
             $sample=$counter.CounterSamples[0]
-            if($sample.Timestamp.Kind -eq 'Local'){
-              [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-            }else{
-              [DateTime]$utc = $sample.Timestamp
-            }
-            $epochtime=($utc - $unixEpochStart).TotalSeconds
             foreach($sample in $counter.CounterSamples){
               [string]$path = $sample.Path.ToString()
               if ($path.StartsWith('\\') -eq 'True'){
@@ -63,8 +55,9 @@ param(
               $metric_data.Add( ($newhash | Select-Object $cepath).$cepath.ToString(), $sample.CookedValue )
             }
             $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+            $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
             $payload = New-Object PSObject -Property @{
-              "timestamp"=$epochtime;
+              "timestamp"=$EpochSecs;
               "identifier"=[string]$iname;
               "values"=$metric_data
             }
@@ -79,8 +72,16 @@ param(
             [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
             [System.Net.ServicePointManager]::Expect100Continue = $false
             $req.Headers.Add('Content-Type', 'application/json')
-            $data_json = $data | ConvertTo-JSON -Depth 5
-            $rslt = $req.UploadString($uri, $data_json)
+            $data_json = $data | ConvertTo-JSON -compress -Depth 5
+            Try
+            {
+              $rslt = $req.UploadString($uri, $data_json)
+            }
+            Catch [system.exception]
+            {
+              Write-CuEggLog "Exception caught: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+              Write-CuEggLog "data : $data , data-json :  $data_json"
+            }
           }
         }
       }
@@ -90,8 +91,6 @@ param(
     # Windows Performance Counter Service, NOT MS_MSSQL
 
     $metric_data = @{}
-    [int]$epochtime = 0
-    $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
     $newhash = $mhj | ConvertFrom-Json
 
     While($True) {
@@ -111,12 +110,6 @@ param(
         }
         foreach($counter in $samples){
           $sample=$counter.CounterSamples[0]
-          if($sample.Timestamp.Kind -eq 'Local'){
-            [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-          }else{
-            [DateTime]$utc = $sample.Timestamp
-          }
-          $epochtime=($utc - $unixEpochStart).TotalSeconds
           foreach($sample in $counter.CounterSamples){
             [string]$path = $sample.Path.ToString()
             if ($path.StartsWith('\\') -eq 'True'){
@@ -130,8 +123,9 @@ param(
           }
         }
         $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+        $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
         $payload = New-Object PSObject -Property @{
-          "timestamp"=$epochtime;
+          "timestamp"=$EpochSecs;
           "identifier"=[string]$h;
           "values"=$metric_data
         }
@@ -146,8 +140,16 @@ param(
         [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
         [System.Net.ServicePointManager]::Expect100Continue = $false
         $req.Headers.Add('Content-Type', 'application/json')
-        $data_json = $data | ConvertTo-JSON -Depth 5
-        $rslt = $req.UploadString($uri, $data_json)
+        $data_json = $data | ConvertTo-JSON -compress -Depth 5
+        Try
+        {
+          $rslt = $req.UploadString($uri, $data_json)
+        }
+        Catch [system.exception]
+        {
+          Write-CuEggLog "Exception in Posting Samples: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+          Write-CuEggLog "uri : $uri , data-json :  $data_json"
+        }
       }
       Start-Sleep -s $freq
     }

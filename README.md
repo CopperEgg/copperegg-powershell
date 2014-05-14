@@ -25,7 +25,10 @@ file, and supports both local and remote monitoring.
 As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs 
 
 ## Recent Updates:
-verion 1.1.2        February 2, 2014
+version 1.2.0       May 14, 2014
+Several stability improvements and better error messages.
+
+version 1.1.2        February 2, 2014
 Fixed the 'UserDefined' issue. 
 
 version 1.1.1       November 20, 2013

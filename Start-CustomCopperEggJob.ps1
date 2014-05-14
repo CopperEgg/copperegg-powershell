@@ -4,7 +4,7 @@
 #	This script does not rely on Get-Counter ... for each monitored metric, this routine expects a variable name and a function that can be called
 #	to retrieve the value for that variable.
 #
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
 #
 #
 param([string[]]$CE_Variables,[string]$group_name,[string]$mhj,[string]$apikey,[string[]]$hosts,[string]$mypath, $mg)
@@ -21,8 +21,6 @@ param(
   [string]$fullpath = "$mypath\UserDefined.psm1"
   import-module $fullpath
   $metric_data = @{}
-  [int]$epochtime = 0
-  $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
   $newhash = $mhj | ConvertFrom-Json
   $groupcfg = $mg.gcfg
   $freq = $groupcfg.frequency
@@ -36,18 +34,17 @@ param(
       [string[]]$ce_custom = $mg.CE_Variables
       $metric_data = $null
       $metric_data = new-object @{}
+      $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
 
       foreach($var in $ce_custom){
         $fxn = ($newhash | Select-Object $var).$var.ToString()
         $fxnrslt  = & $fxn
-        [DateTime]$utc = [System.DateTime]::Now.ToUniversalTime()
-        $epochtime=($utc - $unixEpochStart).TotalSeconds
         $metric_data.Add($var, $fxnrslt)
       }
 
       $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
       $payload = New-Object PSObject -Property @{
-        "timestamp"=$epochtime;
+        "timestamp"=$EpochSecs;
         "identifier"=[string]$h;
         "values"=$metric_data
       }
@@ -62,8 +59,16 @@ param(
       [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
       [System.Net.ServicePointManager]::Expect100Continue = $false
       $req.Headers.Add('Content-Type', 'application/json')
-      $data_json = $data | ConvertTo-JSON -Depth 5
-      $rslt = $req.UploadString($uri, $data_json)
+      $data_json = $data | ConvertTo-JSON  -compress -Depth 5
+      Try
+      {
+        $rslt = $req.UploadString($uri, $data_json)
+      }
+      Catch [system.exception]
+      {
+        Write-CuEggLog "Exception in Posting Samples, Custom: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+        Write-CuEggLog "uri : $uri , data_json :  $data_json"
+      }
     }
     Start-Sleep -s $freq
   }

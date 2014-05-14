@@ -1,14 +1,14 @@
 #
 # Start-CopperEggMonitor.ps1 kicks off a series of background monitoring jobs.
 #
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
 #
 $global:CopperEggJobs = @()
 $global:CopperEggJobCount = 0
 function Start-CopperEggMonitor {
   $cmd = "$global:mypath\Start-CopperEggJob.ps1"
   $cmdCustom = "$global:mypath\Start-CustomCopperEggJob.ps1"
-  $mhj = $global:master_hash | ConvertTo-Json -Depth 5
+  $mhj = $global:master_hash | ConvertTo-Json -compress -Depth 5
 
   foreach( $id in $global:all_metricgroupids ) {
     # All metric groups beginning with "MS_" can be handled the same way ... with the exception of

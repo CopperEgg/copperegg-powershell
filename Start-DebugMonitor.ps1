@@ -3,13 +3,13 @@
 # Run Start-DebugMonitor instead of Start-CopperEggMonitor when you first get started, or when you
 # make serious changes to your config.yml.
 #
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
 #
 
 $global:usermod_loaded = 0
 
 function Start-DebugMonitor {
-  $mhj = $global:master_hash | ConvertTo-Json -Depth 5
+  $mhj = $global:master_hash | ConvertTo-Json -compress -Depth 5
   [string]$mhj = $mhj
   [string]$apikey = $global:apikey
   [string]$mypath = $global:mypath
@@ -37,8 +37,6 @@ function Start-DebugMonitor {
               Write-CuEggLog "Monitoring $gn,  Hosts to monitor:"
               $hosts
               $metric_data = @{}
-              [int]$epochtime = 0
-              $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
               $newhash = $mhj | ConvertFrom-Json
 
               foreach($h in $hosts) {
@@ -59,12 +57,6 @@ function Start-DebugMonitor {
                   }
                   foreach($counter in $samples){
                     $sample=$counter.CounterSamples[0]
-                    if($sample.Timestamp.Kind -eq 'Local'){
-                      [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-                    }else{
-                      [DateTime]$utc = $sample.Timestamp
-                    }
-                    $epochtime=($utc - $unixEpochStart).TotalSeconds
                     foreach($sample in $counter.CounterSamples){
                       [string]$path = $sample.Path.ToString()
                       Write-CuEggLog "Sample path is $path"
@@ -82,8 +74,9 @@ function Start-DebugMonitor {
                       $metric_data.Add( ($newhash | Select-Object $cepath).$cepath.ToString(), $sample.CookedValue )
                     }
                     $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+                    $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
                     $payload = New-Object PSObject -Property @{
-                      "timestamp"=$epochtime;
+                      "timestamp"=$EpochSecs;
                       "identifier"=[string]$iname;
                       "values"=$metric_data
                     }
@@ -98,7 +91,7 @@ function Start-DebugMonitor {
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
                     [System.Net.ServicePointManager]::Expect100Continue = $false
                     $req.Headers.Add('Content-Type', 'application/json')
-                    $data_json = $data | ConvertTo-JSON -Depth 5
+                    $data_json = $data | ConvertTo-JSON -compress -Depth 5
                     Write-CuEggLog "sending sample data: server is $h; instance is $iname, uri is $uri; json_data is $data_json"
                     $rslt = $req.UploadString($uri, $data_json)
                   }
@@ -110,8 +103,6 @@ function Start-DebugMonitor {
               $hosts
 
               $metric_data = @{}
-              [int]$epochtime = 0
-              $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
               $newhash = $mhj | ConvertFrom-Json
               foreach($h in $hosts) {
 
@@ -129,12 +120,6 @@ function Start-DebugMonitor {
                 }
                 foreach($counter in $samples){
                   $sample=$counter.CounterSamples[0]
-                  if($sample.Timestamp.Kind -eq 'Local'){
-                    [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-                  }else{
-                    [DateTime]$utc = $sample.Timestamp
-                  }
-                  $epochtime=($utc - $unixEpochStart).TotalSeconds
                   foreach($sample in $counter.CounterSamples){
                     [string]$path = $sample.Path.ToString()
                     Write-CuEggLog "Sample path is $path"
@@ -149,8 +134,9 @@ function Start-DebugMonitor {
                     $metric_data.Add( ($newhash | Select-Object $path).$path.ToString(), $sample.CookedValue )
                   }
                   $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+                  $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
                   $payload = New-Object PSObject -Property @{
-                    "timestamp"=$epochtime;
+                    "timestamp"=$EpochSecs;
                     "identifier"=[string]$h;
                     "values"=$metric_data
                   }
@@ -165,7 +151,7 @@ function Start-DebugMonitor {
                   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
                   [System.Net.ServicePointManager]::Expect100Continue = $false
                   $req.Headers.Add('Content-Type', 'application/json')
-                  $data_json = $data | ConvertTo-JSON -Depth 5
+                  $data_json = $data | ConvertTo-JSON -compress -Depth 5
                   Write-CuEggLog "sending sample data: server is $h; uri is $uri; json_data is $data_json"
                   $rslt = $req.UploadString($uri, $data_json)
                 }
@@ -182,8 +168,6 @@ function Start-DebugMonitor {
             Write-CuEggLog "Monitoring $gn,  Hosts to monitor:"
             $hosts
             $metric_data = @{}
-            [int]$epochtime = 0
-            $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
             $newhash = $mhj | ConvertFrom-Json
             foreach($h in $hosts) {
               [string[]]$ce_custom = $mg.CE_Variables
@@ -195,13 +179,12 @@ function Start-DebugMonitor {
               foreach($var in $ce_custom){
                 $fxn = ($newhash | Select-Object $var).$var.ToString()
                 $fxnrslt  = & $fxn
-                [DateTime]$utc = [System.DateTime]::Now.ToUniversalTime()
-                $epochtime=($utc - $unixEpochStart).TotalSeconds
                 $metric_data.Add($var, $fxnrslt)
               }
               $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
+              $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
               $payload = New-Object PSObject -Property @{
-                "timestamp"=$epochtime;
+                "timestamp"=$EpochSecs;
                 "identifier"=[string]$h;
                 "values"=$metric_data
               }
@@ -216,7 +199,7 @@ function Start-DebugMonitor {
               [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
               [System.Net.ServicePointManager]::Expect100Continue = $false
               $req.Headers.Add('Content-Type', 'application/json')
-              $data_json = $data | ConvertTo-JSON -Depth 5
+              $data_json = $data | ConvertTo-JSON compress -Depth 5
               $rslt = $req.UploadString($uri, $data_json)
             }
           }
