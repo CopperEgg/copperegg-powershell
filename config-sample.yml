@@ -24,7 +24,7 @@ copperegg:
   - Server1
 
 
-# metric groups included in the copperegg list above
+# metric groups included in the Uptime Cloud Monitor list above
 
 MS_System:
   group_name: 'MSSystem'
@@ -140,7 +140,7 @@ UserDefined:
   custom:
   - 'LogExists'
 
-# dashboards included in the copperegg list
+# dashboards included in the Uptime Cloud Monitor list
 
 MS_Memory_Dash:
   dash_name: 'MS System Memory'
@@ -167,7 +167,7 @@ My_Metrics_Dash:
   dash_name: 'My Metrics'
 
 
-# server definitions, at least those that are included in the copperegg list above.
+# server definitions, at least those that are included in the Uptime Cloud Monitor list above.
 
 Server1:
   hostname: 'REPLACE WITH MS MACHINE NAME'

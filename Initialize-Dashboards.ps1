@@ -1,6 +1,6 @@
 #
 #	Initialize-Dashboards.ps1 contains code for creating a default set of dashboards.
-# Copyright (c) 2012-2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2013 IDERA. All rights reserved.
 #
 
 function Initialize-Dashboards {

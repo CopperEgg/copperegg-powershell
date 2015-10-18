@@ -1,14 +1,14 @@
 copperegg-powershell
 =============
 
-The CopperEgg Powershell module is a Powershell interface to the CopperEgg API, making it simple to create custom metrics and dashboards for Microsoft Windows systems.
+The Uptime Cloud Monitor Powershell module is a Powershell interface to the Uptime Cloud Monitor API, making it simple to create custom metrics and dashboards for Microsoft Windows systems.
 
 ##Synopsis
 The module includes:
-  - CopperEgg.psm1... contains Powershell functions that are wrappers for the CopperEgg API
-  - Initialize-MetricGroups ... creates metric groups, and sends them to CopperEgg
-  - Initialize-Dashboards ... creates custom dashboards, and sends them to CopperEgg
-  - Start-CopperEggMonitor ... starts one or more background jobs that periodically transmit your metrics to CopperEgg
+  - CopperEgg.psm1... contains Powershell functions that are wrappers for the Uptime Cloud Monitor API
+  - Initialize-MetricGroups ... creates metric groups, and sends them to Uptime Cloud Monitor
+  - Initialize-Dashboards ... creates custom dashboards, and sends them to Uptime Cloud Monitor
+  - Start-CopperEggMonitor ... starts one or more background jobs that periodically transmit your metrics to Uptime Cloud Monitor
   - Start-DebugMonitor ... performs the same functionality as Start-CopperEggMonitor, but in the foreground, and with debug output.
   - and other utilities.
 
@@ -53,8 +53,8 @@ It has also been tested on Windows Server 2008r2 and Windows 7, with Powershell 
 You can download Powershell v3.0 here:
 * [Microsoft Powershell v3.0](http://www.microsoft.com/en-us/download/details.aspx?id=34595)
 
-A CopperEgg account is also required. If you don't have one yet, check it out:
-* [CopperEgg Corporation](http://copperegg.com)
+A Uptime Cloud Monitor account is also required. If you don't have one yet, check it out:
+* [IDERA](http://idera.com)
 
 You will also need to install PowerYaml, which is used to parse the config.yml file.
 The procedure will be detailed below.
@@ -69,7 +69,7 @@ The procedure will be detailed below.
 ```ruby
 Set-ExecutionPolicy Unrestricted
 ```
-* Create installation directories for PowerYaml and CopperEgg.
+* Create installation directories for PowerYaml and Uptime Cloud Monitor.
 
 The following instructions assume that you will install PowerYaml in this directory:
 
@@ -101,7 +101,7 @@ The following instructions assume that you will create and edit the AllUsersAllH
 ```ruby
 new-item $PROFILE.AllUsersAllHosts -ItemType file -Force
 ```
-* Edit your powershell profile to include a path to the CopperEgg and PowerYaml module directories.
+* Edit your powershell profile to include a path to the Uptime Cloud Monitor and PowerYaml module directories.
 Add the following lines to your powershell profile:
 
 ```ruby
@@ -128,7 +128,7 @@ git clone https://github.com/scottmuc/PowerYaml.git
 
 ### Edit the config.yml file :
 
-* enter your CopperEgg APIKEY in the the apikey field,
+* enter your Uptime Cloud Monitor APIKEY in the the apikey field,
 
 * set the frequency (actually the sampling period ... a value of 60 means obtain a sample every 60 seconds.)
 
@@ -150,7 +150,7 @@ Save the file, and close it.
 
 ## Usage
 
-####Load the CopperEgg module:
+####Load the Uptime Cloud Monitor module:
 
 ```ruby
 import-module .\CopperEgg.psd1
@@ -166,14 +166,14 @@ Initialize-Dashboards
 Start-CopperEggMonitor
 ```
 The module will set up a number of background jobs. You can continue to use your powershell UI, and the monitoring will continue.
-Now go have a look at your CopperEgg UI, and you will see your new dashboards up and running!
+Now go have a look at your Uptime Cloud Monitor UI, and you will see your new dashboards up and running!
 
 ####To stop monitoring:
 ```ruby
 Stop-CopperEggMonitor
 ```
 
-####To remove all loaded CopperEgg modules:
+####To remove all loaded Uptime Cloud Monitor modules:
 ```ruby
 Remove-AllCopperEgg
 ```
@@ -223,14 +223,14 @@ Close the Task Scheduler. CopperEggTask.ps1 should start (if not already started
 
 ## Questions / Problems?
 
-You can find detailed documentation of the CopperEgg API here:
-* [CopperEgg API](http://dev.copperegg.com/)
+You can find detailed documentation of the Uptime Cloud Monitor API here:
+* [Uptime Cloud Monitor API](http://dev.copperegg.com/)
 
 ##  LICENSE
 
 (The MIT License)
 
-Copyright © 2012 [CopperEgg Corporation](http://copperegg.com)
+Copyright © 2012 [IDERA](http://idera.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
