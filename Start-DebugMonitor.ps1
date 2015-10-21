@@ -3,7 +3,7 @@
 # Run Start-DebugMonitor instead of Start-CopperEggMonitor when you first get started, or when you
 # make serious changes to your config.yml.
 #
-# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 IDERA. All rights reserved.
 #
 
 $global:usermod_loaded = 0

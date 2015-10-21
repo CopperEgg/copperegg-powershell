@@ -1,6 +1,6 @@
 #
-# CopperEgg.psm1 contains the core components of the CopperEgg powershell module.
-# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
+# CopperEgg.psm1 contains the core components of the Uptime Cloud Monitor powershell module.
+# Copyright (c) 2012-2014 IDERA. All rights reserved.
 #
 # The where_am_i functions provides a simple way to avoid path issues
 function where_am_i {$myInvocation}
@@ -57,7 +57,7 @@ trap
 Write-CuEggLog "error: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
 }
 
-# Convert MS Counter path to CopperEgg metric name
+# Convert MS Counter path to Uptime Cloud Monitor metric name
 function ConvertTo-CEName {
 param(
     [string]$counter
@@ -98,7 +98,7 @@ param(
 }
 export-modulemember -function Remove-CounterInstances
 
-# Send-CEGet formats and sends a CopperEgg API Get command
+# Send-CEGet formats and sends a Uptime Cloud Monitor API Get command
 function Send-CEGet {
 param(
     [string]$apikey,
@@ -147,7 +147,7 @@ param(
 }
 export-modulemember -function Send-CEGet
 
-# Send-CEPost formats and sends a CopperEgg API Post command
+# Send-CEPost formats and sends a Uptime Cloud Monitor API Post command
 # TODO: add exception processing, retries
 function Send-CEPost {
 param(
@@ -182,7 +182,7 @@ param(
 export-modulemember -function get-Send-CEPost
 
 
-# Send-CEPut formats and sends a CopperEgg API Put command
+# Send-CEPut formats and sends a Uptime Cloud Monitor API Put command
 # TODO: add exception processing, retries
 function Send-CEPut {
 param(
@@ -299,7 +299,7 @@ param(
 }
 export-modulemember -function New-Dashboard
 
-# Send-CEMetrics is the routine used to send sample data to CopperEgg
+# Send-CEMetrics is the routine used to send sample data to Uptime Cloud Monitor
 # TODO: change to While( $True )
 function Send-CEMetrics {
 param(
@@ -464,7 +464,7 @@ Write-Host "global:frequency is $global:frequency"
 
 # validate the apikey
 if($global:apikey -eq $null) {
-  Write-CuEggLog "Please add a valid CopperEgg apikey to your config.yml"
+  Write-CuEggLog "Please add a valid Uptime Cloud Monitor apikey to your config.yml"
   exit
 }
 # validate the server list in config.yml

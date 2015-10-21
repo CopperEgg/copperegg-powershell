@@ -1,7 +1,7 @@
 #
 #    Start-CopperEggJob.ps1 : a minimal background monitoring job.
 #
-# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 IDERA. All rights reserved.
 #
 param([string[]]$MSCounters,[string]$group_name,[string]$mhj,[string]$apikey,[string[]]$hosts,[string]$mypath,$mg)
 function Start-CopperEggJob {

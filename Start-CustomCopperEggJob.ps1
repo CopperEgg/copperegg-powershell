@@ -4,7 +4,7 @@
 #	This script does not rely on Get-Counter ... for each monitored metric, this routine expects a variable name and a function that can be called
 #	to retrieve the value for that variable.
 #
-# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 IDERA. All rights reserved.
 #
 #
 param([string[]]$CE_Variables,[string]$group_name,[string]$mhj,[string]$apikey,[string[]]$hosts,[string]$mypath, $mg)

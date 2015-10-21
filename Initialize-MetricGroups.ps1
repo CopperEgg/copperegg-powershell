@@ -1,6 +1,6 @@
 #
 # Initialize-MetricGroups.ps1 contains sample code for creating a default set of metric groups.
-# Copyright (c) 2012,2013 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012,2013 IDERA. All rights reserved.
 #
 
 function Initialize-MetricGroups {

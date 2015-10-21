@@ -1,7 +1,7 @@
 #
 # Start-CopperEggMonitor.ps1 kicks off a series of background monitoring jobs.
 #
-# Copyright (c) 2012-2014 CopperEgg Corporation. All rights reserved.
+# Copyright (c) 2012-2014 IDERA. All rights reserved.
 #
 $global:CopperEggJobs = @()
 $global:CopperEggJobCount = 0
