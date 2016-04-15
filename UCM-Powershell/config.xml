@@ -1,0 +1,28 @@
+<Settings>
+	<UptimeCloudMonitor>
+		<Apikey>AbCdEf1234567890</Apikey>
+		<ApiServer>https://api.copperegg.com</ApiServer>
+	</UptimeCloudMonitor>
+	<SQLServersCommonSettings>
+		<DashboardName>MSSQL</DashboardName>
+		<MetricGroupName>mssql</MetricGroupName>
+		<MetricGroupLabel>SQL Server Metrics</MetricGroupLabel>
+		<Frequency>15</Frequency>
+	</SQLServersCommonSettings>
+	<SQLServers>
+		<Server1>
+			<InstanceName>InstanceNameGoesHerre</InstanceName>
+			<Hostname>HostnameGoesHere</Hostname>
+			<Username>UsernameGoesHereIfSQLAuthentication</Username>
+			<Password>PasswordGoesHereIfSQLAuthentication</Password>
+			<SystemIdentifier>UniqueSystemIdentifierGoesHere</SystemIdentifier>
+		</Server1>
+		<Server1>
+			<InstanceName>InstanceNameGoesHerre</InstanceName>
+			<Hostname>HostnameGoesHere</Hostname>
+			<Username>UsernameGoesHereIfSQLAuthentication</Username>
+			<Password>PasswordGoesHereIfSQLAuthentication</Password>
+			<SystemIdentifier>UniqueSystemIdentifierGoesHere</SystemIdentifier>
+		</Server1>
+	</SQLServers>
+</Settings>

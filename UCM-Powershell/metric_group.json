@@ -1,0 +1,57 @@
+{
+	"name": "mssql",
+	"label": "SQL Server Metrics",
+	"unit": null,
+	"metrics": [{
+		"name": "access_page_splits",
+		"label": "Access Page Splits",
+		"type": "ce_counter",
+		"unit": "Splits"
+	}, {
+		"name": "cache_hit_ratio",
+		"label": "Cache Hit Ratio",
+		"type": "ce_counter",
+		"unit": "Hits"
+	}, {
+		"name": "checkpoint_pages",
+		"label": "Checkpoint Pages",
+		"type": "ce_counter",
+		"unit": "Pages"
+	}, {
+		"name": "page_life_expectancy",
+		"label": "Page Life Expectancy",
+		"type": "ce_counter",
+		"unit": "Seconds"
+	}, {
+		"name": "batch_requests",
+		"label": "Batch Requests",
+		"type": "ce_counter",
+		"unit": "Requests"
+	}, {
+		"name": "connections",
+		"label": "Connections",
+		"type": "ce_counter",
+		"unit": "Connections"
+	}, {
+		"name": "lock_waits",
+		"label": "Lock Waits",
+		"type": "ce_counter",
+		"unit": "Milliseconds"
+	}, {
+		"name": "proc_blocked",
+		"label": "Proc Blocked",
+		"type": "ce_counter",
+		"unit": "Processes"
+	}, {
+		"name": "sql_compilations",
+		"label": "SQL Compilations",
+		"type": "ce_counter",
+		"unit": "Compilations"
+	}, {
+		"name": "sql_recompilations",
+		"label": "SQL Recompilations",
+		"type": "ce_counter",
+		"unit": "Recompilations"
+	}],
+	"frequency": "60"
+}

@@ -1,0 +1,108 @@
+{
+	"data": {
+		"widgets": {
+			"0": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[0, "access_page_splits"]
+					]
+				}
+			},
+			"1": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[1, "cache_hit_ratio"]
+					]
+				}
+			},
+			"2": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[2, "checkpoint_pages"]
+					]
+				}
+			},
+			"3": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[3, "page_life_expectancy"]
+					]
+				}
+			},
+			"4": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[4, "batch_requests"]
+					]
+				}
+			},
+			"5": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[5, "connections"]
+					]
+				}
+			},
+			"6": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[6, "lock_waits"]
+					]
+				}
+			},
+			"7": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[7, "proc_blocked"]
+					]
+				}
+			},
+			"8": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[8, "sql_compilations"]
+					]
+				}
+			},
+			"9": {
+				"type": "timeline",
+				"style": "values",
+				"match": "all",
+				"metric": {
+					"mssql2": [
+						[9, "sql_recompilations"]
+					]
+				}
+			}
+		},
+		"order": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	},
+	"name": "SQL-Server"
+}
