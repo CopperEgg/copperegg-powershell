@@ -10,6 +10,7 @@ copperegg:
   - MS_ASP_NET
   - MS_Web_Services
   - MS_MSSQL
+  - MS_AzureSQL
   - UserDefined
   dashboards:
   - MS_Memory_Dash
@@ -19,6 +20,7 @@ copperegg:
   - MS_ASPNET_Dash
   - MS_Web_Dash
   - MSSQL_Dash
+  - MS_AzureSQL_Dash
   - My_Metrics_Dash
   servers:
   - Server1
@@ -133,6 +135,12 @@ MS_MSSQL:
   - 'SQL Statistics\SQL Compilations/sec'
   - 'SQL Statistics\SQL Re-Compilations/sec'
 
+MS_AzureSQL:
+  group_name: 'Azure_SQL'
+  group_label: 'Azure SQL'
+  dashboard: MS_AzureSQL_Dash
+  mspaths:
+
 UserDefined:
   group_name: 'User_Defined'
   group_label: 'User Defined Metrics'
@@ -141,7 +149,6 @@ UserDefined:
   - 'LogExists'
 
 # dashboards included in the Uptime Cloud Monitor list
-
 MS_Memory_Dash:
   dash_name: 'MS System Memory'
 
@@ -163,14 +170,18 @@ MS_Web_Dash:
 MSSQL_Dash:
   dash_name: 'MS SQL Server'
 
+MS_AzureSQL_Dash:
+  dash_name: 'Azure SQL Server'
+
 My_Metrics_Dash:
   dash_name: 'My Metrics'
-
 
 # server definitions, at least those that are included in the Uptime Cloud Monitor list above.
 
 Server1:
   hostname: 'REPLACE WITH MS MACHINE NAME'
+  username: 'REPLACE WITH MACHINE USERNAME'
+  password: 'REPLACE WITH MACHINE USER PASSWORD'
   mssql_instancenames:
   - 'REPLACE WITH MSSQL DATABASE INSTANCE NAME'
   metricgroups:
