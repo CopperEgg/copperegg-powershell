@@ -15,7 +15,7 @@ function Start-CopperEggMonitor {
     # MS_MSSQL.
     if( $id.StartsWith('MS_') -eq 'True' ) {
       if( $id -eq 'MS_MSSQL') {
-        # Handle MSSQL monitoring
+        # Handle MSSQL monitoring differently
         $required_mg = $global:cuconfig.$id.group_name
         $mg = Find-MetricGroup $required_mg
         if( $mg -ne $null ){
@@ -25,13 +25,36 @@ function Start-CopperEggMonitor {
             [string[]]$cpath = $mg.mspaths
             $groupcfg = $mg.gcfg
             $freq = $groupcfg.frequency
-            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor:"
+            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor: $hosts"
             foreach($h in $hosts) {
-              $h
+              $auth  = Find-UserNamePassword $h
+              $u = $p = ''
+              $j = Start-Job -ScriptBlock {param($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg) & $cmd $cpath $gname $mhj $global:apikey $h $u $p $global:mypath $mg} -ArgumentList @($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg)
+              $global:CopperEggJobs = $global:CopperEggJobs + $j
+              $global:CopperEggJobCount++
             }
-            $j = Start-Job -ScriptBlock {param($cmd,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg) & $cmd $cpath $gname $mhj $global:apikey $hosts $global:mypath $mg} -ArgumentList @($cmd,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg)
-            $global:CopperEggJobs = $global:CopperEggJobs + $j
-            $global:CopperEggJobCount++
+          }
+        }
+      } elseif ( $id -eq 'MS_AzureSQL') {
+        # Handle AzureSQL monitoring differently
+        $required_mg = $global:cuconfig.$id.group_name
+        $mg = Find-MetricGroup $required_mg
+        if( $mg -ne $null ){
+          [string[]]$hosts = $mg.hosts
+          if($hosts.length -gt 0){
+            $gname = $mg.name
+            [string[]]$cpath = $mg.mspaths
+            $groupcfg = $mg.gcfg
+            $freq = $groupcfg.frequency
+            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor: $hosts"
+            foreach($h in $hosts) {
+              $auth  = Find-UserNamePassword $h
+              $u = $auth['username']
+              $p = $auth['password']
+              $j = Start-Job -ScriptBlock {param($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg) & $cmd $cpath $gname $mhj $global:apikey $h $u $p $global:mypath $mg} -ArgumentList @($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg)
+              $global:CopperEggJobs = $global:CopperEggJobs + $j
+              $global:CopperEggJobCount++
+            }
           }
         }
       } else {
@@ -47,13 +70,13 @@ function Start-CopperEggMonitor {
             [string[]]$cpath = $mg.mspaths
             $groupcfg = $mg.gcfg
             $freq = $groupcfg.frequency
-            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor:"
+            Write-CuEggLog "Starting Monitor of $gname at an interval of $freq seconds; Hosts to monitor: $hosts"
             foreach($h in $hosts) {
-              $h
+              $u = $p = ''
+              $j = Start-Job -ScriptBlock {param($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg) & $cmd $cpath $gname $mhj $global:apikey $h $u $p $global:mypath $mg} -ArgumentList @($cmd,$cpath,$gname,$mhj,$global:apikey,$h,$u,$p,$global:mypath,$mg)
+              $global:CopperEggJobs = $global:CopperEggJobs + $j
+              $global:CopperEggJobCount++
             }
-            $j = Start-Job -ScriptBlock {param($cmd,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg) & $cmd $cpath $gname $mhj $global:apikey $hosts $global:mypath $mg} -ArgumentList @($cmd,$cpath,$gname,$mhj,$global:apikey,$hosts,$global:mypath,$mg)
-            $global:CopperEggJobs = $global:CopperEggJobs + $j
-            $global:CopperEggJobCount++
           }
         }
       }

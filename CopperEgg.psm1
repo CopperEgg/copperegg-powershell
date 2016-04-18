@@ -119,7 +119,7 @@ param(
   $rtn.Response = $resp
   $rret = ""
   $rresp = ""
-  try 
+  try
   {
     $resp = $webRequest.GetResponse();
     $rtn.Return = "Success"
@@ -384,7 +384,6 @@ function Find-IncludedHosts {
             $hosts += $hn
           }
         } else {
-          #all
           $hosts += $hn
         }
       }
@@ -414,6 +413,21 @@ function Find-InstanceNames {
    return [string[]]$instances
 }
 Export-ModuleMember -function Find-InstanceNames
+
+function Find-UserNamePassword {
+  param(
+  [string]$host
+  )
+  foreach( $id in $global:all_serverids ) {
+    $hn = $global:cuconfig.$id.hostname
+    if($hn -eq $host) {
+      $username = $global:cuconfig.$id.username
+      $password = $global:cuconfig.$id.password
+    }
+  }
+  return @{'username' = $username; 'password' = $password}
+}
+Export-ModuleMember -function Find-UserNamePassword
 
 
 function Stop-CopperEggMonitor {
