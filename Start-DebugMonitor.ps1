@@ -81,7 +81,7 @@ function Start-DebugMonitor {
                       "values"=$metric_data
                     }
                     $data = $payload
-                    $uri = 'https://api.copperegg.com/v2' + $apicmd
+                    $uri = 'https://api.staging.cuegg.net/v2' + $apicmd
                     $authinfo = $apikey + ':U'
                     $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
                     $req = New-Object System.Net.WebClient
@@ -95,6 +95,91 @@ function Start-DebugMonitor {
                     Write-CuEggLog "sending sample data: server is $h; instance is $iname, uri is $uri; json_data is $data_json"
                     $rslt = $req.UploadString($uri, $data_json)
                   }
+                }
+              }
+            } elseif ($id -eq 'MS_AzureSQL') {
+
+              $metric_data = @{}
+              foreach($h in $hosts) {
+
+                $Query = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_counters WHERE
+          counter_name in ('Cache Hit Ratio Base', 'Checkpoint pages/sec',
+          'Page life expectancy', 'Processes blocked', 'Lock Waits/sec',
+          'Page Splits/sec', 'Batch Requests/sec', 'SQL Re-Compilations/sec',
+          'SQL Compilations/sec', 'Active parallel threads', 'Active requests',
+          'Active Transactions', 'Backup/Restore Throughput/sec', 'CPU usage %',
+          'Blocked tasks', 'Cache Object Counts', 'Dropped Messages Total',
+          'Errors/sec', 'Free Memory (KB)', 'Number of Deadlocks/sec',
+          'Open Connection Count', 'Page lookups/sec', 'Page reads/sec',
+          'Page Splits/sec', 'Page writes/sec', 'Queued requests',
+          'Transaction Delay', 'Transaction ownership waits', 'Transactions',
+          'Write Transactions/sec');"
+
+
+                $user_pass  = Find-UserNamePassword $h
+                $auth = @{Username = $user_pass['username'] ; Password = $user_pass['password']}
+                $samples = Invoke-Sqlcmd -Query $Query -ServerInstance $h @Auth
+
+                Foreach ($sample in  $samples) {
+                  $metric_data.Set_Item($sample.counter_name.trim(), $sample.cntr_value)
+                }
+                $EpochSecs=[int][double]::Parse($(Get-Date -date (Get-Date).ToUniversalTime()-uformat %s))
+                $payload = @{
+                  identifier             = [string]$h;
+                  timestamp              = $EpochSecs
+                  values                 = @{
+                    'Cache_Hit_Ratio_Base' = $metric_data['Cache Hit Ratio Base']
+                    'Checkpoint_Pages_per_sec' = $metric_data['Checkpoint pages/sec']
+                    'Page_Life_Expectancy' = $metric_data['Page life expectancy']
+                    'Processes_Blocked' = $metric_data['Processes blocked']
+                    'Lock_waits_per_sec' = $metric_data['Lock Waits/sec']
+                    'Page_Splits_per_sec' = $metric_data['Page Splits/sec']
+                    'Batch_Requests_per_sec' = $metric_data['Batch Requests/sec']
+                    'SQL_Re-Compilations_per_sec' = $metric_data['SQL Re-Compilations/sec']
+                    'SQL_Compilations_per_sec' = $metric_data['SQL Compilations/sec']
+                    'Active_Parallel_Threads' = $metric_data['Active parallel threads']
+                    'Active_Requests' = $metric_data['Active requests']
+                    'Active_Transactions' = $metric_data['Active Transactions']
+                    'Backup_Restore_Throughput_per_sec' = $metric_data['Backup/Restore Throughput/sec']
+                    'Blocked_Tasks' = $metric_data['Blocked tasks']
+                    'Cache_Object_Counts' = $metric_data['Cache Object Counts']
+                    'CPU_Usage_Percent' = $metric_data['CPU usage %']
+                    'Dropped_Messages_Total' = $metric_data['Dropped Messages Total']
+                    'Errors_per_sec' = $metric_data['Errors/sec']
+                    'Free_Memory' = $metric_data['Free Memory (KB)']
+                    'Number_of_Deadlocks_per_Sec' = $metric_data['Number of Deadlocks/sec']
+                    'Open_Connection_Count' = $metric_data['Open Connection Count']
+                    'Page_Lookups_per_sec' = $metric_data['Page lookups/sec']
+                    'Page_Reads_per_sec' = $metric_data['Page reads/sec']
+                    'Page_Writes_per_sec' = $metric_data['Page writes/sec']
+                    'Queued_Requests' = $metric_data['Queued requests']
+                    'Transaction_Delay' = $metric_data['Transaction Delay']
+                    'Transaction_Ownership_Waits' = $metric_data['Transaction ownership waits']
+                    'Transactions' = $metric_data['Transactions']
+                    'Write_Transactions_per_sec' = $metric_data['Write Transactions/sec']
+                  }
+                }
+                $data = $payload
+                $uri = 'https://api.staging.cuegg.net/v2' + $apicmd
+                $authinfo = $apikey + ':U'
+                $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
+                $req = New-Object System.Net.WebClient
+                $req.Headers.Add('Authorization', $auth )
+                $req.Headers.Add('Accept', '*/*')
+                $req.Headers.Add("user-agent", "PowerShell")
+                [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+                [System.Net.ServicePointManager]::Expect100Continue = $false
+                $req.Headers.Add('Content-Type', 'application/json')
+                $data_json = $data | ConvertTo-JSON -compress -Depth 5
+                Write-CuEggLog "sending sample data: server is $h; uri is $uri; json_data is $data_json"
+                Try
+                {
+                  $rslt = $req.UploadString($uri, $data_json)
+                }
+                Catch [system.exception]
+                {
+                  Write-CuEggLog "Exception caught: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+                  Write-CuEggLog "data : $data , data-json :  $data_json"
                 }
               }
             } else {
@@ -141,7 +226,7 @@ function Start-DebugMonitor {
                     "values"=$metric_data
                   }
                   $data = $payload
-                  $uri = 'https://api.copperegg.com/v2' + $apicmd
+                  $uri = 'https://api.staging.cuegg.net/v2' + $apicmd
                   $authinfo = $apikey + ':U'
                   $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
                   $req = New-Object System.Net.WebClient
@@ -189,7 +274,7 @@ function Start-DebugMonitor {
                 "values"=$metric_data
               }
               $data = $payload
-              $uri = 'https://api.copperegg.com/v2' + $apicmd
+              $uri = 'https://api.staging.cuegg.net/v2' + $apicmd
               $authinfo = $apikey + ':U'
               $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
               $req = New-Object System.Net.WebClient

@@ -1,5 +1,5 @@
 #
-#	UserDefined.psm1 contains functions for retrieving metrics that may not be available using Get-Counter.
+# UserDefined.psm1 contains functions for retrieving metrics that may not be available using Get-Counter.
 #
 #
 # Copyright (c) 2012,2013 IDERA. All rights reserved.

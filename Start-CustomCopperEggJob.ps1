@@ -49,7 +49,7 @@ param(
         "values"=$metric_data
       }
       $data = $payload
-      $uri = 'https://api.copperegg.com/v2' + $apicmd
+      $uri = 'https://api.staging.cuegg.net/v2' + $apicmd
       $authinfo = $apikey + ':U'
       $auth = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($authinfo))
       $req = New-Object System.Net.WebClient
