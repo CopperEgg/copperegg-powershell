@@ -1,0 +1,21 @@
+<Settings>
+	<UptimeCloudMonitor>
+		<Apikey>User's API Key</Apikey>
+		<ApiServer>https://api.copperegg.com</ApiServer>
+	</UptimeCloudMonitor>
+	<SQLServersCommonSettings>
+		<DashboardName>SQL Server</DashboardName>
+		<MetricGroupName>mssql</MetricGroupName>
+		<MetricGroupLabel>SQL Server Metrics</MetricGroupLabel>
+		<Frequency>15</Frequency>
+	</SQLServersCommonSettings>
+	<SQLServers>
+		<Server1>
+			<InstanceName>GaganLaptop\SQLEXPRESS</InstanceName>
+			<Hostname>localhost</Hostname>
+			<Username></Username>
+			<Password></Password>
+			<SystemIdentifier>Gagan SQL Server</SystemIdentifier>
+		</Server1>
+	</SQLServers>
+</Settings>
