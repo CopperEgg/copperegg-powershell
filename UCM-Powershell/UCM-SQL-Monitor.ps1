@@ -7,6 +7,9 @@
    4. If '-MakeDashboard' option is passed, it also creates dashboard for Metric Group.
    5. Other arguments (like -Debug) are passed to workers.
 
+   * An important work done by this script is to stop the job if requested by user.
+     This is done by checking existence of of special file ("$env:temp\stop-ucm-monitor.txt")
+
    If you change config.xml, you need to restart this service.
 #>
 
@@ -61,10 +64,23 @@ ForEach ($server in $SQLServers.ChildNodes)
   $job = Start-Job -filepath "$PSScriptRoot\Monitor-Worker.ps1" -ArgumentList $arguments
   Write-Log "Spawning worker thread : $($job|out-string)"
 }
+$SleepTime = 0
 while($TRUE)
 {
   $jobs = Get-job
-  Write-Host "Running $($jobs.count) workers. Check copperegg-metrics.log for any worker logs.
-              Press Ctrl+C to stop monitoring"
-  Start-Sleep -s 60
+  $StopJob = Test-Path -Path "$env:temp\stop-ucm-monitor.txt"
+  if ($StopJob)
+  {
+    Write-Log "Stopping job as requested by user."
+    Remove-Item "$env:temp\stop-ucm-monitor.txt"
+    exit 0
+  }
+  if ($SleepTime % 60 -eq 0)
+  {
+    Write-Host "Running $($jobs.count) workers. Check copperegg-metrics.log for any worker logs."
+    Write-Host "Press Ctrl+C to stop monitoring"
+    $SleepTime = 0
+  }
+  Start-Sleep -s 1
+  SleepTime++
 }
