@@ -1,4 +1,4 @@
-copperegg-powershell
+CoppereggPowershell
 =============
 
 The Uptime Cloud Monitor Powershell module is a Powershell interface to the Uptime Cloud Monitor API, making it simple to create custom metrics and dashboards for Microsoft Windows systems.
@@ -22,29 +22,7 @@ This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboa
 This module will replace revealmetrics-powershell, which will be deprecated. CopperEgg-Powershell is configured with a yaml configuration
 file, and supports both local and remote monitoring.
 
-As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs 
-
-## Recent Updates:
-version 1.2.0       May 14, 2014
-Several stability improvements and better error messages.
-
-version 1.1.2        February 2, 2014
-Fixed the 'UserDefined' issue. 
-
-version 1.1.1       November 20, 2013
-Bug Fixes ... primarily around Windows Perfmon-like counters
-
-
-version 1.1.0       November 14, 2013
-Added the capability to add any Windows Perfmon-like counter
-
-         
-version 1.0.1       July 10, 2013
-Fixed a typo in the config-sample.yml.
-Added console messages during installation to provide some feedback.
-
-version 1.0.0
-Is the first release of copperegg-powershell. It supersedes revealmetrics-powershell 0.9.2
+As of 1.0.0, errors and events are logged. Look for logs here: Modules/CopperEgg/Logs
 
 ## Requirements
 This release requires Powershell v3.0, which ships with Windows 8 and Windows Server 2012.
