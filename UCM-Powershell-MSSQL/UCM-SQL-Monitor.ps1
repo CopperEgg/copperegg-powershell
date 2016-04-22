@@ -82,5 +82,5 @@ while($TRUE)
     $SleepTime = 0
   }
   Start-Sleep -s 1
-  SleepTime++
+  $SleepTime++
 }
