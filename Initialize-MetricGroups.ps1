@@ -18,7 +18,7 @@ function Initialize-MetricGroups {
         @{"type"="ce_gauge_f";  "name"="ASPNET_Request_Wait_Time";         "label"="ASP.NET Request Wait Time";           "unit"="seconds"},
         @{"type"="ce_gauge";    "name"="ASPNET_Requests_Current";          "label"="ASP.NET Requests Current";           "unit"="Requests"},
         @{"type"="ce_counter";  "name"="ASPNET_Error_Events_Raised";       "label"="ASP.NET Error Events";              "unit"="Total Errors"},
-        @{"type"="ce_counter";  "name"="ASPNET_Request_Error_Events_Raised";   "label"="ASP.NET Request Error Events";      "unit"="Request Errors"},
+        @{"type"="ce_counter";  "name"="ASPNET_Request_Error_Events_Raised"; "label"="ASP.NET Request Error Events";      "unit"="Request Errors"},
         @{"type"="ce_counter";  "name"="ASPNET_Infrastructure_Error_Events_Raised";  "label"="ASP.NET Infrastruct Error Events";   "unit"="Infrastructure Errors"},
         @{"type"="ce_gauge";    "name"="ASPNET_Requests_In_Native_Queue";   "label"="ASP.NET Requests in Native Queue";          "unit"="Requests"}
       )
@@ -143,6 +143,92 @@ function Initialize-MetricGroups {
         $mgroup.add("host_map", $host_instance_hash)
         $global:all_metricgroups.Add( $gname, $mgroup)
 
+        $rslt = New-MetricGroup $gname $groupcfg
+        if( $rslt -ne $null ) {
+          Write-CuEggLog "Successfuly created $gname"
+        }
+      }
+    } elseif( $id -eq 'MS_AzureSQL' ) {
+      # create azuresql metric group
+      $metricgroup_id = $id
+      Write-CuEggLog "Creating metric group $metricgroup_id"
+
+      $marray = @(
+        @{"type"="ce_gauge_f"; "name"="Cache_Hit_Ratio_Base"; "label"="Cache Hit Ratio Base"; }
+        @{"type"="ce_gauge_f"; "name"="Checkpoint_Pages_per_sec"; "label"="Checkpoint pages/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Page_Life_Expectancy"; "label"="Page life expectancy"; }
+        @{"type"="ce_gauge_f"; "name"="Processes_Blocked"; "label"="Processes blocked"; }
+        @{"type"="ce_gauge_f"; "name"="Lock_waits_per_sec"; "label"="Lock Waits/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Page_Splits_per_sec"; "label"="Page Splits/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Batch_Requests_per_sec"; "label"="Batch Requests/sec"; }
+        @{"type"="ce_gauge_f"; "name"="SQL_Re-Compilations_per_sec"; "label"="SQL Re-Compilations/sec"; }
+        @{"type"="ce_gauge_f"; "name"="SQL_Compilations_per_sec"; "label"="SQL Compilations/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Active_Parallel_Threads"; "label"="Active parallel threads"; }
+        @{"type"="ce_gauge_f"; "name"="Active_Requests"; "label"="Active requests"; }
+        @{"type"="ce_gauge_f"; "name"="Active_Transactions"; "label"="Active Transactions"; }
+        @{"type"="ce_gauge_f"; "name"="Backup_Restore_Throughput_per_sec"; "label"="Backup/Restore Throughput/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Blocked_Tasks"; "label"="Blocked tasks"; }
+        @{"type"="ce_gauge_f"; "name"="Cache_Object_Counts"; "label"="Cache Object Counts"; }
+        @{"type"="ce_gauge_f"; "name"="CPU_Usage_Percent"; "label"="CPU usage %"; }
+        @{"type"="ce_gauge_f"; "name"="Dropped_Messages_Total"; "label"="Dropped Messages Total"; }
+        @{"type"="ce_gauge_f"; "name"="Errors_per_sec"; "label"="Errors/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Free_Memory"; "label"="Free Memory (KB)"; }
+        @{"type"="ce_gauge_f"; "name"="Number_of_Deadlocks_per_Sec"; "label"="Number of Deadlocks/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Open_Connection_Count"; "label"="Open Connection Count"; }
+        @{"type"="ce_gauge_f"; "name"="Page_Lookups_per_sec"; "label"="Page lookups/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Page_Reads_per_sec"; "label"="Page reads/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Page_Writes_per_sec"; "label"="Page writes/sec"; }
+        @{"type"="ce_gauge_f"; "name"="Queued_Requests"; "label"="Queued requests"; }
+        @{"type"="ce_gauge_f"; "name"="Transaction_Delay"; "label"="Transaction Delay"; }
+        @{"type"="ce_gauge_f"; "name"="Transaction_Ownership_Waits"; "label"="Transaction ownership waits"; }
+        @{"type"="ce_gauge_f"; "name"="Transactions"; "label"="Transactions"; }
+        @{"type"="ce_gauge_f"; "name"="Write_Transactions_per_sec"; "label"="Write Transactions/sec"; }
+      )
+      $gname = $global:cuconfig.$metricgroup_id.group_name
+      $glabel = $global:cuconfig.$metricgroup_id.group_label
+      $gdash = $global:cuconfig.$metricgroup_id.dashboard
+      [string[]]$hosts = @()
+      $hosts = Find-IncludedHosts $metricgroup_id
+      $host_instance_hash = @{}
+      if( $hosts.length -gt 0 ){
+        $global:dashes_tobuild += $gdash
+        foreach($h in $hosts){
+          Write-CuEggLog "Found host $h :"
+          $hosthash_array = @()
+          [string[]]$instances = @()
+          $instances = Find-InstanceNames $h
+          if($instances -eq $null) {
+            Write-CuEggLog "Found host $h with no azure sql instance names!"
+            exit
+          } else {
+            Write-CuEggLog "Found host $h with azure sql instance names $instances"
+            foreach($i in $instances) {
+              $host_hash = @{}
+              $host_hash.add("instancename",$i)
+              $mspaths = @()
+              $host_hash.add("mspaths",$mspaths)
+              $hosthash_array += $host_hash
+            }
+          }
+          $host_instance_hash.add($h,$hosthash_array)
+        }
+        Write-CuEggLog "Finished host-instance scan : $host_instance_hash"
+        $groupcfg = New-Object PSObject -Property @{
+          "name" = $gname;
+          "label" = $glabel;
+          "frequency" = $global:frequency;
+          "is_hidden" = 0;
+          "metrics" = $marray
+        }
+        $mgroup = @{}
+        $mgroup.add("name", $gname)
+        $mgroup.add("gcfg", $groupcfg)
+        $mgroup.add("MS_list", "AzureSQLServer:General Statistics")
+        $mgroup.add("hosts", $hosts)
+        $mgroup.add("host_map", $host_instance_hash)
+        $global:all_metricgroups.Add( $gname, $mgroup)
+
+        Write-Host "createmetric group  $gname"
         $rslt = New-MetricGroup $gname $groupcfg
         if( $rslt -ne $null ) {
           Write-CuEggLog "Successfuly created $gname"
@@ -354,7 +440,7 @@ function Initialize-MetricGroups {
         }
       }
     } elseif($id.StartsWith("MS_")) {
-      #       
+      #
       #       Here is the code for all metric groups that have not been pre-defined, but which use Microsoft
       #       perfmon counters (formatted as paths ... as used by the Get-Counter Powershell command)
       #
@@ -374,8 +460,7 @@ function Initialize-MetricGroups {
       $mtypes = $global:cuconfig.$metricgroup_id.types
       $munits = $global:cuconfig.$metricgroup_id.units
       $msp = $global:cuconfig.$metricgroup_id.mspaths
-      
- 
+
       $index = 0
       $marray = @()
       foreach( $path in $msp) {
@@ -433,7 +518,7 @@ function Initialize-MetricGroups {
     $gn = $global:cuconfig.$id.group_name
 
     #Write-CuEggLog "Scanning through configured metric groups: id is $id group name $gn"
- 
+
     $gn = $global:cuconfig.$id.group_name
     $mg = @{}
     $mg = Find-MetricGroup $gn
@@ -442,6 +527,27 @@ function Initialize-MetricGroups {
       if($id.StartsWith("MS_")) {
         Write-CuEggLog "MS Perf Counter Service $id, group name $gn"
         if($id -eq 'MS_MSSQL'){
+          # ms sql has to be handled separately to support multiple instance names per host
+          $msp = $global:cuconfig.$id.mspaths
+          $hostmap = $mg.host_map
+          foreach($h in $mg.hosts){
+            $hh_array = $hostmap.$h
+            foreach($hh in $hh_array){
+              $hh
+              $iname = $hh.instancename
+              [string[]]$paths = @()
+              foreach($path in $msp ) {
+                [string]$path = "\$iname`:$path"
+                $paths = $paths + (Remove-CounterInstances($path))
+              }
+              $hh.mspaths = $paths
+            }
+          }
+          foreach( $path in $msp) {
+            $nam = (ConvertTo-CEName($path))
+            $global:master_hash.Add($path.ToLower(),$nam)
+          }
+        } elseif($id -eq 'MS_AzureSQL'){
           # ms sql has to be handled separately to support multiple instance names per host
           $msp = $global:cuconfig.$id.mspaths
           $hostmap = $mg.host_map
