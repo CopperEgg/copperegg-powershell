@@ -54,6 +54,7 @@ Foreach ($arg in $arguments)
   {
     Create-Dashboard $ApiServer $Apikey $DashboardName
     Write-Log "Dashboard created"
+    exit 0
   }
 }
 
