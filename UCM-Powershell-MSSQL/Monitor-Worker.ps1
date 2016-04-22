@@ -20,41 +20,41 @@ $Hostname         = ''
 
 $SystemIdentifier = ''
 
-$Query            = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_counters WHERE 
-                     counter_name = 'active parallel threads' OR 
-                     counter_name = 'active requests' OR 
-                     counter_name = 'active transactions' OR 
-                     counter_name = 'backup/restore throughput/sec' OR 
+$Query            = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_counters WHERE
+                     counter_name = 'active parallel threads' OR
+                     counter_name = 'active requests' OR
+                     counter_name = 'active transactions' OR
+                     counter_name = 'backup/restore throughput/sec' OR
                      counter_name = 'batch requests/sec' OR
-                     counter_name = 'blocked tasks' OR 
+                     counter_name = 'blocked tasks' OR
                      counter_name = 'cache hit ratio' OR
-                     counter_name = 'cache object counts' OR 
+                     counter_name = 'cache object counts' OR
                      counter_name = 'checkpoint pages/sec' OR
-                     counter_name = 'cpu usage %' OR 
-                     counter_name = 'dropped messages total' OR 
-                     counter_name = 'errors/sec' OR 
-                     counter_name = 'free memory (kb)' OR 
+                     counter_name = 'cpu usage %' OR
+                     counter_name = 'dropped messages total' OR
+                     counter_name = 'errors/sec' OR
+                     counter_name = 'free memory (kb)' OR
                      counter_name = 'lock waits' OR
-                     counter_name = 'number of deadlocks/sec' OR 
+                     counter_name = 'number of deadlocks/sec' OR
                      counter_name = 'open connection count' OR
-                     counter_name = 'page life expectancy' OR 
-                     counter_name = 'page lookups/sec' OR 
-                     counter_name = 'page reads/sec' OR 
+                     counter_name = 'page life expectancy' OR
+                     counter_name = 'page lookups/sec' OR
+                     counter_name = 'page reads/sec' OR
                      counter_name = 'page splits' OR
-                     counter_name = 'page splits/sec' OR 
-                     counter_name = 'page writes/sec' OR 
+                     counter_name = 'page splits/sec' OR
+                     counter_name = 'page writes/sec' OR
                      counter_name = 'processes blocked' OR
-                     counter_name = 'queued requests' OR 
+                     counter_name = 'queued requests' OR
                      counter_name = 'sql compilations/sec' OR
                      counter_name = 'sql re-compilations/sec' OR
-                     counter_name = 'transaction delay' OR 
-                     counter_name = 'transaction ownership waits' OR 
-                     counter_name = 'transactions' OR 
+                     counter_name = 'transaction delay' OR
+                     counter_name = 'transaction ownership waits' OR
+                     counter_name = 'transactions' OR
                      counter_name = 'write transactions/sec'";
 
 $Request = New-Object System.Net.WebClient
 
-# LogFile path is hardcoded here because worker thread cannot read $PSScriptRoot Variable 
+# LogFile path is hardcoded here because worker thread cannot read $PSScriptRoot Variable
 $LogFile = "$env:programfiles\UCM-Powershell\ucm-metrics.log"
 
 $Debug = $FALSE
@@ -65,8 +65,8 @@ $DataHash         = @{}
 
 $CountHash        = @{}
 
-<# Same function as defined in Utils.ps1. It is copied here because worker process cannot import 
-   other files 
+<# Same function as defined in Utils.ps1. It is copied here because worker process cannot import
+   other files
 #>
 function Write-Log($Message)
 {
@@ -82,8 +82,8 @@ function Get-UnixTimestamp
   return $ED=[Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 }
 
-<# Custom method to parse required variables from config object given by parent process. 
-   Arguments : Config (The object holding all the required variables) 
+<# Custom method to parse required variables from config object given by parent process.
+   Arguments : Config (The object holding all the required variables)
 #>
 
 function Initialize-VariablesFromConfig($Config)
@@ -129,8 +129,8 @@ function Initialize-AuthAndHeaders
 }
 
 <# Custom method to get performance metrics from the SQL instance based on type of authentication
-   (Windows/SQL Server Authentication). 
-   For SQL Server authentication mode, we have username and password, while the Windows 
+   (Windows/SQL Server Authentication).
+   For SQL Server authentication mode, we have username and password, while the Windows
    authentication mode works without username and password. So if username is blank, that means we
    are authenticating with 'Windows Authentication' mode, otherwise 'SQL Server Authentication' mode.
    Arguments : none
@@ -170,7 +170,7 @@ function Get-PerformanceMetrics
 
 <# Custom method to return value after diving the summed value from the no. of times of value occurance
    If the value is present in hashmaps, it is calculated and sent.
-   In case the value was not there, it might cause divide by zero or some arithmetic error because 
+   In case the value was not there, it might cause divide by zero or some arithmetic error because
    we are performing division operation here, so in that case exception is caught and 0 is sent.
 
   Arguments : $Metric (Particular metric for which value is required)
@@ -188,11 +188,11 @@ function Get-PerformanceMetricValue($Metric)
   }
 }
 
-<# Custom method to process performance metrics and send only required performance metrics to 
+<# Custom method to process performance metrics and send only required performance metrics to
    UCM API. Processing logic is simple, if there was a single value for a performance metric, it is
-   forwarded as it is. If there are multiple values for a metric (say Page Splits), they are 
-   averaged. For eg, two results for page splits are 20 and 30 respectively, then the value sent to 
-   API is 25 ([20+30]/(2)). This calculation is handled by two hashes (DataHash and CountHash). 
+   forwarded as it is. If there are multiple values for a metric (say Page Splits), they are
+   averaged. For eg, two results for page splits are 20 and 30 respectively, then the value sent to
+   API is 25 ([20+30]/(2)). This calculation is handled by two hashes (DataHash and CountHash).
    DataHash stores the added data (like 20+30 = 50 for Page Splits) and counter hash stores no. of
    times that value was in the QueryResult (1+1 = 2 for Page Splits).
    At thh end, the method returns Data JSON for the sample which can be sent to UCM API.
@@ -245,7 +245,7 @@ function Process-PerformanceMetrics($QueryResult)
       dropped_messages_total         = Get-PerformanceMetricValue("dropped messages total")
       errors_sec                     = Get-PerformanceMetricValue("errors/sec")
       free_memory                    = Get-PerformanceMetricValue("free memory (kb)")
-      lock_waits                     = Get-PerformanceMetricValue("lock waits")
+      lock_wait                      = Get-PerformanceMetricValue("lock waits")
       number_of_deadlocks_sec        = Get-PerformanceMetricValue("number of deadlocks/sec")
       open_connection_count          = Get-PerformanceMetricValue("open connection count")
       page_life_expectancy           = Get-PerformanceMetricValue("page life expectancy")
@@ -273,7 +273,7 @@ function Send-PerformanceMetrics($Data)
 {
   $URI = "$ApiServer/v2/revealmetrics/samples/$MetricGroup.json"
   Initialize-AuthAndHeaders
-  
+
   $DataJson = $Data | ConvertTo-JSON -compress -Depth 5
   Try
   {
@@ -333,17 +333,17 @@ Initialize-VariablesFromConfig($args[1])
 
 
 <# Main loop :
-   1. Clears DataHash and CountHash on each iteration 
+   1. Clears DataHash and CountHash on each iteration
    2. Gets metrics, processes and sends them. Notes time taken to do this entire thing.
-   3. This time is then substracted from Monitoring Frequency and thread then sleeps for remaining 
+   3. This time is then substracted from Monitoring Frequency and thread then sleeps for remaining
       time.
-   4. If there is any problem in getting the metrics, the thread sleeps for 5 seconds before 
+   4. If there is any problem in getting the metrics, the thread sleeps for 5 seconds before
       retrying, irrespective of time spent for quering in previous iteration
 #>
 while($TRUE)
 {
   $StartTime = Get-UnixTimestamp
-   
+
   $DataHash.Clear()
   $CountHash.Clear()
   $QueryResult = Get-PerformanceMetrics
@@ -359,7 +359,7 @@ while($TRUE)
     Write-Log "Error getting/sending performance metrics for instance $Instance"
     $NormalizedSleepTime = 5
   }
- 
+
   if($Debug)
   {
     Write-Log "Sleeping for $NormalizedSleepTime Seconds, Time for getting metrics and uploading them was $($EndTime - $StartTime) seconds"
