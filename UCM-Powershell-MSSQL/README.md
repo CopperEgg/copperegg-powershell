@@ -2,10 +2,12 @@ UCM-Powershell
 ==============
 
 This is a powershell based implementation to collect performance metrics from Microsoft SQL Server.
-Unlike the implementation in main page of the repository, it does not collect metrics for other services but comes with
-installation script because of which the user is not required to create config.xml file himself. To get
-the installation script, open your Uptime Cloud Monitor account -> Custom Tab -> Getting Started -> Microsoft SQL Server and copy the script.
-The script will be downloaded and you will be required to enter configuration settings for your SQL server instance(s).
+Unlike the implementation in main page of the repository, it does not collect metrics for other services
+but comes with installation script because of which the user is not required to create config.xml file
+himself. To get the installation script, open your Uptime Cloud Monitor account -> Custom Tab ->
+Getting Started -> Microsoft SQL Server and follow the instructions. The script will be downloaded
+and you will be required to enter configuration settings for your SQL server instance(s). Post that,
+a config.xml file is generated with the provided settings and service is started to monitor SQL instance(s)
 
 ##Synopsis
 The module includes:
@@ -58,16 +60,36 @@ This script monitors more metrics as compared to previous script which is in the
 
 All the errors and events are logged in C:\Program Files\UCM-Powershell\ucm-metrics.log
 
+## Script Options
+
+As of now, the script supports two options apart from the normal mode in which it runs :
+- You can run the script in debug mode which will generate more logs (in case you want to see the flow
+of code or you are debugging some exception). Open a powershell terminal, navigate to c:\program files\ucm-powershell\ and run
+
+`Start-UCM-Monitor.ps1 -Debug`
+
+- Dashboard is created for the metric group during installation but in case you want to create the dashboard again,
+open a powershell terminal, navigate to c:\program files\ucm-powershell\ and run
+
+`Start-UCM-Monitor.ps1 -MakeDashboard`
+
+This will just create the dashboard and exit, i.e. **the script will not monitor your instances with this command**.
+
 ## Requirements
-This release requires Powershell v3.0, which ships with Windows 8 and Windows Server 2012.
 
 The script has been tested on:
-- Windows 8 system and  SQL Server 2012
-- Windows 10 system and SQL Server 2014
-- Windows 10 system and SQL Server 2012
+- Windows 8  and  SQL Server 2012.
+- Windows 10 and SQL Server 2014.
+- Windows 10 and SQL Server 2012.
 
-Prerequisites :
-* Powershell v3.0, you can download it from [here](http://www.microsoft.com/en-us/download/details.aspx?id=34595)
+All of the above systems had powershell 3.0 installed. Apart from that, the script has following requirements
+
+* Powershell v3.0 is required, you can download it from [here](http://www.microsoft.com/en-us/download/details.aspx?id=34595)
+If you want to check your powershell version, open a powershell terminal and run
+
+`$PSVersionTable.PSVersion`
+
+This will show you Powershell major version, minor version etc.
 
 * A Uptime Cloud Monitor account is also required. [IDERA](https://www.idera.com/infrastructure-monitoring-as-a-service/freetrialsubscriptionform)
 
@@ -77,7 +99,7 @@ Prerequisites :
  2. Microsoft SQL Server 2012 Shared Management Objects (search SharedManagementObjects.msi in the page)
  3. Microsoft Windows PowerShell Extensions for Microsoft SQL Server 2012 (search PowerShellTools.msi in the page)
 
- After downloading, run this command on a powershell window in Admin mode : Import-Module SQLPS
+ After downloading, run this command on a powershell window in Admin mode : `Import-Module SQLPS`
 
 ## Questions / Problems?
 
