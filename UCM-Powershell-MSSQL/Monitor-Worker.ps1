@@ -21,16 +21,36 @@ $Hostname         = ''
 $SystemIdentifier = ''
 
 $Query            = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_counters WHERE 
-                     counter_name LIKE '%page life expectancy%' OR 
-                     counter_name LIKE 'cache hit ratio%' OR
-                     counter_name LIKE '%page splits%' OR
-                     counter_name LIKE '%checkpoint pages%' OR
-                     counter_name LIKE '%batch requests%' OR
-                     counter_name LIKE '%open connection count%' OR
-                     counter_name LIKE 'lock waits%' OR
-                     counter_name LIKE '%processes blocked%' OR
-                     counter_name LIKE '%sql compilations%' OR
-                     counter_name LIKE '%sql re-compilations%';"
+                     counter_name = 'active parallel threads' OR 
+                     counter_name = 'active requests' OR 
+                     counter_name = 'active transactions' OR 
+                     counter_name = 'backup/restore throughput/sec' OR 
+                     counter_name = 'batch requests/sec' OR
+                     counter_name = 'blocked tasks' OR 
+                     counter_name = 'cache hit ratio' OR
+                     counter_name = 'cache object counts' OR 
+                     counter_name = 'checkpoint pages/sec' OR
+                     counter_name = 'cpu usage %' OR 
+                     counter_name = 'dropped messages total' OR 
+                     counter_name = 'errors/sec' OR 
+                     counter_name = 'free memory (kb)' OR 
+                     counter_name = 'lock waits' OR
+                     counter_name = 'number of deadlocks/sec' OR 
+                     counter_name = 'open connection count' OR
+                     counter_name = 'page life expectancy' OR 
+                     counter_name = 'page lookups/sec' OR 
+                     counter_name = 'page reads/sec' OR 
+                     counter_name = 'page splits' OR
+                     counter_name = 'page splits/sec' OR 
+                     counter_name = 'page writes/sec' OR 
+                     counter_name = 'processes blocked' OR
+                     counter_name = 'queued requests' OR 
+                     counter_name = 'sql compilations/sec' OR
+                     counter_name = 'sql re-compilations/sec' OR
+                     counter_name = 'transaction delay' OR 
+                     counter_name = 'transaction ownership waits' OR 
+                     counter_name = 'transactions' OR 
+                     counter_name = 'write transactions/sec'";
 
 $Request = New-Object System.Net.WebClient
 
@@ -148,11 +168,31 @@ function Get-PerformanceMetrics
   }
 }
 
+<# Custom method to return value after diving the summed value from the no. of times of value occurance
+   If the value is present in hashmaps, it is calculated and sent.
+   In case the value was not there, it might cause divide by zero or some arithmetic error because 
+   we are performing division operation here, so in that case exception is caught and 0 is sent.
+
+  Arguments : $Metric (Particular metric for which value is required)
+
+#>
+function Get-PerformanceMetricValue($Metric)
+{
+  Try
+  {
+    return $DataHash.Get_Item($Metric) / $CountHash.Get_Item($Metric)
+  }
+  Catch [system.exception]
+  {
+    return 0
+  }
+}
+
 <# Custom method to process performance metrics and send only required performance metrics to 
    UCM API. Processing logic is simple, if there was a single value for a performance metric, it is
    forwarded as it is. If there are multiple values for a metric (say Page Splits), they are 
    averaged. For eg, two results for page splits are 20 and 30 respectively, then the value sent to 
-   API is 25 ([20+30]/(2)). This calculation is handled by two hashes (DataHash and CounterHash). 
+   API is 25 ([20+30]/(2)). This calculation is handled by two hashes (DataHash and CountHash). 
    DataHash stores the added data (like 20+30 = 50 for Page Splits) and counter hash stores no. of
    times that value was in the QueryResult (1+1 = 2 for Page Splits).
    At thh end, the method returns Data JSON for the sample which can be sent to UCM API.
@@ -189,20 +229,39 @@ function Process-PerformanceMetrics($QueryResult)
   }
 
   $Data = @{
-    timestamp              = Get-UnixTimestamp
-    identifier             = $SystemIdentifier
-    values                 = @{
-      page_life_expectancy = $DataHash.Get_Item("Page Life Expectancy") / $CountHash.Get_Item("Page Life Expectancy")
-      access_page_splits   = $DataHash.Get_Item("Page Splits/sec") / $CountHash.Get_Item("Page Splits/sec")
-      cache_hit_ratio      = $DataHash.Get_Item("Cache Hit Ratio") / $CountHash.Get_Item("Cache Hit Ratio")
-      checkpoint_pages     = $DataHash.Get_Item("Checkpoint pages/sec") / $CountHash.Get_Item("Checkpoint pages/sec")
-      batch_requests       = $DataHash.Get_Item("Batch Requests/sec") / $CountHash.Get_Item("Batch Requests/sec")
-      connections          = $DataHash.Get_Item("Open Connection Count") / $CountHash.Get_Item("Open Connection Count")
-      lock_waits           = $DataHash.Get_Item("Lock waits") / $CountHash.Get_Item("Lock waits")
-      proc_blocked         = $DataHash.Get_Item("Processes blocked") / $CountHash.Get_Item("Processes blocked")
-      sql_compilations     = $DataHash.Get_Item("SQL Compilations/sec") / $CountHash.Get_Item("SQL Compilations/sec")
-      sql_recompilations   = $DataHash.Get_Item("SQL Re-Compilations/sec") / $CountHash.Get_Item("SQL Re-Compilations/sec")
-      }
+    timestamp                        = Get-UnixTimestamp
+    identifier                       = $SystemIdentifier
+    values                           = @{
+      active_parallel_threads        = Get-PerformanceMetricValue("active parallel threads")
+      active_requests                = Get-PerformanceMetricValue("active requests")
+      active_transactions            = Get-PerformanceMetricValue("active transactions")
+      backup_restore_throughput_sec  = Get-PerformanceMetricValue("backup/restore throughput/sec")
+      batch_requests_sec             = Get-PerformanceMetricValue("batch requests/sec")
+      blocked_tasks                  = Get-PerformanceMetricValue("blocked tasks")
+      cache_hit_ratio                = Get-PerformanceMetricValue("cache hit ratio")
+      cache_object_counts            = Get-PerformanceMetricValue("cache object counts")
+      checkpoint_pages_sec           = Get-PerformanceMetricValue("checkpoint pages/sec")
+      cpu_usage                      = Get-PerformanceMetricValue("cpu usage %")
+      dropped_messages_total         = Get-PerformanceMetricValue("dropped messages total")
+      errors_sec                     = Get-PerformanceMetricValue("errors/sec")
+      free_memory                    = Get-PerformanceMetricValue("free memory (kb)")
+      lock_waits                     = Get-PerformanceMetricValue("lock waits")
+      number_of_deadlocks_sec        = Get-PerformanceMetricValue("number of deadlocks/sec")
+      open_connection_count          = Get-PerformanceMetricValue("open connection count")
+      page_life_expectancy           = Get-PerformanceMetricValue("page life expectancy")
+      page_lookups_sec               = Get-PerformanceMetricValue("page lookups/sec")
+      page_reads_sec                 = Get-PerformanceMetricValue("page reads/sec")
+      page_splits_sec                = Get-PerformanceMetricValue("page splits/sec")
+      page_writes_sec                = Get-PerformanceMetricValue("page writes/sec")
+      processes_blocked              = Get-PerformanceMetricValue("processes blocked")
+      queued_requests                = Get-PerformanceMetricValue("queued requests")
+      sql_compilations_sec           = Get-PerformanceMetricValue("sql compilations/sec")
+      sql_re_compilations_sec        = Get-PerformanceMetricValue("sql re-compilations/sec")
+      transaction_delay              = Get-PerformanceMetricValue("transaction delay")
+      transaction_ownership_waits    = Get-PerformanceMetricValue("transaction ownership waits")
+      transactions                   = Get-PerformanceMetricValue("transactions")
+      write_transactions_sec         = Get-PerformanceMetricValue("write transactions/sec")
+    }
   }
   return $Data
 }
