@@ -78,7 +78,7 @@ while($TRUE)
   }
   if ($SleepTime % 60 -eq 0)
   {
-    Write-Host "Running $($jobs.count) workers. Check copperegg-metrics.log for any worker logs."
+    Write-Host "Running $($jobs.count) workers. Check ucm-metrics.log for any worker logs."
     Write-Host "Press Ctrl+C to stop monitoring"
     $SleepTime = 0
   }
