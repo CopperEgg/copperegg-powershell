@@ -11,11 +11,11 @@
 	</SQLServersCommonSettings>
 	<SQLServers>
 		<Server1>
-			<InstanceName>GaganLaptop\SQLEXPRESS</InstanceName>
+			<InstanceName>ServerName\SQLEXPRESS</InstanceName>
 			<Hostname>localhost</Hostname>
 			<Username></Username>
 			<Password></Password>
-			<SystemIdentifier>Gagan SQL Server</SystemIdentifier>
+			<SystemIdentifier>My Server 1</SystemIdentifier>
 		</Server1>
 	</SQLServers>
 </Settings>
