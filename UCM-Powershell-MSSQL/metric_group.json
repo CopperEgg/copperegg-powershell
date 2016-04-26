@@ -152,8 +152,8 @@
     "frequency": "60"
   },
   "AzureSQL" : {
-    "name": "mssql",
-    "label": "SQL Server Metrics",
+    "name": "AzureSQL",
+    "label": "AzureSQL Server Metrics",
     "unit": null,
     "metrics": [{
       "name": "active_parallel_threads",
@@ -304,8 +304,8 @@
     "frequency": "60"
   },
   "CustomSQL" : {
-    "name": "mssql",
-    "label": "SQL Server Metrics",
+    "name": "custom",
+    "label": "",
     "unit": null,
     "metrics": [{
       "name": "active_parallel_threads",

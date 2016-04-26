@@ -27,7 +27,7 @@ ForEach($metric in $Metrics.ChildNodes)
   [string]$MetricGroupLabel = $metric.MetricGroupLabel
   [string]$MonitoringFrequency = $metric.Frequency
   [string]$DashboardName = $metric.DashboardName
-  [System.Xml.XmlElement]$Servers = $metric.Servers ##
+  [System.Xml.XmlElement]$Servers = $metric.Servers
 
   Create-MetricGroup $ApiServer $Apikey $ServiceName $MetricGroupName $MetricGroupLabel $MonitoringFrequency
   $arguments = $args -split " "
