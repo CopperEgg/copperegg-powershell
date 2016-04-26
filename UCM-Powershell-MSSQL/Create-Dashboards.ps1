@@ -7,9 +7,8 @@ $root = $PSScriptRoot
                Apikey (Apikey of user using which metric group is created and samples are sent)
                DashboardName (Name of the dashboard)
 #>
-function Create-Dashboard($ApiServer, $ApiKey, $MetricName, $DashboardName)
+function Create-Dashboard($ApiServer, $ApiKey, $ServiceName, $DashboardName)
 {
-  $MetricName = 'MSSQL'
   $Request = New-Object System.Net.WebClient
   $URI = "$ApiServer/v2/revealmetrics/dashboards"
   $AuthInfo = $ApiKey + ':U'
@@ -23,7 +22,7 @@ function Create-Dashboard($ApiServer, $ApiKey, $MetricName, $DashboardName)
 
   # Get the json, make a hashtable out of it, modify the requried parameters and convert back to JSON
   $DataJson = Get-Content -Raw -Path "$PSScriptRoot\dashboard.json" | ConvertFrom-JSON
-  $ConvertedJson = $DataJson.$MetricName
+  $ConvertedJson = $DataJson.$ServiceName
   $ConvertedJson.name = $DashboardName
   $DataJson = $ConvertedJson | ConvertTo-JSON -Depth 10
 
