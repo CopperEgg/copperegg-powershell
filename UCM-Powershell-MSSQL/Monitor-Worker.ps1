@@ -155,7 +155,15 @@ function Get-PerformanceMetrics
         Write-Host "Instance $Instance is 'Windows' Authenticated"
       }
     }
-    return Invoke-Sqlcmd -Query $Query -ServerInstance $Instance @Auth
+    if ($Instance)
+    {
+      $InstanceInfo = @{ServerInstance = $Instance}
+    }
+    else
+    {
+      $InstanceInfo = @{}
+    }
+    return Invoke-Sqlcmd -Query $Query @InstanceInfo @Auth
   }
   Catch [system.exception]
   {
@@ -167,7 +175,6 @@ function Get-PerformanceMetrics
     }
   }
 }
-
 <# Custom method to return value after diving the summed value from the no. of times of value occurance
    If the value is present in hashmaps, it is calculated and sent.
    In case the value was not there, it might cause divide by zero or some arithmetic error because

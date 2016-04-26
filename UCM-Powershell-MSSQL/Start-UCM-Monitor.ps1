@@ -15,4 +15,4 @@ Remove-Item "$env:temp\stop-ucm-monitor.txt"
 
 Write-Host "Launching main script. Please allow it to run with admin rights"
 Start-Sleep -s 2
-Start-Process Powershell -Verb RunAs -ArgumentList "-file `"C:\Program Files\UCM-Powershell\UCM-SQL-Monitor.ps1`" `"$args`""
+Start-Process Powershell -WindowStyle Hidden -Verb RunAs -ArgumentList "-file `"C:\Program Files\UCM-Powershell\UCM-SQL-Monitor.ps1`" `"$args`""
