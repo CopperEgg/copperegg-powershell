@@ -1,21 +1,43 @@
 <Settings>
-	<UptimeCloudMonitor>
-		<Apikey>User's API Key</Apikey>
-		<ApiServer>https://api.copperegg.com</ApiServer>
-	</UptimeCloudMonitor>
-	<SQLServersCommonSettings>
-		<DashboardName>SQL Server</DashboardName>
-		<MetricGroupName>mssql</MetricGroupName>
-		<MetricGroupLabel>SQL Server Metrics</MetricGroupLabel>
-		<Frequency>15</Frequency>
-	</SQLServersCommonSettings>
-	<SQLServers>
-		<Server1>
-			<InstanceName>ServerName\SQLEXPRESS</InstanceName>
-			<Hostname>localhost</Hostname>
-			<Username></Username>
-			<Password></Password>
-			<SystemIdentifier>My Server 1</SystemIdentifier>
-		</Server1>
-	</SQLServers>
+  <UptimeCloudMonitor>
+    <Apikey>User's API Key</Apikey>
+    <ApiServer>https://api.copperegg.com</ApiServer>
+  </UptimeCloudMonitor>
+  <MetricGroups>
+    <MetricGroup1>
+      <ServiceName>MSSQL</ServiceName>
+      <DashboardName>SQL Server</DashboardName>
+      <MetricGroupName>mssql</MetricGroupName>
+      <MetricGroupLabel>SQL Server Metrics</MetricGroupLabel>
+      <Frequency>15</Frequency>
+      <Servers>
+        <Server1>
+          <InstanceName>SQLEXPRESS</InstanceName>
+          <Hostname>localhost</Hostname>
+          <Username></Username>
+          <Password></Password>
+          <SystemIdentifier>SQL Server</SystemIdentifier>
+        </Server1>
+      </Servers>
+    </MetricGroup1>
+
+    <MetricGroup2>
+      <ServiceName>AzureSQL</ServiceName>
+      <DashboardName>AzureSQL Server</DashboardName>
+      <MetricGroupName>azuresql</MetricGroupName>
+      <MetricGroupLabel>SQL Server Metrics</MetricGroupLabel>
+      <Frequency>15</Frequency>
+      <Servers>
+        <Server1>
+          <InstanceName>SQLEXPRESS</InstanceName>
+          <Hostname>localhost</Hostname>
+          <Username></Username>
+          <Password></Password>
+          <SystemIdentifier>SQL Server</SystemIdentifier>
+        </Server1>
+      </Servers>
+    </MetricGroup2>
+
+  </MetricServers>
+
 </Settings>

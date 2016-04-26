@@ -13,10 +13,10 @@ a config.xml file is generated with the provided settings and service is started
 The module includes:
  - Create-Dashboards.ps1 : Creates dashboard when user requests to create (via -MakeDashboard option) and when configuring instances (during installation)
  - Create-MetricGroups.ps1 : Checks the existence of metric group everytime when the script starts and creates if not present.
- - Monitor-Worker.ps1 : Worker thread script. Say if you are monitoring 5 instances, 5 copies of this script run on your system (1 for each instance)
+ - SQL-Worker.ps1 : Worker thread script. Say if you are monitoring 5 instances, 5 copies of this script run on your system (1 for each instance)
  - Start-UCM-Monitor.ps1 : Script for starting monitoring job based on settings inside config.xml
  - Stop-UCM-Monitor.ps1 : Script to stop monitoring job for all instances.
- - UCM-SQL-Monitor.ps1 : Reads configuration settings and calls Monitor-Worker for all the instances defined in config.xml
+ - UCM-SQL-Monitor.ps1 : Reads configuration settings and calls SQL-Worker for all the instances defined in config.xml
  - Utils.ps1 : Common utility functions are defined inside this file.
  - config-sample.xml : A sample config.xml, a usable config.xml file is created during installation. We don't recommend our users to change config.xml by hand unless they completely understand its structure. The structure is not too complex and you can play with it after taking the backup of main config.xml somewhere.
  - dashboard.json : A JSON request to create dashboard on UCM. Some values are configurable by the user and are picked from config.xml before sending request to create a dashboard.
