@@ -11,8 +11,15 @@ if ($PSVersionTable.PSVersion.Major -lt 3)
 }
 
 # Remove the temp file so that script doesn't stop as soon as it starts
-Remove-Item "$env:temp\stop-ucm-monitor.txt"
+Try
+{
+    Remove-Item "$env:temp\stop-ucm-monitor.txt" -EA Stop
+}
+Catch [system.exception]
+{
+    # Control comes here if that file doesn't exist. No problem if the file is not present; do nothing
+}
 
 Write-Host "Launching main script. Please allow it to run with admin rights"
 Start-Sleep -s 2
-Start-Process Powershell -WindowStyle Hidden -Verb RunAs -ArgumentList "-file `"C:\Program Files\UCM-Powershell\UCM-SQL-Monitor.ps1`" `"$args`""
+Start-Process Powershell -WindowStyle Hidden -Verb RunAs -ArgumentList "-file `"$env:programfiles\UCM-Powershell\UCM-SQL-Monitor.ps1`" `"$args`""
