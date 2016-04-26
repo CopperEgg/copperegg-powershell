@@ -1,14 +1,15 @@
 $root = $PSScriptRoot
 
-. $root\Utils.ps1 
+. $root\Utils.ps1
 
 <# Custom method to Create a dashboard based on parameters passed to the script.
    Arguments : ApiServer (Address of API Server, kept flexible for testing on dev/staging env)
                Apikey (Apikey of user using which metric group is created and samples are sent)
                DashboardName (Name of the dashboard)
 #>
-function Create-Dashboard($ApiServer, $ApiKey, $DashboardName)
+function Create-Dashboard($ApiServer, $ApiKey, $MetricName, $DashboardName)
 {
+  $MetricName = 'MSSQL'
   $Request = New-Object System.Net.WebClient
   $URI = "$ApiServer/v2/revealmetrics/dashboards"
   $AuthInfo = $ApiKey + ':U'
@@ -21,8 +22,8 @@ function Create-Dashboard($ApiServer, $ApiKey, $DashboardName)
   [System.Net.ServicePointManager]::Expect100Continue = $false
 
   # Get the json, make a hashtable out of it, modify the requried parameters and convert back to JSON
-  $DataJson = Get-Content -Raw -Path "$PSScriptRoot\dashboard.json"
-  $ConvertedJson = $DataJson | ConvertFrom-JSON
+  $DataJson = Get-Content -Raw -Path "$PSScriptRoot\dashboard.json" | ConvertFrom-JSON
+  $ConvertedJson = $DataJson.$MetricName
   $ConvertedJson.name = $DashboardName
   $DataJson = $ConvertedJson | ConvertTo-JSON -Depth 10
 

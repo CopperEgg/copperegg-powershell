@@ -1,298 +1,598 @@
 {
-	"data": {
-		"widgets": {
-			"0": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[0, "active_parallel_threads"]
-					]
-				}
-			},
-			"1": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[1, "active_requests"]
-					]
-				}
-			},
-			"2": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[2, "active_transactions"]
-					]
-				}
-			},
-			"3": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[3, "backup_restore_throughput_sec"]
-					]
-				}
-			},
-			"4": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[4, "batch_requests_sec"]
-					]
-				}
-			},
-			"5": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[5, "blocked_tasks"]
-					]
-				}
-			},
-			"6": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[6, "cache_hit_ratio"]
-					]
-				}
-			},
-			"7": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[7, "cache_object_counts"]
-					]
-				}
-			},
-			"8": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[8, "checkpoint_pages_sec"]
-					]
-				}
-			},
-			"9": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[9, "cpu_usage"]
-					]
-				}
-			},
-			"10": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[10, "dropped_messages_total"]
-					]
-				}
-			},
-			"11": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[11, "errors_sec"]
-					]
-				}
-			},
-			"12": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[12, "free_memory"]
-					]
-				}
-			},
-			"13": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[13, "lock_wait"]
-					]
-				}
-			},
-			"14": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[14, "number_of_deadlocks_sec"]
-					]
-				}
-			},
-			"15": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[15, "open_connection_count"]
-					]
-				}
-			},
-			"16": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[16, "page_life_expectancy"]
-					]
-				}
-			},
-			"17": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[17, "page_lookups_sec"]
-					]
-				}
-			},
-			"18": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[18, "page_reads_sec"]
-					]
-				}
-			},
-			"19": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[19, "page_splits_sec"]
-					]
-				}
-			},
-			"20": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[20, "page_writes_sec"]
-					]
-				}
-			},
-			"21": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[21, "processes_blocked"]
-					]
-				}
-			},
-			"22": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[22, "queued_requests"]
-					]
-				}
-			},
-			"23": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[23, "sql_compilations_sec"]
-					]
-				}
-			},
-			"24": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[24, "sql_re_compilations_sec"]
-					]
-				}
-			},
-			"25": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[25, "transaction_delay"]
-					]
-				}
-			},
-			"26": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[26, "transaction_ownership_waits"]
-					]
-				}
-			},
-			"27": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[27, "transactions"]
-					]
-				}
-			},
-			"28": {
-				"type": "timeline",
-				"style": "values",
-				"match": "all",
-				"metric": {
-					"mssql": [
-						[28, "write_transactions_sec"]
-					]
-				}
-			}
-		},
-		"order": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
-	},
-	"name": "SQL-Server"
+  "MSSQL" : {
+    "name": "SQL-Server",
+    "data": {
+      "widgets": {
+        "0": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [0, "active_parallel_threads"]
+            ]
+          }
+        },
+        "1": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [1, "active_requests"]
+            ]
+          }
+        },
+        "2": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [2, "active_transactions"]
+            ]
+          }
+        },
+        "3": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [3, "backup_restore_throughput_sec"]
+            ]
+          }
+        },
+        "4": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [4, "batch_requests_sec"]
+            ]
+          }
+        },
+        "5": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [5, "blocked_tasks"]
+            ]
+          }
+        },
+        "6": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [6, "cache_hit_ratio"]
+            ]
+          }
+        },
+        "7": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [7, "cache_object_counts"]
+            ]
+          }
+        },
+        "8": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [8, "checkpoint_pages_sec"]
+            ]
+          }
+        },
+        "9": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [9, "cpu_usage"]
+            ]
+          }
+        },
+        "10": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [10, "dropped_messages_total"]
+            ]
+          }
+        },
+        "11": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [11, "errors_sec"]
+            ]
+          }
+        },
+        "12": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [12, "free_memory"]
+            ]
+          }
+        },
+        "13": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [13, "lock_wait"]
+            ]
+          }
+        },
+        "14": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [14, "number_of_deadlocks_sec"]
+            ]
+          }
+        },
+        "15": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [15, "open_connection_count"]
+            ]
+          }
+        },
+        "16": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [16, "page_life_expectancy"]
+            ]
+          }
+        },
+        "17": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [17, "page_lookups_sec"]
+            ]
+          }
+        },
+        "18": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [18, "page_reads_sec"]
+            ]
+          }
+        },
+        "19": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [19, "page_splits_sec"]
+            ]
+          }
+        },
+        "20": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [20, "page_writes_sec"]
+            ]
+          }
+        },
+        "21": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [21, "processes_blocked"]
+            ]
+          }
+        },
+        "22": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [22, "queued_requests"]
+            ]
+          }
+        },
+        "23": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [23, "sql_compilations_sec"]
+            ]
+          }
+        },
+        "24": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [24, "sql_re_compilations_sec"]
+            ]
+          }
+        },
+        "25": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [25, "transaction_delay"]
+            ]
+          }
+        },
+        "26": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [26, "transaction_ownership_waits"]
+            ]
+          }
+        },
+        "27": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [27, "transactions"]
+            ]
+          }
+        },
+        "28": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [28, "write_transactions_sec"]
+            ]
+          }
+        }
+      },
+      "order": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
+    }
+  },
+  "AzureSQL" : {
+    "name": "SQL-Server",
+    "data": {
+      "widgets": {
+        "0": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [0, "active_parallel_threads"]
+            ]
+          }
+        },
+        "1": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [1, "active_requests"]
+            ]
+          }
+        },
+        "2": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [2, "active_transactions"]
+            ]
+          }
+        },
+        "3": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [3, "backup_restore_throughput_sec"]
+            ]
+          }
+        },
+        "4": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [4, "batch_requests_sec"]
+            ]
+          }
+        },
+        "5": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [5, "blocked_tasks"]
+            ]
+          }
+        },
+        "6": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [6, "cache_hit_ratio"]
+            ]
+          }
+        },
+        "7": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [7, "cache_object_counts"]
+            ]
+          }
+        },
+        "8": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [8, "checkpoint_pages_sec"]
+            ]
+          }
+        },
+        "9": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [9, "cpu_usage"]
+            ]
+          }
+        },
+        "10": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [10, "dropped_messages_total"]
+            ]
+          }
+        },
+        "11": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [11, "errors_sec"]
+            ]
+          }
+        },
+        "12": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [12, "free_memory"]
+            ]
+          }
+        },
+        "13": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [13, "lock_wait"]
+            ]
+          }
+        },
+        "14": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [14, "number_of_deadlocks_sec"]
+            ]
+          }
+        },
+        "15": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [15, "open_connection_count"]
+            ]
+          }
+        },
+        "16": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [16, "page_life_expectancy"]
+            ]
+          }
+        },
+        "17": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [17, "page_lookups_sec"]
+            ]
+          }
+        },
+        "18": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [18, "page_reads_sec"]
+            ]
+          }
+        },
+        "19": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [19, "page_splits_sec"]
+            ]
+          }
+        },
+        "20": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [20, "page_writes_sec"]
+            ]
+          }
+        },
+        "21": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [21, "processes_blocked"]
+            ]
+          }
+        },
+        "22": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [22, "queued_requests"]
+            ]
+          }
+        },
+        "23": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [23, "sql_compilations_sec"]
+            ]
+          }
+        },
+        "24": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [24, "sql_re_compilations_sec"]
+            ]
+          }
+        },
+        "25": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [25, "transaction_delay"]
+            ]
+          }
+        },
+        "26": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [26, "transaction_ownership_waits"]
+            ]
+          }
+        },
+        "27": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [27, "transactions"]
+            ]
+          }
+        },
+        "28": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "mssql": [
+              [28, "write_transactions_sec"]
+            ]
+          }
+        }
+      },
+      "order": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"]
+    }
+  }
 }

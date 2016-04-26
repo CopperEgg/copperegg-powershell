@@ -1,152 +1,458 @@
 {
-	"name": "mssql",
-	"label": "SQL Server Metrics",
-	"unit": null,
-	"metrics": [{
-		"name": "active_parallel_threads",
-		"label": "Active Parallel Threads",
-		"type": "ce_counter",
-		"unit": "Threads"
-	}, {
-		"name": "active_requests",
-		"label": "Active Requests",
-		"type": "ce_counter",
-		"unit": "Requests"
-	}, {
-		"name": "active_transactions",
-		"label": "Active Transactions",
-		"type": "ce_counter",
-		"unit": "Transactions"
-	}, {
-		"name": "backup_restore_throughput_sec",
-		"label": "Backup Restore Throughput/Sec",
-		"type": "ce_counter",
-		"unit": ""
-	}, {
-		"name": "batch_requests_sec",
-		"label": "Batch Requests/Sec",
-		"type": "ce_counter",
-		"unit": "Requests"
-	}, {
-		"name": "blocked_tasks",
-		"label": "Blocked Tasks",
-		"type": "ce_counter",
-		"unit": "Tasks"
-	}, {
-		"name": "cache_hit_ratio",
-		"label": "Cache Hit Ratio",
-		"type": "ce_counter",
-		"unit": "Hits"
-	}, {
-		"name": "cache_object_counts",
-		"label": "Cache Object Counts",
-		"type": "ce_counter",
-		"unit": "Objects"
-	}, {
-		"name": "checkpoint_pages_sec",
-		"label": "Checkpoint Pages/Sec",
-		"type": "ce_counter",
-		"unit": "Pages"
-	}, {
-		"name": "cpu_usage",
-		"label": "CPU Usage (%)",
-		"type": "ce_counter",
-		"unit": "Percent"
-	}, {
-		"name": "dropped_messages_total",
-		"label": "Dropped Messages Total",
-		"type": "ce_counter",
-		"unit": "Messages"
-	}, {
-		"name": "errors_sec",
-		"label": "Errors/Sec",
-		"type": "ce_counter",
-		"unit": "Errors"
-	}, {
-		"name": "free_memory",
-		"label": "Free Memory",
-		"type": "ce_counter",
-		"unit": "KB"
-	}, {
-		"name": "lock_wait",
-		"label": "Lock Wait",
-		"type": "ce_counter",
-		"unit": "Locks"
-	}, {
-		"name": "number_of_deadlocks_sec",
-		"label": "No. of Deadlocks/Sec",
-		"type": "ce_counter",
-		"unit": "Deadlocks"
-	}, {
-		"name": "open_connection_count",
-		"label": "Open Connections Count",
-		"type": "ce_counter",
-		"unit": "connections"
-	}, {
-		"name": "page_life_expectancy",
-		"label": "Page Life Expectancy",
-		"type": "ce_counter",
-		"unit": "Seconds"
-	}, {
-		"name": "page_lookups_sec",
-		"label": "Page Lookups/Sec",
-		"type": "ce_counter",
-		"unit": "Lookups"
-	}, {
-		"name": "page_reads_sec",
-		"label": "Page Reads/Sec",
-		"type": "ce_counter",
-		"unit": "Reads"
-	}, {
-		"name": "page_splits_sec",
-		"label": "Access Page Splits",
-		"type": "ce_counter",
-		"unit": "Splits"
-	}, {
-		"name": "page_writes_sec",
-		"label": "Page Writes/Sec",
-		"type": "ce_counter",
-		"unit": "Writes"
-	}, {
-		"name": "processes_blocked",
-		"label": "Processes Blocked",
-		"type": "ce_counter",
-		"unit": "Processes"
-	}, {
-		"name": "queued_requests",
-		"label": "Queued Requests",
-		"type": "ce_counter",
-		"unit": "Requests"
-	}, {
-		"name": "sql_compilations_sec",
-		"label": "SQL Compilations/Sec",
-		"type": "ce_counter",
-		"unit": "Compilations"
-	}, {
-		"name": "sql_re_compilations_sec",
-		"label": "SQL Recompilations/Sec",
-		"type": "ce_counter",
-		"unit": "Recompilations"
-	}, {
-		"name": "transaction_delay",
-		"label": "Transaction Delay",
-		"type": "ce_counter",
-		"unit": "Seconds"
-	}, {
-		"name": "transaction_ownership_waits",
-		"label": "Transaction Ownership Waits",
-		"type": "ce_counter",
-		"unit": "Seconds"
-	}, {
-		"name": "transactions",
-		"label": "Transactions",
-		"type": "ce_counter",
-		"unit": "Transactions"
-	}, {
-		"name": "write_transactions_sec",
-		"label": "Write Transactions/Sec",
-		"type": "ce_counter",
-		"unit": "Transactions"
-	}],
-	"frequency": "60"
+  "MSSQL" : {
+    "name": "mssql",
+    "label": "SQL Server Metrics",
+    "unit": null,
+    "metrics": [{
+      "name": "active_parallel_threads",
+      "label": "Active Parallel Threads",
+      "type": "ce_counter",
+      "unit": "Threads"
+    }, {
+      "name": "active_requests",
+      "label": "Active Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "active_transactions",
+      "label": "Active Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "backup_restore_throughput_sec",
+      "label": "Backup Restore Throughput/Sec",
+      "type": "ce_counter",
+      "unit": ""
+    }, {
+      "name": "batch_requests_sec",
+      "label": "Batch Requests/Sec",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "blocked_tasks",
+      "label": "Blocked Tasks",
+      "type": "ce_counter",
+      "unit": "Tasks"
+    }, {
+      "name": "cache_hit_ratio",
+      "label": "Cache Hit Ratio",
+      "type": "ce_counter",
+      "unit": "Hits"
+    }, {
+      "name": "cache_object_counts",
+      "label": "Cache Object Counts",
+      "type": "ce_counter",
+      "unit": "Objects"
+    }, {
+      "name": "checkpoint_pages_sec",
+      "label": "Checkpoint Pages/Sec",
+      "type": "ce_counter",
+      "unit": "Pages"
+    }, {
+      "name": "cpu_usage",
+      "label": "CPU Usage (%)",
+      "type": "ce_counter",
+      "unit": "Percent"
+    }, {
+      "name": "dropped_messages_total",
+      "label": "Dropped Messages Total",
+      "type": "ce_counter",
+      "unit": "Messages"
+    }, {
+      "name": "errors_sec",
+      "label": "Errors/Sec",
+      "type": "ce_counter",
+      "unit": "Errors"
+    }, {
+      "name": "free_memory",
+      "label": "Free Memory",
+      "type": "ce_counter",
+      "unit": "KB"
+    }, {
+      "name": "lock_wait",
+      "label": "Lock Wait",
+      "type": "ce_counter",
+      "unit": "Locks"
+    }, {
+      "name": "number_of_deadlocks_sec",
+      "label": "No. of Deadlocks/Sec",
+      "type": "ce_counter",
+      "unit": "Deadlocks"
+    }, {
+      "name": "open_connection_count",
+      "label": "Open Connections Count",
+      "type": "ce_counter",
+      "unit": "connections"
+    }, {
+      "name": "page_life_expectancy",
+      "label": "Page Life Expectancy",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "page_lookups_sec",
+      "label": "Page Lookups/Sec",
+      "type": "ce_counter",
+      "unit": "Lookups"
+    }, {
+      "name": "page_reads_sec",
+      "label": "Page Reads/Sec",
+      "type": "ce_counter",
+      "unit": "Reads"
+    }, {
+      "name": "page_splits_sec",
+      "label": "Access Page Splits",
+      "type": "ce_counter",
+      "unit": "Splits"
+    }, {
+      "name": "page_writes_sec",
+      "label": "Page Writes/Sec",
+      "type": "ce_counter",
+      "unit": "Writes"
+    }, {
+      "name": "processes_blocked",
+      "label": "Processes Blocked",
+      "type": "ce_counter",
+      "unit": "Processes"
+    }, {
+      "name": "queued_requests",
+      "label": "Queued Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "sql_compilations_sec",
+      "label": "SQL Compilations/Sec",
+      "type": "ce_counter",
+      "unit": "Compilations"
+    }, {
+      "name": "sql_re_compilations_sec",
+      "label": "SQL Recompilations/Sec",
+      "type": "ce_counter",
+      "unit": "Recompilations"
+    }, {
+      "name": "transaction_delay",
+      "label": "Transaction Delay",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transaction_ownership_waits",
+      "label": "Transaction Ownership Waits",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transactions",
+      "label": "Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "write_transactions_sec",
+      "label": "Write Transactions/Sec",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }],
+    "frequency": "60"
+  },
+  "AzureSQL" : {
+    "name": "mssql",
+    "label": "SQL Server Metrics",
+    "unit": null,
+    "metrics": [{
+      "name": "active_parallel_threads",
+      "label": "Active Parallel Threads",
+      "type": "ce_counter",
+      "unit": "Threads"
+    }, {
+      "name": "active_requests",
+      "label": "Active Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "active_transactions",
+      "label": "Active Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "backup_restore_throughput_sec",
+      "label": "Backup Restore Throughput/Sec",
+      "type": "ce_counter",
+      "unit": ""
+    }, {
+      "name": "batch_requests_sec",
+      "label": "Batch Requests/Sec",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "blocked_tasks",
+      "label": "Blocked Tasks",
+      "type": "ce_counter",
+      "unit": "Tasks"
+    }, {
+      "name": "cache_hit_ratio",
+      "label": "Cache Hit Ratio",
+      "type": "ce_counter",
+      "unit": "Hits"
+    }, {
+      "name": "cache_object_counts",
+      "label": "Cache Object Counts",
+      "type": "ce_counter",
+      "unit": "Objects"
+    }, {
+      "name": "checkpoint_pages_sec",
+      "label": "Checkpoint Pages/Sec",
+      "type": "ce_counter",
+      "unit": "Pages"
+    }, {
+      "name": "cpu_usage",
+      "label": "CPU Usage (%)",
+      "type": "ce_counter",
+      "unit": "Percent"
+    }, {
+      "name": "dropped_messages_total",
+      "label": "Dropped Messages Total",
+      "type": "ce_counter",
+      "unit": "Messages"
+    }, {
+      "name": "errors_sec",
+      "label": "Errors/Sec",
+      "type": "ce_counter",
+      "unit": "Errors"
+    }, {
+      "name": "free_memory",
+      "label": "Free Memory",
+      "type": "ce_counter",
+      "unit": "KB"
+    }, {
+      "name": "lock_wait",
+      "label": "Lock Wait",
+      "type": "ce_counter",
+      "unit": "Locks"
+    }, {
+      "name": "number_of_deadlocks_sec",
+      "label": "No. of Deadlocks/Sec",
+      "type": "ce_counter",
+      "unit": "Deadlocks"
+    }, {
+      "name": "open_connection_count",
+      "label": "Open Connections Count",
+      "type": "ce_counter",
+      "unit": "connections"
+    }, {
+      "name": "page_life_expectancy",
+      "label": "Page Life Expectancy",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "page_lookups_sec",
+      "label": "Page Lookups/Sec",
+      "type": "ce_counter",
+      "unit": "Lookups"
+    }, {
+      "name": "page_reads_sec",
+      "label": "Page Reads/Sec",
+      "type": "ce_counter",
+      "unit": "Reads"
+    }, {
+      "name": "page_splits_sec",
+      "label": "Access Page Splits",
+      "type": "ce_counter",
+      "unit": "Splits"
+    }, {
+      "name": "page_writes_sec",
+      "label": "Page Writes/Sec",
+      "type": "ce_counter",
+      "unit": "Writes"
+    }, {
+      "name": "processes_blocked",
+      "label": "Processes Blocked",
+      "type": "ce_counter",
+      "unit": "Processes"
+    }, {
+      "name": "queued_requests",
+      "label": "Queued Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "sql_compilations_sec",
+      "label": "SQL Compilations/Sec",
+      "type": "ce_counter",
+      "unit": "Compilations"
+    }, {
+      "name": "sql_re_compilations_sec",
+      "label": "SQL Recompilations/Sec",
+      "type": "ce_counter",
+      "unit": "Recompilations"
+    }, {
+      "name": "transaction_delay",
+      "label": "Transaction Delay",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transaction_ownership_waits",
+      "label": "Transaction Ownership Waits",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transactions",
+      "label": "Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "write_transactions_sec",
+      "label": "Write Transactions/Sec",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }],
+    "frequency": "60"
+  },
+  "CustomSQL" : {
+    "name": "mssql",
+    "label": "SQL Server Metrics",
+    "unit": null,
+    "metrics": [{
+      "name": "active_parallel_threads",
+      "label": "Active Parallel Threads",
+      "type": "ce_counter",
+      "unit": "Threads"
+    }, {
+      "name": "active_requests",
+      "label": "Active Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "active_transactions",
+      "label": "Active Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "backup_restore_throughput_sec",
+      "label": "Backup Restore Throughput/Sec",
+      "type": "ce_counter",
+      "unit": ""
+    }, {
+      "name": "batch_requests_sec",
+      "label": "Batch Requests/Sec",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "blocked_tasks",
+      "label": "Blocked Tasks",
+      "type": "ce_counter",
+      "unit": "Tasks"
+    }, {
+      "name": "cache_hit_ratio",
+      "label": "Cache Hit Ratio",
+      "type": "ce_counter",
+      "unit": "Hits"
+    }, {
+      "name": "cache_object_counts",
+      "label": "Cache Object Counts",
+      "type": "ce_counter",
+      "unit": "Objects"
+    }, {
+      "name": "checkpoint_pages_sec",
+      "label": "Checkpoint Pages/Sec",
+      "type": "ce_counter",
+      "unit": "Pages"
+    }, {
+      "name": "cpu_usage",
+      "label": "CPU Usage (%)",
+      "type": "ce_counter",
+      "unit": "Percent"
+    }, {
+      "name": "dropped_messages_total",
+      "label": "Dropped Messages Total",
+      "type": "ce_counter",
+      "unit": "Messages"
+    }, {
+      "name": "errors_sec",
+      "label": "Errors/Sec",
+      "type": "ce_counter",
+      "unit": "Errors"
+    }, {
+      "name": "free_memory",
+      "label": "Free Memory",
+      "type": "ce_counter",
+      "unit": "KB"
+    }, {
+      "name": "lock_wait",
+      "label": "Lock Wait",
+      "type": "ce_counter",
+      "unit": "Locks"
+    }, {
+      "name": "number_of_deadlocks_sec",
+      "label": "No. of Deadlocks/Sec",
+      "type": "ce_counter",
+      "unit": "Deadlocks"
+    }, {
+      "name": "open_connection_count",
+      "label": "Open Connections Count",
+      "type": "ce_counter",
+      "unit": "connections"
+    }, {
+      "name": "page_life_expectancy",
+      "label": "Page Life Expectancy",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "page_lookups_sec",
+      "label": "Page Lookups/Sec",
+      "type": "ce_counter",
+      "unit": "Lookups"
+    }, {
+      "name": "page_reads_sec",
+      "label": "Page Reads/Sec",
+      "type": "ce_counter",
+      "unit": "Reads"
+    }, {
+      "name": "page_splits_sec",
+      "label": "Access Page Splits",
+      "type": "ce_counter",
+      "unit": "Splits"
+    }, {
+      "name": "page_writes_sec",
+      "label": "Page Writes/Sec",
+      "type": "ce_counter",
+      "unit": "Writes"
+    }, {
+      "name": "processes_blocked",
+      "label": "Processes Blocked",
+      "type": "ce_counter",
+      "unit": "Processes"
+    }, {
+      "name": "queued_requests",
+      "label": "Queued Requests",
+      "type": "ce_counter",
+      "unit": "Requests"
+    }, {
+      "name": "sql_compilations_sec",
+      "label": "SQL Compilations/Sec",
+      "type": "ce_counter",
+      "unit": "Compilations"
+    }, {
+      "name": "sql_re_compilations_sec",
+      "label": "SQL Recompilations/Sec",
+      "type": "ce_counter",
+      "unit": "Recompilations"
+    }, {
+      "name": "transaction_delay",
+      "label": "Transaction Delay",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transaction_ownership_waits",
+      "label": "Transaction Ownership Waits",
+      "type": "ce_counter",
+      "unit": "Seconds"
+    }, {
+      "name": "transactions",
+      "label": "Transactions",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }, {
+      "name": "write_transactions_sec",
+      "label": "Write Transactions/Sec",
+      "type": "ce_counter",
+      "unit": "Transactions"
+    }],
+    "frequency": "60"
+  }
 }

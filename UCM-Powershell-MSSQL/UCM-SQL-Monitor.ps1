@@ -41,18 +41,19 @@ Write-Log "Starting monitoring agent."
 #>
 [System.Xml.XmlElement]$SQLServers = $Config.Settings.SQLServers
 
+[String]$MetricName = 'MSSQL'
 [string]$MetricGroupName = $Config.Settings.SQLServersCommonSettings.MetricGroupName
 [string]$MetricGroupLabel = $Config.Settings.SQLServersCommonSettings.MetricGroupLabel
 [string]$MonitoringFrequency = $Config.Settings.SQLServersCommonSettings.Frequency
 [string]$DashboardName = $Config.Settings.SQLServersCommonSettings.DashboardName
 
-Create-MetricGroup $ApiServer $Apikey  $MetricGroupName $MetricGroupLabel $MonitoringFrequency
+Create-MetricGroup $ApiServer $Apikey $MetricName $MetricGroupName $MetricGroupLabel $MonitoringFrequency
 $arguments = $args -split " "
 Foreach ($arg in $arguments)
 {
   if($arg -eq '-MakeDashboard')
   {
-    Create-Dashboard $ApiServer $Apikey $DashboardName
+    Create-Dashboard $ApiServer $Apikey $MetricName $DashboardName
     Write-Log "Dashboard created"
     exit 0
   }

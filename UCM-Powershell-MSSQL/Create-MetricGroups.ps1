@@ -1,6 +1,6 @@
 $root = $PSScriptRoot
 
-. $root\Utils.ps1 
+. $root\Utils.ps1
 
 <# Custom method to Create a metric group based on parameters passed to the script. This is done
    everytime when the parent script is started. If metric group already exists, nothing is done.
@@ -10,8 +10,9 @@ $root = $PSScriptRoot
                GroupLabel (Label of the metric group)
                MonitoringFrequency (Frequency on which this metric group will be monitored)
 #>
-function Create-MetricGroup([string]$ApiServer, [string]$ApiKey, [string]$GroupName, [string]$GroupLabel, [string]$MonitoringFrequency)
+function Create-MetricGroup([string]$ApiServer, [string]$ApiKey, [string]$MetricName, [string]$GroupName, [string]$GroupLabel, [string]$MonitoringFrequency)
 {
+  $MetricName = 'MSSQL'
   $Request = New-Object System.Net.WebClient
   $URI = "$ApiServer/v2/revealmetrics/metric_groups"
   $AuthInfo = $ApiKey + ':U'
@@ -24,8 +25,8 @@ function Create-MetricGroup([string]$ApiServer, [string]$ApiKey, [string]$GroupN
   [System.Net.ServicePointManager]::Expect100Continue = $false
 
   # Get the json, make a hashtable out of it, modify the requried parameters and convert back to JSON
-  $DataJson = Get-Content -Raw -Path "$PSScriptRoot\metric_group.json"
-  $ConvertedJson = $DataJson | ConvertFrom-JSON
+  $DataJson = Get-Content -Raw -Path "$PSScriptRoot\metric_group.json" | ConvertFrom-JSON
+  $ConvertedJson = $DataJson.$MetricName
   $ConvertedJson.name = $GroupName
   $ConvertedJson.label = $GroupLabel
   $ConvertedJson.frequency = $MonitoringFrequency
