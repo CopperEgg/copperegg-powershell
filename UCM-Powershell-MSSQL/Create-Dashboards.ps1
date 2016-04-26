@@ -20,9 +20,11 @@ function Create-Dashboard($ApiServer, $ApiKey, $ServiceName, $DashboardName)
   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
   [System.Net.ServicePointManager]::Expect100Continue = $false
 
+  Write-Host "Creating Dashboard for $ServiceName"
   # Get the json, make a hashtable out of it, modify the requried parameters and convert back to JSON
   $DataJson = Get-Content -Raw -Path "$PSScriptRoot\dashboard.json" | ConvertFrom-JSON
   $ConvertedJson = $DataJson.$ServiceName
+  Write-Host "--dont get lost here $ConvertedJson"
   $ConvertedJson.name = $DashboardName
   $DataJson = $ConvertedJson | ConvertTo-JSON -Depth 10
 
