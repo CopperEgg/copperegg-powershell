@@ -144,7 +144,7 @@ function Get-PerformanceMetrics
       $auth = @{Username = $Username ; Password = $Password}
       if($Debug)
       {
-        Write-Host "Instance $Instance is 'SQL Server' Authenticated"
+        Write-Log "Instance $Instance is 'SQL Server' Authenticated"
       }
     }
     else
@@ -152,7 +152,7 @@ function Get-PerformanceMetrics
       $auth=@{}
       if($Debug)
       {
-        Write-Host "Instance $Instance is 'Windows' Authenticated"
+        Write-Log "Instance $Instance is 'Windows' Authenticated"
       }
     }
     if ($Instance)
