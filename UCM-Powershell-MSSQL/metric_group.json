@@ -154,7 +154,7 @@
     ]
   },
   "AzureSQL" : {
-    "name": "AzureSQL",
+    "name": "azure_sql",
     "label": "AzureSQL Server Metrics",
     "unit": null,
     "frequency": "60",

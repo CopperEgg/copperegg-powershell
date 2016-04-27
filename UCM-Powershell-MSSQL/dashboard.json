@@ -8,7 +8,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [0, "active_parallel_threads"]
             ]
           }
@@ -18,7 +18,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [1, "active_requests"]
             ]
           }
@@ -28,7 +28,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [2, "active_transactions"]
             ]
           }
@@ -38,7 +38,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [3, "backup_restore_throughput_sec"]
             ]
           }
@@ -48,7 +48,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [4, "batch_requests_sec"]
             ]
           }
@@ -58,7 +58,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [5, "blocked_tasks"]
             ]
           }
@@ -68,7 +68,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [6, "cache_hit_ratio"]
             ]
           }
@@ -78,7 +78,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [7, "cache_object_counts"]
             ]
           }
@@ -88,7 +88,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [8, "checkpoint_pages_sec"]
             ]
           }
@@ -98,7 +98,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [9, "cpu_usage"]
             ]
           }
@@ -108,7 +108,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [10, "dropped_messages_total"]
             ]
           }
@@ -118,7 +118,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [11, "errors_sec"]
             ]
           }
@@ -128,7 +128,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [12, "free_memory"]
             ]
           }
@@ -138,7 +138,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [13, "lock_wait"]
             ]
           }
@@ -148,7 +148,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [14, "number_of_deadlocks_sec"]
             ]
           }
@@ -158,7 +158,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [15, "open_connection_count"]
             ]
           }
@@ -168,7 +168,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [16, "page_life_expectancy"]
             ]
           }
@@ -178,7 +178,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [17, "page_lookups_sec"]
             ]
           }
@@ -188,7 +188,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [18, "page_reads_sec"]
             ]
           }
@@ -198,7 +198,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [19, "page_splits_sec"]
             ]
           }
@@ -208,7 +208,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [20, "page_writes_sec"]
             ]
           }
@@ -218,7 +218,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [21, "processes_blocked"]
             ]
           }
@@ -228,7 +228,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [22, "queued_requests"]
             ]
           }
@@ -238,7 +238,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [23, "sql_compilations_sec"]
             ]
           }
@@ -248,7 +248,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [24, "sql_re_compilations_sec"]
             ]
           }
@@ -258,7 +258,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [25, "transaction_delay"]
             ]
           }
@@ -268,7 +268,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [26, "transaction_ownership_waits"]
             ]
           }
@@ -278,7 +278,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [27, "transactions"]
             ]
           }
@@ -288,7 +288,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_1": [
               [28, "write_transactions_sec"]
             ]
           }
@@ -306,7 +306,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [0, "active_parallel_threads"]
             ]
           }
@@ -316,7 +316,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [1, "active_requests"]
             ]
           }
@@ -326,7 +326,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [2, "active_transactions"]
             ]
           }
@@ -336,7 +336,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [3, "backup_restore_throughput_sec"]
             ]
           }
@@ -346,7 +346,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [4, "batch_requests_sec"]
             ]
           }
@@ -356,7 +356,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [5, "blocked_tasks"]
             ]
           }
@@ -366,7 +366,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [6, "cache_hit_ratio"]
             ]
           }
@@ -376,7 +376,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [7, "cache_object_counts"]
             ]
           }
@@ -386,7 +386,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [8, "checkpoint_pages_sec"]
             ]
           }
@@ -396,7 +396,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [9, "cpu_usage"]
             ]
           }
@@ -406,7 +406,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [10, "dropped_messages_total"]
             ]
           }
@@ -416,7 +416,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [11, "errors_sec"]
             ]
           }
@@ -426,7 +426,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [12, "free_memory"]
             ]
           }
@@ -436,7 +436,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [13, "lock_wait"]
             ]
           }
@@ -446,7 +446,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [14, "number_of_deadlocks_sec"]
             ]
           }
@@ -456,7 +456,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [15, "open_connection_count"]
             ]
           }
@@ -466,7 +466,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [16, "page_life_expectancy"]
             ]
           }
@@ -476,7 +476,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [17, "page_lookups_sec"]
             ]
           }
@@ -486,7 +486,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [18, "page_reads_sec"]
             ]
           }
@@ -496,7 +496,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [19, "page_splits_sec"]
             ]
           }
@@ -506,7 +506,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [20, "page_writes_sec"]
             ]
           }
@@ -516,7 +516,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [21, "processes_blocked"]
             ]
           }
@@ -526,7 +526,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [22, "queued_requests"]
             ]
           }
@@ -536,7 +536,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [23, "sql_compilations_sec"]
             ]
           }
@@ -546,7 +546,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [24, "sql_re_compilations_sec"]
             ]
           }
@@ -556,7 +556,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [25, "transaction_delay"]
             ]
           }
@@ -566,7 +566,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [26, "transaction_ownership_waits"]
             ]
           }
@@ -576,7 +576,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [27, "transactions"]
             ]
           }
@@ -586,7 +586,7 @@
           "style": "values",
           "match": "all",
           "metric": {
-            "mssql": [
+            "metric_group_2": [
               [28, "write_transactions_sec"]
             ]
           }
