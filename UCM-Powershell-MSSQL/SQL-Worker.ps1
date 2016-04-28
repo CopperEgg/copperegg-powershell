@@ -137,37 +137,28 @@ function Initialize-AuthAndHeaders
 #>
 function Get-PerformanceMetrics
 {
+  $ConnectionString = @{Query = $script:Query}
+
+  if ($Username -ne "")
+  {
+    $ConnectionString.Add("Username", $script:Username)
+    $ConnectionString.Add("Password", $script:Password)
+  }
+
+  if ($Hostname -ne "")
+  {
+    $ConnectionString.Add("Hostname", $script:Hostname)
+  }
+
+  if ($Instance -ne "")
+  {
+    $ConnectionString.Add("ServerInstance", $script:Instance)
+  }
+
   Try
   {
-    if($Username)
-    {
-      $Auth = @{Username = $Username ; Password = $Password}
-    }
-    else
-    {
-      $Auth=@{}
-    }
-
-    if ($Instance)
-    {
-      $InstanceInfo = @{ServerInstance = $Instance}
-    }
-    else
-    {
-      $InstanceInfo = @{}
-    }
-
-    if ($Hostname)
-    {
-        @HostInfo = @{Hostname = $Hostname}
-    }
-    else
-    {
-        @HostInfo = @{}
-    }
-
     # Run query with available information and return result.
-    return Invoke-Sqlcmd -Query $Query @InstanceInfo @Auth @HostInfo
+    return Invoke-Sqlcmd @ConnectionString
   }
   Catch [system.exception]
   {
