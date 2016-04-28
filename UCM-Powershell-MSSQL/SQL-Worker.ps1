@@ -141,20 +141,13 @@ function Get-PerformanceMetrics
   {
     if($Username)
     {
-      $auth = @{Username = $Username ; Password = $Password}
-      if($Debug)
-      {
-        Write-Log "Instance $Instance is 'SQL Server' Authenticated"
-      }
+      $Auth = @{Username = $Username ; Password = $Password}
     }
     else
     {
-      $auth=@{}
-      if($Debug)
-      {
-        Write-Log "Instance $Instance is 'Windows' Authenticated"
-      }
+      $Auth=@{}
     }
+
     if ($Instance)
     {
       $InstanceInfo = @{ServerInstance = $Instance}
@@ -163,16 +156,25 @@ function Get-PerformanceMetrics
     {
       $InstanceInfo = @{}
     }
-    return Invoke-Sqlcmd -Query $Query @InstanceInfo @Auth
+
+    if ($Hostname)
+    {
+        @HostInfo = @{Hostname = $Hostname}
+    }
+    else
+    {
+        @HostInfo = @{}
+    }
+
+    # Run query with available information and return result.
+    return Invoke-Sqlcmd -Query $Query @InstanceInfo @Auth @HostInfo
   }
   Catch [system.exception]
   {
     Write-Log "Exception in getting data from SQL Server Instance: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
-    if ($Debug)
-    {
-      Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
-      Write-Log "More information about error (if any) => $($error[0] | out-string)"
-    }
+    Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
+    Write-Log "More information about error (if any) => $($error[0] | out-string)"
+
   }
 }
 <# Custom method to return value after diving the summed value from the no. of times of value occurance
@@ -301,11 +303,12 @@ function Send-PerformanceMetrics($Data)
   Catch [system.exception]
   {
     Write-Log "Exception in sending metric information to Uptime Cloud Monitor for instance $InstanceName"
-    Write-Log "ApiKey: $ApiKey, URI: $URI, data : $DataJson"
+    Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
+    Write-Log "More information about error (if any) => $($error[0] | out-string)"
+
     if ($Debug)
     {
-      Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
-      Write-Log "More information about error (if any) => $($error[0] | out-string)"
+      Write-Log "ApiKey: $ApiKey, URI: $URI, data : $DataJson"
     }
   }
   $script:SamplesCounter++
