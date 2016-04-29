@@ -52,6 +52,8 @@ $Query            = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_
                      counter_name = 'transactions' OR
                      counter_name = 'write transactions/sec'";
 
+# Initializing this variable here, before sending each request, the variable is 
+# initialized again otherwise request fails after sometime
 $Request = New-Object System.Net.WebClient
 
 # LogFile path is hardcoded here because worker thread cannot read $PSScriptRoot Variable
@@ -113,18 +115,20 @@ function Initialize-VariablesFromConfig($Config)
 #>
 function Initialize-AuthAndHeaders
 {
+  $script:Request = New-Object System.Net.WebClient
+
   $AuthInfo = $ApiKey + ':U'
   $AuthObject = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($AuthInfo))
-  $Request.Headers.Add('Authorization', $AuthObject)
-  $Request.Headers.Add('Accept', '*/*')
-  $Request.Headers.Add("User-Agent", "PowerShell")
-  $Request.Headers.Add('Content-Type', 'application/json')
+  $script:Request.Headers.Add('Authorization', $AuthObject)
+  $script:Request.Headers.Add('Accept', '*/*')
+  $script:Request.Headers.Add("User-Agent", "PowerShell")
+  $script:Request.Headers.Add('Content-Type', 'application/json')
   [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
   [System.Net.ServicePointManager]::Expect100Continue = $false
 
   if($Debug)
   {
-    Write-Log "Created request object with authentication info and headers $($Request | out-string)"
+    Write-Log "Created request object with authentication info and headers $($script:Request | out-string)"
   }
 }
 
@@ -282,8 +286,8 @@ function Send-PerformanceMetrics($Data)
       Write-Log "Sending $script:SamplesCounter th sample."
       Write-Log "URI : $URI, Request JSON : $($DataJson)"
     }
-    $Result = $Request.UploadString($URI, $DataJson)
-    $StatusCode = $($Request.ResponseHeaders.Item('status'))
+    $Result = $script:Request.UploadString($URI, $DataJson)
+    $StatusCode = $($script:Request.ResponseHeaders.Item('status'))
     if($StatusCode -ne "200 OK")
     {
       Write-Log "Failed sending the sample to Uptime Cloud Monitor. The response code was not 200."
