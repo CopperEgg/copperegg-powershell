@@ -3,6 +3,12 @@ CoppereggPowershell
 
 The Uptime Cloud Monitor Powershell module is a Powershell interface to the Uptime Cloud Monitor API, making it simple to create custom metrics and dashboards for Microsoft Windows systems.
 
+## Update
+
+We have included monitoring agents for Microsoft SQL Server and Microsoft AzureSQL Server inside UCM-Powershell-MSSQL directory of this repository.
+These are easily configurable using installation script available in your Uptime Cloud Monitor account
+(Login to your account -> Custom Tab -> Getting Started -> Click on SQL Server or AzureSQL icon and follow the instructions).
+
 ##Synopsis
 The module includes:
   - CopperEgg.psm1... contains Powershell functions that are wrappers for the Uptime Cloud Monitor API

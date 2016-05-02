@@ -1,3 +1,5 @@
+#### CoppereggPowershell 1.3.0 (May 14, 2014)
+* Added monitoring agent for Microsoft SQL Server and Azure SQL server (UCM-Powershell-MSSQL directory)
 
 #### CoppereggPowershell 1.2.0 (May 14, 2014)
 * Several stability improvements and better error messages.
