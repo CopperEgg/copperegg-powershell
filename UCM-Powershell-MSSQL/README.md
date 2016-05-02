@@ -1,12 +1,15 @@
-UCM-Powershell
+UCM-Powershell-MSSQL
 ==============
 
-This is a powershell based implementation to collect performance metrics from Microsoft SQL Server.
+Uses powershell to monitor Microsoft based services. It currently supports
+ - Microsoft SQL Server,
+ - Microsoft AzureSQL Server.
+
 Unlike the implementation in main page of the repository, it does not collect metrics for other services
-but comes with installation script because of which the user is not required to create config.xml file
+but comes with installation script because of which the user is not required to create/edit config.xml file
 himself. To get the installation script, open your Uptime Cloud Monitor account -> Custom Tab ->
-Getting Started -> Microsoft SQL Server and follow the instructions. The script will be downloaded
-and you will be required to enter configuration settings for your SQL server instance(s). Post that,
+Getting Started -> Click on Microsoft SQL Server or Azure SQL icon and follow the instructions. The script will be downloaded
+and you will be required to enter configuration settings for your instance(s). Post that,
 a config.xml file is generated with the provided settings and service is started to monitor SQL instance(s)
 
 ##Synopsis
@@ -24,37 +27,35 @@ The module includes:
 
 This module provides a rich set of performance metrics for Microsoft SQL Server. The metrics monitored by this script are :
 
-- Access Page Splits
-- Cache Hit Ratio
-- Checkpoint Pages
-- Page Life Expectancy
-- Batch Requests
-- Connections
-- Lock Waits
-- Proc Blocked
-- SQL Compilations
-- SQL Recompilations
-- Active parallel threads
-- Active requests
+- Active Parallel Threads
+- Active Requests
 - Active Transactions
-- Backup/Restore Throughput/sec
-- Blocked tasks
+- Backup Restore Throughput/Sec
+- Batch Requests/Sec
+- Blocked Tasks
+- Cache Hit Ratio
 - Cache Object Counts
-- CPU usage %
+- Checkpoint Pages/Sec
+- CPU Usage (%)
 - Dropped Messages Total
-- Errors/sec
-- Free Memory (KB)
-- Number of Deadlocks/sec
-- Open Connection Count
-- Page lookups/sec
-- Page reads/sec
-- Page Splits/sec
-- Page writes/sec
-- Queued requests
+- Errors/Sec
+- Free Memory
+- Lock Wait
+- No. of Deadlocks/Sec
+- Open Connections Count
+- Page Life Expectancy
+- Page Lookups/Sec
+- Page Reads/Sec
+- Access Page Splits
+- Page Writes/Sec
+- Processes Blocked
+- Queued Requests
+- SQL Compilations/Sec
+- SQL Recompilations/Sec
 - Transaction Delay
-- Transaction ownership waits
+- Transaction Ownership Waits
 - Transactions
-- Write Transactions/sec
+- Write Transactions/Sec
 
 This script monitors more metrics as compared to previous script which is in the main page of the repository.
 
@@ -82,6 +83,10 @@ The script has been tested on:
 - Windows 10 and SQL Server 2014.
 - Windows 10 and SQL Server 2012.
 
+No specific requirements for Azure SQL instance. Just make sure you update the firewall settings in
+Azure console to allow IP of the monitoring system. Here monitoring system is the one where you will be
+installing and runing this script.
+
 All of the above systems had powershell 3.0 installed. Apart from that, the script has following requirements
 
 * Powershell v3.0 is required, you can download it from [here](http://www.microsoft.com/en-us/download/details.aspx?id=34595)
@@ -99,7 +104,7 @@ This will show you Powershell major version, minor version etc.
  2. Microsoft SQL Server 2012 Shared Management Objects (search SharedManagementObjects.msi in the page)
  3. Microsoft Windows PowerShell Extensions for Microsoft SQL Server 2012 (search PowerShellTools.msi in the page)
 
- After downloading, run this command on a powershell window in Admin mode : `Import-Module SQLPS`
+After downloading, run this command on a powershell window in Admin mode : `Import-Module SQLPS`
 
 ## Questions / Problems?
 
