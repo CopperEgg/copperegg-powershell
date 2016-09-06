@@ -1,0 +1,130 @@
+{
+  "Web_Service" : {
+    "name": "dashboard_name",
+    "data": {
+      "widgets": {
+        "0": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [0, "locked errors/sec"]
+            ]
+          }
+        },
+        "1": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [1, "lock requests/sec"]
+            ]
+          }
+        },
+        "2": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [2, "not found errors/sec"]
+            ]
+          }
+        },
+        "3": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [3, "bytes received/sec"]
+            ]
+          }
+        },
+        "4": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [4, "bytes sent/sec"]
+            ]
+          }
+        },
+        "5": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [5, "bytes total/sec"]
+            ]
+          }
+        },
+        "6": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [6, "current connections"]
+            ]
+          }
+        },
+        "7": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [7, "cgi requests/sec"]
+            ]
+          }
+        },
+        "8": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [8, "isapi extension requests/sec"]
+            ]
+          }
+        },
+        "9": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [9, "service uptime"]
+            ]
+          }
+        },
+        "10": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [10, "current anonymous users"]
+            ]
+          }
+        },
+        "11": {
+          "type": "timeline",
+          "style": "values",
+          "match": "all",
+          "metric": {
+            "metric_group_name": [
+               [11, "current nonanonymous users"]
+            ]
+          }
+        }
+      },
+      "order": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+    }
+  }
+}
