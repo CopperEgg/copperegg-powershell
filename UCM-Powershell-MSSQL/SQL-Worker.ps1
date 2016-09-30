@@ -52,12 +52,12 @@ $Query            = "SELECT counter_name, cntr_value FROM sys.dm_os_performance_
                      counter_name = 'transactions' OR
                      counter_name = 'write transactions/sec'";
 
-# Initializing this variable here, before sending each request, the variable is 
+# Initializing this variable here, before sending each request, the variable is
 # initialized again otherwise request fails after sometime
 $Request = New-Object System.Net.WebClient
 
 # LogFile path is hardcoded here because worker thread cannot read $PSScriptRoot Variable
-$LogFile = "$env:programfiles\UCM-Powershell\ucm-metrics.log"
+$LogFile = "$env:programfiles\UCM-Powershell\MSSQL\ucm-metrics.log"
 
 $Debug = $FALSE
 
