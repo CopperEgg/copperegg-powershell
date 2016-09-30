@@ -22,4 +22,4 @@ Catch [system.exception]
 
 Write-Host "Launching main script. Please allow it to run with admin rights"
 Start-Sleep -s 2
-Start-Process Powershell -WindowStyle Hidden -Verb RunAs -ArgumentList "-file `"$env:programfiles\UCM-Powershell\mssql\UCM-SQL-Monitor.ps1`" `"$args`""
+Start-Process Powershell -WindowStyle Hidden -Verb RunAs -ArgumentList "-file `"$env:programfiles\UCM-Powershell\MSSQL\UCM-SQL-Monitor.ps1`" `"$args`""
