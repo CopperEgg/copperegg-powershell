@@ -1,0 +1,112 @@
+{
+  "Web_Service" : {
+    "name": "MS_Web",
+    "label": "MS_Web",
+    "unit": null,
+    "frequency": "60",
+    "metrics": [
+      {
+        "name": "current anonymous users",
+        "label": "Current Anonymous Users",
+        "type": "ce_gauge",
+        "unit": "Users"
+      },
+      {
+        "name": "current cgi requests",
+        "label": "Current CGI Requests",
+        "type": "ce_gauge",
+        "unit": "Requests"
+      },
+      {
+        "name": "current connections",
+        "label": "Current Connections",
+        "type": "ce_gauge",
+        "unit": "Connections"
+      },
+      {
+        "name": "current isapi extension requests",
+        "label": "Current ISAPI Requests",
+        "type": "ce_gauge",
+        "unit": "Requests"
+      },
+      {
+        "name": "current nonanonymous users",
+        "label": "Current NonAnonymous Users",
+        "type": "ce_gauge",
+        "unit": "Users"
+      },
+      {
+        "name": "maximum cgi requests",
+        "label": "Maximum CGI Requests",
+        "type": "ce_gauge",
+        "unit": "Requests"
+      },
+      {
+        "name": "maximum connections",
+        "label": "Maximum Connections",
+        "type": "ce_gauge",
+        "unit": "Connections"
+      },
+      {
+        "name": "maximum isapi extension requests",
+        "label": "Maximum ISAPI Requests",
+        "type": "ce_gauge",
+        "unit": "Request"
+      },
+      {
+        "name": "service uptime",
+        "label": "Service Uptime",
+        "type": "ce_gauge",
+        "unit": "Seconds"
+      },
+      {
+        "name": "bytes received/sec",
+        "label": "Bytes Recieved",
+        "type": "ce_gauge",
+        "unit": "Bytes"
+      },
+      {
+        "name": "bytes sent/sec",
+        "label": "Bytes Sent",
+        "type": "ce_gauge",
+        "unit": "Bytes"
+      },
+      {
+        "name": "cgi requests/sec",
+        "label": "CGI Request",
+        "type": "ce_gauge",
+        "unit": "Request"
+      },
+      {
+        "name": "isapi extension requests/sec",
+        "label": "Isapi Extension Requests",
+        "type": "ce_gauge",
+        "unit": "Request"
+      },
+      {
+        "name": "lock requests/sec",
+        "label": "Lock Requests",
+        "type": "ce_gauge",
+        "unit": "Requests"
+      },
+      {
+        "name": "locked errors/sec",
+        "label": "Locked Errors",
+        "type": "ce_gauge",
+        "unit": "Errors"
+      },
+      {
+        "name": "nonanonymous users/sec",
+        "label": "NonAnonymous Users",
+        "type": "ce_gauge",
+        "unit": "Users"
+      },
+      {
+        "name": "not found errors/sec",
+        "label": "NotFound Errors",
+        "type": "ce_gauge",
+        "unit": "Errors"
+      }
+    ]
+  }
+}

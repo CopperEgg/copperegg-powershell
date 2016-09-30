@@ -2,12 +2,7 @@ $root = $PSScriptRoot
 
 . $root\Utils.ps1
 
-<# Custom method to Create a dashboard based on parameters passed to the script.
-   Arguments : ApiServer (Address of API Server, kept flexible for testing on dev/staging env)
-               Apikey (Apikey of user using which metric group is created and samples are sent)
-               DashboardName (Name of the dashboard)
-#>
-function Create-Dashboard([string]$ApiServer, [string]$ApiKey, [string]$ServiceName, [string]$DashboardName)
+function Create-Dashboard($ApiServer, $ApiKey, $ServiceName, $DashboardName)
 {
   $Request = New-Object System.Net.WebClient
   $URI = "$ApiServer/v2/revealmetrics/dashboards"
@@ -21,19 +16,21 @@ function Create-Dashboard([string]$ApiServer, [string]$ApiKey, [string]$ServiceN
   [System.Net.ServicePointManager]::Expect100Continue = $false
 
   # Get the json, make a hashtable out of it, modify the requried parameters and convert back to JSON
-  $DataJson = Get-Content -Raw -Path "$PSScriptRoot\dashboard.json" | ConvertFrom-JSON
+  $DataJson = Get-Content -Raw -Path "$root\dashboard.json" | ConvertFrom-JSON
   $ConvertedJson = $DataJson.$ServiceName
   $ConvertedJson.name = $DashboardName
   $DataJson = $ConvertedJson | ConvertTo-JSON -Depth 10
+
+########## metric_group_name  change to metric group name
 
   Write-Log "Updated DataJson parameters from config : $DataJson"
   Try
   {
     $Result = $Request.UploadString($URI, $DataJson)
     $StatusCode = $($Request.ResponseHeaders.Item('status'))
-    Write-Log "Succesfully created dashboard on Uptime Cloud Monitor [$StatusCode]"
     if($StatusCode -ne "200 OK")
     {
+      Write-Host "Failed while creating dashboard for $($ConvertedJson.name). The response code was not 200."
       Write-Log "Failed while creating dashboard for $($ConvertedJson.name). The response code was not 200."
       Write-Log "More information : Response code : '$StatusCode', Request result : '$Result'"
     }
