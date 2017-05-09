@@ -4,6 +4,7 @@
     "label": "SQL Server Metrics",
     "unit": null,
     "frequency": "60",
+    "service": "mssql",
     "metrics": [
       {
         "name": "active_parallel_threads",
@@ -158,6 +159,7 @@
     "label": "AzureSQL Server Metrics",
     "unit": null,
     "frequency": "60",
+    "service": "azure_sql",
     "metrics": [
       {
         "name": "active_parallel_threads",

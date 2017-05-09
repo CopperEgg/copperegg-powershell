@@ -29,6 +29,7 @@ function Create-MetricGroup([string]$ApiServer, [string]$ApiKey, [string]$Servic
   $ConvertedJson.name = $GroupName
   $ConvertedJson.label = $GroupLabel
   $ConvertedJson.frequency = $MonitoringFrequency
+
   $DataJson = $ConvertedJson | ConvertTo-JSON -Depth 10
 
   Write-Log "Updated DataJson parameters from config : $DataJson"
