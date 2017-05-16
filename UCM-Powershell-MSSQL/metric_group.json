@@ -5,6 +5,7 @@
     "unit": null,
     "frequency": "60",
     "service": "mssql",
+    "is_database": "true",
     "metrics": [
       {
         "name": "active_parallel_threads",
@@ -160,6 +161,7 @@
     "unit": null,
     "frequency": "60",
     "service": "azure_sql",
+    "is_database": "true",
     "metrics": [
       {
         "name": "active_parallel_threads",
