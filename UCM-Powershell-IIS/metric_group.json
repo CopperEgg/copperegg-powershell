@@ -56,7 +56,7 @@
       {
         "name": "isapi extension requests/sec",
         "label": "Isapi Extension Requests",
-        "type": "ce_gauge",
+        "type": "ce_counter",
         "unit": "Request"
       },
       {
