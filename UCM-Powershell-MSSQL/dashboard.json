@@ -1,6 +1,7 @@
 {
   "MSSQL" : {
     "name": "SQL-Server",
+    "is_database": true,
     "data": {
       "widgets": {
         "0": {
@@ -299,6 +300,7 @@
   },
   "AzureSQL" : {
     "name": "AzureSQL-Server",
+    "is_database": true,
     "data": {
       "widgets": {
         "0": {
