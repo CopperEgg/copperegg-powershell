@@ -5,7 +5,7 @@ $root = $PSScriptRoot
 . $root\Create-MetricGroups.ps1
 . $root\Create-Dashboards.ps1
 
-function ParseNodeToXML($server)
+function ParseServerNodeToXML($server)
 {
   [string]$Username = $server.Username
   [string]$Password = $server.Password
@@ -19,6 +19,17 @@ function ParseNodeToXML($server)
   return $hash
 }
 
+function ParseSiteNodeToXML($site)
+{
+  [string]$SiteName = $site.SiteName
+  [string]$IpAddress = $site.IpAddress
+  [string]$Port = $site.Port
+  $hash = @{
+    "SiteName" = "$SiteName"; "IpAddress" = "$IpAddress" ; "Port" = "$Port"
+  }
+  return $hash
+}
+
 [System.Xml.XmlElement]$Metrics = $Config.Settings.MetricGroups
 
 # Setting execution policy to unrestricted so that no user is required to reply to security prompts once script starts running
@@ -26,8 +37,6 @@ Set-ExecutionPolicy Unrestricted
 
 Write-Log "Starting monitoring agent."
 
-
-$counter = 0
 ForEach($metric in $Metrics.ChildNodes)
 {
   [string]$ServiceName = $metric.ServiceName
@@ -40,12 +49,14 @@ ForEach($metric in $Metrics.ChildNodes)
   Create-MetricGroup $ApiServer $Apikey $ServiceName $MetricGroupName $MetricGroupLabel $MonitoringFrequency
   ForEach ($server in $Servers.ChildNodes)
   {
-    $hash = ParseNodeToXML($server)
-    $arguments = @($args, $hash, $Apikey, $ApiServer, $MetricGroupName, $MonitoringFrequency, $PSScriptRoot)
-    if($counter -eq 0) {
+    [System.Xml.XmlElement]$Sites = $server.Sites
+    ForEach ($site in $Sites.ChildNodes)
+    {
+      $ServerHash = ParseServerNodeToXML($server)
+      $SiteHash = ParseSiteNodeToXML($site)
+      $arguments = @($args, $ServerHash, $SiteHash, $Apikey, $ApiServer, $MetricGroupName, $MonitoringFrequency, $PSScriptRoot)
       $job = Start-Job -filepath "$root\Worker.ps1" -ArgumentList $arguments
       Write-Log "Spawning worker thread : $($job|out-string)"
-      $counter  = 1
     }
   }
 }

@@ -115,6 +115,25 @@ function CreateXML
       $XMLWriter.WriteElementString("Username",$Server.Username)
       $XMLWriter.WriteElementString("Password",$Server.Password)
       $XMLWriter.WriteElementString("SystemIdentifier",$Server.UniqueName)
+      $XMLWriter.WriteStartElement("Sites")
+      $Sites = get-website
+      $SiteList = [System.Collections.ArrayList]@()
+      foreach($Site in $Sites) {
+        $Counter = $SiteList.Add($Site.name) + 1
+        $XMLWriter.WriteStartElement("Site$Counter")
+        $name = $Site.name
+        $bindings = $Site.bindings.collection.bindinginformation.split(":")
+        $ip = $bindings[0]
+        $port = $bindings[1]
+        $XMLWriter.WriteElementString("SiteName",$name)
+        $XMLWriter.WriteElementString("IpAddress", $ip)
+        $XMLWriter.WriteElementString("Port", $port)
+        $XMLWriter.WriteEndElement()
+      }
+      Write-Host "Adding monitoring for these sites under IIS server ($($Server.Hostname)): $($SiteList -join ', ')"
+      Write-Host "To Add/Delete the monitoring for any specific site you can edit the config.yml generated."
+      # Closing Sites Element
+      $XMLWriter.WriteEndElement()
       # Closing particular server, say Server1
       $XMLWriter.WriteEndElement()
       $Index++
@@ -142,6 +161,70 @@ function CreateXML
   $XMLWriter.Close()
 }
 
+function TestConnection ($InstanceDetails)
+{
+  Try
+  {
+    # Try to connect to the server specified
+    Try
+    {
+      # Check with instance name
+      $result = Test-Connection -ComputerName $InstanceDetails.HostName -Count 1 -Quiet
+    }
+    Catch [system.exception]
+    {
+      # If we are not able to connect then, the Hostname mentioned is incorrect/unreachable
+      Write-Host
+      Write-Host -ForegroundColor YELLOW "Not able to fetch connect to the server."
+      Write-Host -ForegroundColor YELLOW "Hostname mentioned is incorrect/unreachable"
+      return $FALSE
+    }
+
+    # If the script reaches here it means connection is successful. Now let's check if we can access stats
+
+    Try
+    {
+      $result = Get-Counter -ComputerName $InstanceDetails.HostName -listset *
+      return $TRUE
+    }
+    Catch [system.exception]
+    {
+      Write-Host
+      Write-Host -ForegroundColor YELLOW "Not able to fetch stats for the system specified."
+      Write-Host -ForegroundColor YELLOW "Probably issue with admin access to the server/firewall setting issues."
+      Write-Host
+      Write-Host "Are you sure you want to save these settings ? [Y/N] [Default=No]"
+      $Save = Read-Host
+      if ($Save -eq "Y")
+      {
+        return $TRUE
+      }
+      else
+      {
+        return $FALSE
+      }
+    }
+  }
+  Catch [system.exception]
+  {
+    Write-Host "Exception in getting stats from IIS Instance: $($_.Exception.GetType().Name) - $($_.Exception.Message)"
+    Write-Host "$($_.Exception.GetType().Name) - $($_.Exception.Message)"
+    Write-Host
+    Write-Host
+    Write-Host
+    Write-Host "We were not able to access the instance using given credentials. Are you sure you want to save these settings ? [Y/N] [Default=No]"
+    Write-Host "Note : This might generate errors in logs if credentials are not correct."
+    $Save = Read-Host
+    if ($Save -eq "Y")
+    {
+      return $TRUE
+    }
+    else
+    {
+      return $FALSE
+    }
+  }
+}
 
 function ConfigureInstanceSpecificDetails($InstanceNumber)
 {
@@ -168,9 +251,18 @@ function ConfigureInstanceSpecificDetails($InstanceNumber)
     "InstanceName" = "$InstanceName"
   }
 
-  $Index = $script:MetricGroup.Servers.Add($InstanceDetails)
-  Write-Host "Instance details saved."
-  Write-Host
+  Write-Host "Attempting to connect to instance with given settings...."
+  $Save = TestConnection($InstanceDetails)
+  if ($Save)
+  {
+    # $Index is not used anywhere but if we don't store the result of .Add method somewhere,
+    # it will be echoed to the powershell console and we don't want that.
+
+    Write-Host "Connection successful"
+    $Index = $script:MetricGroup.Servers.Add($InstanceDetails)
+    Write-Host "Instance details saved."
+    Write-Host
+  }
 }
 
 function ConfigureDetails()
@@ -264,7 +356,6 @@ function PrintHintText ($Message)
 
 ConfigureDetails
 CreateXML
-
 CreateDashboard
 
 $StartupFilePath = MakeStartupService
