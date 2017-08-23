@@ -18,20 +18,9 @@ $Hostname         = ''
 
 $SystemIdentifier = ''
 
-$QueryMetrics     = @(
-  '\Web Service(default web site)\Lock Requests/sec',
-  '\Web Service(default web site)\Locked Errors/sec',
-  '\Web Service(default web site)\Not Found Errors/sec',
-  '\Web Service(default web site)\Bytes Received/sec',
-  '\Web Service(default web site)\Bytes Sent/sec',
-  '\Web Service(default web site)\Bytes Total/sec',
-  '\Web Service(default web site)\Current Connections',
-  '\Web Service(default web site)\CGI Requests/sec',
-  '\Web Service(default web site)\ISAPI Extension Requests/sec',
-  '\Web Service(default web site)\Service Uptime'
-  '\Web Service(default web site)\Current Anonymous Users',
-  '\Web Service(default web site)\Current NonAnonymous Users'
-  );
+$Site             = ''
+
+$MetricIdentifier = ''
 
 # Initializing this variable here, before sending each request, the variable is
 # initialized again otherwise request fails after sometime
@@ -55,17 +44,21 @@ function Get-UnixTimestamp
   return $ED=[Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 }
 
-function Initialize-VariablesFromConfig($Config)
+function Initialize-VariablesFromConfig($ServerConfig)
 {
-  $script:Instance         = [string]$Config.InstanceName.trim()
-  $script:SystemIdentifier = [string]$Config.SystemIdentifier.trim()
-  $script:Username         = [string]$Config.Username.trim()
-  $script:Password         = [string]$Config.Password.trim()
-  $script:Hostname         = [string]$Config.Hostname.trim()
+  $script:Instance         = [string]$ServerConfig.InstanceName.trim()
+  $script:SystemIdentifier = [string]$ServerConfig.SystemIdentifier.trim()
+  $script:Username         = [string]$ServerConfig.Username.trim()
+  $script:Password         = [string]$ServerConfig.Password.trim()
+  $script:Hostname         = [string]$ServerConfig.Hostname.trim()
+  $script:Site             = [string]$ServerConfig.SiteName.trim()
+  $script:MetricIdentifier = $SystemIdentifier + '_' + $($Site.replace(' ', '_'))
 
   Write-Log "Parsed Argument from config ==> IIS Instance name : '$Instance'"
   Write-Log "Parsed Argument from config ==> IIS Hostname : '$Hostname'"
   Write-Log "Parsed Argument from config ==> System's Unique Name : '$SystemIdentifier'"
+  Write-Log "Parsed Argument from config ==> Site's Name : '$Site'"
+  Write-Log "Parsed Argument from config ==> Custom Metric Object's Name : '$MetricIdentifier'"
 
 }
 
@@ -104,7 +97,7 @@ function Process-PerformanceMetrics($samples)
 
   $sample_data = @{
     timestamp  = Get-UnixTimestamp
-    identifier = $SystemIdentifier
+    identifier = $MetricIdentifier
     values     = $metric_data
   }
 
@@ -157,18 +150,33 @@ function Send-PerformanceMetrics($Data)
 Write-log "Starting worker job "
 
 # Parsing parameters from args which is a complex array (passed by parent script)
-[string]$Apikey = $args[2]
-[string]$ApiServer = $args[3]
-[string]$MetricGroup = $args[4]
-[string]$SleepTime = $args[5]
-[string]$BasePath = $args[6]
+[string]$Apikey = $args[3]
+[string]$ApiServer = $args[4]
+[string]$MetricGroup = $args[5]
+[string]$SleepTime = $args[6]
+[string]$BasePath = $args[7]
 
 Write-Log "Parsed Argument from config ==> Apikey : '$ApiKey'"
 Write-Log "Parsed Argument from config ==> API Server : '$ApiServer'"
 Write-Log "Parsed Argument from config ==> Metric Group name : '$MetricGroup'"
 Write-Log "Parsed Argument from config ==> Monitoring Frequency : '$SleepTime'"
 
-Initialize-VariablesFromConfig($args[1])
+Initialize-VariablesFromConfig($args[1], $args[2])
+
+$QueryMetrics = @(
+            "\Web Service($Site)\Lock Requests/sec",
+            "\Web Service($Site)\Locked Errors/sec",
+            "\Web Service($Site)\Not Found Errors/sec",
+            "\Web Service($Site)\Bytes Received/sec",
+            "\Web Service($Site)\Bytes Sent/sec",
+            "\Web Service($Site)\Bytes Total/sec",
+            "\Web Service($Site)\Current Connections",
+            "\Web Service($Site)\CGI Requests/sec",
+            "\Web Service($Site)\ISAPI Extension Requests/sec",
+            "\Web Service($Site)\Service Uptime"
+            "\Web Service($Site)\Current Anonymous Users",
+            "\Web Service($Site)\Current NonAnonymous Users"
+            );
 
 while($TRUE)
 {

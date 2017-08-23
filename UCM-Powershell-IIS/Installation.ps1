@@ -77,71 +77,163 @@ function CreateDashboard
 
 function CreateXML
 {
-  Write-Host "Saving settings"
-  $XMLWriter = New-Object System.XMl.XmlTextWriter($XmlfilePath, $Null)
-
-  $XMLWriter.Formatting = "Indented"
-  $XMLWriter.Indentation = "4"
-
-  $XMLWriter.WriteStartDocument()
-
-  $XMLWriter.WriteStartElement("Settings")
-
-  $XMLWriter.WriteStartElement("UptimeCloudMonitor")
-  $XMLWriter.WriteElementString("Apikey",$script:UserAPIKey)
-  $XMLWriter.WriteElementString("ApiServer",$script:ApiHost)
-  $XMLWriter.WriteEndElement()
-
-  $XMLWriter.WriteStartElement("MetricGroups")
-
-  $server_count = $MetricGroup.Servers.Count
-  if($server_count -gt 0)
+  Try
   {
-    $XMLWriter.WriteStartElement("MetricGroup$Count")
-    $XMLWriter.WriteElementString("ServiceName", $service)
-    $XMLWriter.WriteElementString("DashboardName", "$($MetricGroup.DashboardName)")
-    $XMLWriter.WriteElementString("MetricGroupName", "$($MetricGroup.MetricGroupName)")
-    $XMLWriter.WriteElementString("MetricGroupLabel", "$($MetricGroup.MetricGroupLabel)")
-    $XMLWriter.WriteElementString("Frequency", "$($MetricGroup.Frequency)")
+    Write-Host "Saving settings"
+    $XMLWriter = New-Object System.XMl.XmlTextWriter($XmlfilePath, $Null)
 
-    $XMLWriter.WriteStartElement("Servers")
-    $Index = 1
+    $XMLWriter.Formatting = "Indented"
+    $XMLWriter.Indentation = "4"
 
-    ForEach ($Server in $MetricGroup.Servers)
+    $XMLWriter.WriteStartDocument()
+
+    $XMLWriter.WriteStartElement("Settings")
+
+    $XMLWriter.WriteStartElement("UptimeCloudMonitor")
+    $XMLWriter.WriteElementString("Apikey",$script:UserAPIKey)
+    $XMLWriter.WriteElementString("ApiServer",$script:ApiHost)
+    $XMLWriter.WriteEndElement()
+
+    $XMLWriter.WriteStartElement("MetricGroups")
+
+    $server_count = $MetricGroup.Servers.Count
+    if($server_count -gt 0)
     {
-      $XMLWriter.WriteStartElement("Server$Index")
-      $XMLWriter.WriteElementString("InstanceName",$Server.InstanceName)
-      $XMLWriter.WriteElementString("Hostname",$Server.Hostname)
-      $XMLWriter.WriteElementString("Username",$Server.Username)
-      $XMLWriter.WriteElementString("Password",$Server.Password)
-      $XMLWriter.WriteElementString("SystemIdentifier",$Server.UniqueName)
-      # Closing particular server, say Server1
+      $XMLWriter.WriteStartElement("MetricGroup$Count")
+      $XMLWriter.WriteElementString("ServiceName", $service)
+      $XMLWriter.WriteElementString("DashboardName", "$($MetricGroup.DashboardName)")
+      $XMLWriter.WriteElementString("MetricGroupName", "$($MetricGroup.MetricGroupName)")
+      $XMLWriter.WriteElementString("MetricGroupLabel", "$($MetricGroup.MetricGroupLabel)")
+      $XMLWriter.WriteElementString("Frequency", "$($MetricGroup.Frequency)")
+
+      $XMLWriter.WriteStartElement("Servers")
+      $Index = 1
+
+      ForEach ($Server in $MetricGroup.Servers)
+      {
+        $XMLWriter.WriteStartElement("Server$Index")
+        $XMLWriter.WriteElementString("InstanceName",$Server.InstanceName)
+        $XMLWriter.WriteElementString("Hostname",$Server.Hostname)
+        $XMLWriter.WriteElementString("Username",$Server.Username)
+        $XMLWriter.WriteElementString("Password",$Server.Password)
+        $XMLWriter.WriteElementString("SystemIdentifier",$Server.UniqueName)
+        $XMLWriter.WriteStartElement("Sites")
+        $Sites = get-website
+        $SiteList = [System.Collections.ArrayList]@()
+        foreach($Site in $Sites) {
+          $Counter = $SiteList.Add($Site.name) + 1
+          $XMLWriter.WriteStartElement("Site$Counter")
+          $name = $Site.name
+          $bindings = $Site.bindings.collection.bindinginformation.split(":")
+          $ip = $bindings[0]
+          $port = $bindings[1]
+          $XMLWriter.WriteElementString("SiteName",$name)
+          $XMLWriter.WriteElementString("IpAddress", $ip)
+          $XMLWriter.WriteElementString("Port", $port)
+          $XMLWriter.WriteEndElement()
+        }
+        Write-Host "Adding monitoring for these sites under IIS server ($($Server.Hostname)): $($SiteList -join ', ')"
+        Write-Host "To Add/Delete the monitoring for any specific site you can edit the config.yml generated."
+        Write-Host "Configuration file can be found here $env:programfiles\UCM-Powershell\IIS\config.xml"
+        # Closing Sites Element
+        $XMLWriter.WriteEndElement()
+        # Closing particular server, say Server1
+        $XMLWriter.WriteEndElement()
+        $Index++
+      }
+      # Close Servers tag
       $XMLWriter.WriteEndElement()
-      $Index++
+
+      # Close a particular MetricGroup tag, say MetricGroup1 tag
+      $XMLWriter.WriteEndElement()
+      $Count++
     }
-    # Close Servers tag
+    # Close MetricGroup
     $XMLWriter.WriteEndElement()
 
-
-    # Close a particular MetricGroup tag, say MetricGroup1 tag
+    # Close Settings
     $XMLWriter.WriteEndElement()
-    $Count++
+
+    # End the XML Document
+    $XMLWriter.WriteEndDocument()
+
+    # Finish The Document
+    $XMLWriter.Flush()
+    $XMLWriter.Close()
   }
-
-  # Close MetricGroup
-  $XMLWriter.WriteEndElement()
-
-  # Close Settings
-  $XMLWriter.WriteEndElement()
-
-  # End the XML Document
-  $XMLWriter.WriteEndDocument()
-
-  # Finish The Document
-  $XMLWriter.Flush()
-  $XMLWriter.Close()
+  Catch [system.exception]
+  {
+    Write-Host "Error creating config file. Check connectivity to the host/permissions for running this script."
+    Write-Host "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
+    Write-Host "More information about error (if any) => $($error[0] | out-string)"
+    exit
+  }
 }
 
+function SaveIncorrectHost ($Reason)
+{
+  Write-Host
+  if ($Reason -eq 'ServerUnreachable')
+  {
+    # If we are not able to connect then, the Hostname mentioned is incorrect/unreachable
+    Write-Host -ForegroundColor YELLOW "Not able to fetch connect to the server."
+    Write-Host -ForegroundColor YELLOW "Hostname mentioned is incorrect/unreachable"
+  }
+  elseif ($Reason -eq 'PermissionIssue')
+  {
+    Write-Host -ForegroundColor YELLOW "Not able to fetch stats for the system specified."
+    Write-Host -ForegroundColor YELLOW "Probably issue with admin access to the server/firewall setting issues."
+  }
+  Write-Host
+  Write-Host "Are you sure you want to save these settings ? [Y/N] [Default=No]"
+  $Save = Read-Host
+  if ($Save -eq "Y")
+  {
+    return $TRUE
+  }
+  else
+  {
+    return $FALSE
+  }
+}
+
+function TestConnection ($InstanceDetails)
+{
+  Try
+  {
+    # Try to connect to the server specified
+    $result = Test-Connection -ComputerName $InstanceDetails.HostName -Count 1
+  }
+  Catch [system.exception]
+  {
+    return SaveIncorrectHost('ServerUnreachable')
+  }
+
+  Try
+  {
+    if($result)
+    {
+      # If the script reaches here it means connection is successful. Now let's check if we can access stats
+      $result = Get-Counter -ComputerName $InstanceDetails.HostName -listset *
+      if ([string]::IsNullOrEmpty($result))
+      {
+        return SaveIncorrectHost('PermissionIssue')
+      }
+      else
+      {
+        return $TRUE
+      }
+    }
+    else
+    {
+      return SaveIncorrectHost('ServerUnreachable')
+    }
+  }
+  Catch [system.exception]
+  {
+    return SaveIncorrectHost('PermissionIssue')
+  }
+}
 
 function ConfigureInstanceSpecificDetails($InstanceNumber)
 {
@@ -168,9 +260,18 @@ function ConfigureInstanceSpecificDetails($InstanceNumber)
     "InstanceName" = "$InstanceName"
   }
 
-  $Index = $script:MetricGroup.Servers.Add($InstanceDetails)
-  Write-Host "Instance details saved."
-  Write-Host
+  Write-Host "Attempting to connect to instance with given settings...."
+  $Save = TestConnection($InstanceDetails)
+  if ($Save)
+  {
+    # $Index is not used anywhere but if we don't store the result of .Add method somewhere,
+    # it will be echoed to the powershell console and we don't want that.
+
+    Write-Host "Connection successful"
+    $Index = $script:MetricGroup.Servers.Add($InstanceDetails)
+    Write-Host "Instance details saved."
+    Write-Host
+  }
 }
 
 function ConfigureDetails()
@@ -264,7 +365,6 @@ function PrintHintText ($Message)
 
 ConfigureDetails
 CreateXML
-
 CreateDashboard
 
 $StartupFilePath = MakeStartupService
