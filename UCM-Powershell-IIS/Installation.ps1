@@ -45,29 +45,34 @@ function MakeStartupService
 {
   Write-Host "Creating Startup job"
 
-  $taskName = "UCM_IIS"
-  $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+  $jobName = "UCM_IIS"
+  $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
 
-  if ($task -ne $null)
+  if ($job -ne $null)
   {
-    Write-Host "Un-registering existing task"
-    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+    Write-Host "Un-registering existing job"
+    Unregister-ScheduledJob -Name $jobName -Confirm:$false
   }
 
-  $action     = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File `"$ConfigDirectory\start-ucm-monitor.ps1"`'
-  $trigger    = New-ScheduledTaskTrigger -AtStartup -RandomDelay 00:00:30
-  $settings   = New-ScheduledTaskSettingsSet -Compatibility Win8
-  $principal  = New-ScheduledTaskPrincipal -UserId SYSTEM -LogonType ServiceAccount -RunLevel Highest
-  $definition = New-ScheduledTask -Action $action -Principal $principal -Trigger $trigger -Settings $settings -Description "Run $($taskName) at startup"
-  Register-ScheduledTask -TaskName $taskName -InputObject $definition
-  $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-  if ($task -ne $null)
+  $filePath = "$ConfigDirectory\start-ucm-monitor.ps1"
+  $jobTrigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
+  $jobSchedule = New-ScheduledJobOption -RunElevated -WakeToRun
+  Try
   {
-    Write-Output "Created scheduled task: '$($task.ToString())'."
+    Register-ScheduledJob -Name $jobName -FilePath $filePath -ScheduledJobOption $jobSchedule -Trigger $jobTrigger
+    $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
+    if ($job -ne $null)
+    {
+      Write-Output "Created scheduled job: '$($job.ToString())'."
+    }
+    else
+    {
+      Write-Output "Failed creating scheduled job"
+    }
   }
-  else
+  Catch [system.exception]
   {
-    Write-Output "Failed creating scheduled task"
+    Write-Host "Failed creating scheduled job"
   }
 }
 
