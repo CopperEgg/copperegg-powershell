@@ -8,13 +8,13 @@ $MetricGroup      = ''
 
 $SleepTime        = 0
 
-$Instance         = ''
-
 $Username         = ''
 
 $Password         = ''
 
 $Hostname         = ''
+
+$HostAddress      = ''
 
 $SystemIdentifier = ''
 
@@ -44,18 +44,29 @@ function Get-UnixTimestamp
   return $ED=[Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 }
 
+function Get-UserCreds()
+{
+  if($env:computername -eq $Hostname)
+  {
+    return ''
+  }
+  $pass = $Password|ConvertTo-SecureString -AsPlainText -Force
+  $creds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $Username, $pass
+  return $creds
+}
+
 function Initialize-VariablesFromConfig($ServerConfig)
 {
-  $script:Instance         = [string]$ServerConfig.InstanceName.trim()
   $script:SystemIdentifier = [string]$ServerConfig.SystemIdentifier.trim()
   $script:Username         = [string]$ServerConfig.Username.trim()
   $script:Password         = [string]$ServerConfig.Password.trim()
   $script:Hostname         = [string]$ServerConfig.Hostname.trim()
+  $script:HostAddress      = [string]$ServerConfig.HostAddress.trim()
   $script:Site             = [string]$ServerConfig.SiteName.trim()
   $script:MetricIdentifier = $SystemIdentifier + '_' + $($Site.replace(' ', '_'))
 
-  Write-Log "Parsed Argument from config ==> IIS Instance name : '$Instance'"
-  Write-Log "Parsed Argument from config ==> IIS Hostname : '$Hostname'"
+  Write-Log "Parsed Argument from config ==> IIS Instance Hostname : '$Hostname'"
+  Write-Log "Parsed Argument from config ==> IIS Host Address : '$HostAddress'"
   Write-Log "Parsed Argument from config ==> System's Unique Name : '$SystemIdentifier'"
   Write-Log "Parsed Argument from config ==> Site's Name : '$Site'"
   Write-Log "Parsed Argument from config ==> Custom Metric Object's Name : '$MetricIdentifier'"
@@ -111,7 +122,8 @@ function Get-PerformanceMetrics
     if($env:computername -eq $Hostname) {
       $samples = Get-Counter -Counter $QueryMetrics
     } else {
-      $samples = Get-Counter -ComputerName $Hostname -Counter $QueryMetrics
+      $samples = Invoke-Command  -ComputerName $HostAddress -credential $cred { Import-Module WebAdministration;
+                                   Get-Counter -Counter $QueryMetrics }
     }
     return $samples
   }
@@ -140,7 +152,7 @@ function Send-PerformanceMetrics($Data)
   }
   Catch [system.exception]
   {
-    Write-Log "Exception in sending metric information to Uptime Cloud Monitor for instance $InstanceName"
+    Write-Log "Exception in sending metric information to Uptime Cloud Monitor for instance $SystemIdentifier"
     Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
     Write-Log "More information about error (if any) => $($error[0] | out-string)"
   }
@@ -178,6 +190,8 @@ $QueryMetrics = @(
             "\Web Service($Site)\Current NonAnonymous Users"
             );
 
+$cred = Get-UserCreds
+
 while($TRUE)
 {
   $StartTime = Get-UnixTimestamp
@@ -194,7 +208,7 @@ while($TRUE)
   }
   else
   {
-    Write-log "Error getting/sending performance metrics for instance $Instance"
+    Write-log "Error getting/sending performance metrics for instance $SystemIdentifier"
     $NormalizedSleepTime = 5
   }
 
