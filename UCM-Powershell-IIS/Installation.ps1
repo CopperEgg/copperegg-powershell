@@ -7,7 +7,7 @@ param (
 
 $service = 'Web_Service'
 $InstanceNumber='1'
-$ConfigDirectory = "$env:programfiles\UCM-Powershell\IIS\"
+$ConfigDirectory = "$env:programfiles\UCM-Powershell\IIS"
 $XmlfilePath = "$ConfigDirectory\config.xml"
 $MetricGroup = @{
   'MetricGroupName' = "IIS";
@@ -27,7 +27,8 @@ $MetricGroupLabelHintText  = "Hint : This is the label which appears in 'Custom 
 $DashboardNameHintText     = "Hint : This is the name of dashboard which appears in 'Dashboards' tab and will show all your Monitored Instances at one place."
 $UniqueNameHintText        = "Hint : Unique name represents this particular instance and is visible at Custom -> Custom Objects -> Identifier."
 $HostNameHintText          = "Hint : Hostname is the 'computer name' of the server instance where the Web Service is running.`
-                              For a local instance, you can leave this as blank in case this is first system you have configured for monitoring."
+                              For a local instance, you can leave this as blank in case this is first system you have configured for monitoring.`
+                              If you have multiple servers with same 'computer name' then keep this field as blank if IIS is running on current system else, mention any random name here"
 $HostAddressHintText       = "Hint : This is usually the 'Servername' in your connection string (server IP/hostname/public DNS)."
 $UserNameHintText          = "Hint : Username (with domain, if any) for user which have access to Powershell Monitoring Group on the remote system."
 $PassWordHintText          = "Hint : Password for the above mentioned user."
@@ -43,23 +44,41 @@ function Write-Log($Message)
 
 function MakeStartupService
 {
-  Write-Host "Creating Startup job"
-
-  $jobName = "UCM_IIS"
-  $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
-
-  if ($job -ne $null)
-  {
-    Write-Host "Un-registering existing job"
-    Unregister-ScheduledJob -Name $jobName -Confirm:$false
-  }
-
-  $filePath = "$ConfigDirectory\start-ucm-monitor.ps1"
-  $jobTrigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
-  $jobSchedule = New-ScheduledJobOption -RunElevated -WakeToRun
   Try
   {
-    Register-ScheduledJob -Name $jobName -FilePath $filePath -ScheduledJobOption $jobSchedule -Trigger $jobTrigger
+    Write-Host "Creating Startup job"
+
+    $jobName = "UCM_IIS"
+    $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
+
+    if ($job -ne $null)
+    {
+      Write-Host "Un-registering existing job"
+      Unregister-ScheduledJob -Name $jobName -Confirm:$false
+    }
+
+    $filePath = "$ConfigDirectory\Start-Ucm-Monitor.ps1"
+    $jobTrigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
+    $jobSchedule = New-ScheduledJobOption -RunElevated -WakeToRun
+    Write-Host "Enter credentials for Admin account which is added to local policy 'Logon as batch user'"
+    Start-Sleep -Seconds 2
+    $cred = Get-Credential -UserName MyDomain\MyAccount -Message "Scheduled job credentials for admin user."
+    if ($cred) {
+      $user = $cred.username
+      $pass = $cred.GetNetworkCredential().password
+    }
+    else
+    {
+      Write-Host "Credentials are not valid for scheduled job user mentioned!"
+      Throw "No valid credentials for scheduled job user mentioned!"
+    }
+
+    $sb = {
+      param([string]$path)
+      PowerShell -NoLogo -NonInteractive -File $path
+    }
+
+    Register-ScheduledJob -Name $jobName -ScriptBlock $sb -ArgumentList ("$filePath") -Credential $cred -ScheduledJobOption $jobSchedule -Trigger $jobTrigger
     $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
     if ($job -ne $null)
     {
@@ -78,26 +97,31 @@ function MakeStartupService
 
 function CreateDashboard
 {
-   . "$ConfigDirectory/Create-Dashboards.ps1"
+   . "$ConfigDirectory\Create-Dashboards.ps1"
    $DashboardName = $MetricGroup.DashboardName
    $MetricGroupName = $MetricGroup.MetricGroupName
 
    cat "$ConfigDirectory\dashboard.json" | % { $_ -replace "metric_group_name",$MetricGroupName } > "$ConfigDirectory\temp.json"
    cat "$ConfigDirectory\temp.json" | % { $_ -replace "dashboard_name",$DashboardName } > "$ConfigDirectory\temp2.json"
-   Remove-Item "$ConfigDirectory/dashboard.json" -ErrorAction SilentlyContinue
-   Remove-Item "$ConfigDirectory/temp.json" -ErrorAction SilentlyContinue
-   Rename-Item "$ConfigDirectory/temp2.json" "$ConfigDirectory/dashboard.json"
+   Remove-Item "$ConfigDirectory\dashboard.json" -ErrorAction SilentlyContinue
+   Remove-Item "$ConfigDirectory\temp.json" -ErrorAction SilentlyContinue
+   Rename-Item "$ConfigDirectory\temp2.json" "$ConfigDirectory\dashboard.json"
    Write-Host "Creating dashboard '$DashboardName' on Uptime Cloud Monitor interface for MS Web Server"
    Create-Dashboard $ApiHost $UserAPIKey $service $DashboardName
 }
 
-function GetUserCreds($InstanceDetails)
+function GetUserCreds ($InstanceDetails)
 {
   $username = [string]$InstanceDetails.Username.trim()
   $password = [string]$InstanceDetails.Password.trim()
   $password = $password|ConvertTo-SecureString -AsPlainText -Force
   $creds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $password
   return $creds
+}
+
+function TestIfLocalSystem ($serverName)
+{
+  return ($env:computername -eq $serverName)
 }
 
 function CreateXML
@@ -144,7 +168,7 @@ function CreateXML
         $XMLWriter.WriteElementString("Password",$Server.Password)
         $XMLWriter.WriteStartElement("Sites")
 
-        if ( $Server.Hostname -eq "$env:computername" )
+        if ( TestIfLocalSystem $Server.Hostname )
         {
           $Sites = Get-Website
         }
@@ -239,7 +263,7 @@ function TestConnection ($InstanceDetails)
   {
     $ServerType = 'remote'
     $Server = ''
-    if ( $InstanceDetails.Hostname -eq "$env:computername" )
+    if ( TestIfLocalSystem $InstanceDetails.Hostname )
     {
       $ServerType = 'local'
       $Server = $InstanceDetails.Hostname
@@ -301,15 +325,15 @@ function ConfigureInstanceSpecificDetails($InstanceNumber, $DefaultHostName, $De
     $UniqueName = "Instance$InstanceNumber"
   }
 
-  Write-Host "Servername ?[Default = $DefaultHostName]"
-  PrintHintText $script:InstanceNameHintText
+  Write-Host "Servername ? [Default = $DefaultHostName]"
+  PrintHintText $script:HostNameHintText
   $InstanceName = Read-Host
   if ($InstanceName -eq "")
   {
     $InstanceName = "$DefaultHostName"
   }
 
-  Write-Host "Server Address ?[Default = $DefaultHostAddress]"
+  Write-Host "Server Address ? [Default = $DefaultHostAddress]"
   PrintHintText $script:HostAddressHintText
   $InstanceAddress = Read-Host
   if ($InstanceAddress -eq "")
@@ -317,14 +341,23 @@ function ConfigureInstanceSpecificDetails($InstanceNumber, $DefaultHostName, $De
     $InstanceAddress = "$DefaultHostAddress"
   }
 
-  Write-Host "Add user credentials for user on remote system with access to Powershell Monitoring Group (skip if not monitoring a remote system)"
-  Write-Host "Enter Username:"
-  PrintHintText $script:UserNameHintText
-  $UserName = Read-Host
+  if ( TestIfLocalSystem $InstanceName )
+  {
+     $UserName = ""
+     $Password = ""
+  }
+  else
+  {
+    Write-Host
+    Write-Host "Add credentials for user on remote system with access to Powershell Monitoring Group"
+    Write-Host "Username ?"
+    PrintHintText $script:UserNameHintText
+    $UserName = Read-Host
 
-  Write-Host "Enter Password:"
-  PrintHintText $script:PassWordHintText
-  $Password = Read-Host
+    Write-Host "Password ?"
+    PrintHintText $script:PassWordHintText
+    $Password = Read-Host
+  }
 
   $InstanceDetails = @{ "Hostname" = "$InstanceName" ;
     "HostAddress" = "$InstanceAddress";
@@ -399,9 +432,9 @@ function ConfigureDetails()
     }
     else
     {
-      ConfigureInstanceSpecificDetails "$InstanceNumber" "" ""
+      ConfigureInstanceSpecificDetails "$InstanceNumber" "MyComputer" "local"
     }
-    Write-Host "Add more instances ?[Default = No]"
+    Write-Host "Add more instances ? [Y/N] [Default = No]"
     $ConfigureMoreInstances = Read-Host
     if ($ConfigureMoreInstances -eq 'Y')
     {

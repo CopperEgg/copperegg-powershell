@@ -122,8 +122,8 @@ function Get-PerformanceMetrics
     if($env:computername -eq $Hostname) {
       $samples = Get-Counter -Counter $QueryMetrics
     } else {
-      $samples = Invoke-Command  -ComputerName $HostAddress -credential $cred { Import-Module WebAdministration;
-                                   Get-Counter -Counter $QueryMetrics }
+      $samples = Invoke-Command  -ComputerName $HostAddress -Credential $cred { Import-Module WebAdministration;
+                                   Get-Counter -Counter $args } -ArgumentList $QueryMetrics
     }
     return $samples
   }
