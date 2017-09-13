@@ -27,8 +27,8 @@ $MetricGroupLabelHintText  = "Hint : This is the label which appears in 'Custom 
 $DashboardNameHintText     = "Hint : This is the name of dashboard which appears in 'Dashboards' tab and will show all your Monitored Instances at one place."
 $UniqueNameHintText        = "Hint : Unique name represents this particular instance and is visible at Custom -> Custom Objects -> Identifier."
 $HostNameHintText          = "Hint : Hostname is the 'computer name' of the server instance where the Web Service is running.`
-                              For a local instance, you can leave this as blank in case this is first system you have configured for monitoring.`
-                              If you have multiple servers with same 'computer name' then keep this field as blank if IIS is running on current system else, mention any random name here"
+For a local instance, you can leave this as blank in case this is first system you have configured for monitoring.`
+If you have multiple servers with same 'computer name' then keep this field as blank if IIS is running on current system else, mention any random name here"
 $HostAddressHintText       = "Hint : This is usually the 'Servername' in your connection string (server IP/hostname/public DNS)."
 $UserNameHintText          = "Hint : Username (with domain, if any) for user which have access to Powershell Monitoring Group on the remote system."
 $PassWordHintText          = "Hint : Password for the above mentioned user."

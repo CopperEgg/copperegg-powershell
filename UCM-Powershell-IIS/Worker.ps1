@@ -119,11 +119,31 @@ function Get-PerformanceMetrics
 {
   Try
   {
-    if($env:computername -eq $Hostname) {
+    if($IsLocalSystem) {
       $samples = Get-Counter -Counter $QueryMetrics
     } else {
-      $samples = Invoke-Command  -ComputerName $HostAddress -Credential $cred { Import-Module WebAdministration;
-                                   Get-Counter -Counter $args } -ArgumentList $QueryMetrics
+
+      $samples = Invoke-Command  -ComputerName $HostAddress -Credential $cred {
+        Import-Module WebAdministration;
+        $samples = Get-Counter -Counter $args;
+        $metric_data = new-object @{};
+        foreach($counter in $samples){
+          foreach($sample in $counter.CounterSamples){
+            [string]$path = $sample.Path.ToString()
+            if ($path.StartsWith('\\') -eq 'True'){
+              [int]$off = $path.IndexOfAny('\', 2)
+              [string]$path = $path.Substring($off).ToString()
+            }
+            if ($path.StartsWith('\\') -eq 'True'){
+              [string]$path = $path.Substring(1).ToString()
+            }
+            [int]$off = $path.IndexOfAny('\', 1)
+            [string]$cepath = $path.Substring($off+1).ToString()
+            $metric_data.Add( $cepath, $sample.CookedValue )
+          }
+        }
+        return [pscustomobject]@{MetricsData=$metric_data}
+      } -ArgumentList $QueryMetrics
     }
     return $samples
   }
@@ -191,6 +211,7 @@ $QueryMetrics = @(
             );
 
 $cred = Get-UserCreds
+$IsLocalSystem = ($env:computername -eq $Hostname)
 
 while($TRUE)
 {
@@ -201,7 +222,19 @@ while($TRUE)
   $QueryResult = Get-PerformanceMetrics
   if($QueryResult)
   {
-    $Data = Process-PerformanceMetrics($QueryResult)
+    if($IsLocalSystem)
+    {
+      $Data = Process-PerformanceMetrics($QueryResult)
+    }
+    else
+    {
+      $Data = @{
+          timestamp  = Get-UnixTimestamp
+          identifier = $MetricIdentifier
+          values     = $QueryResult.MetricsData
+        }
+    }
+
     Send-PerformanceMetrics($Data)
     $EndTime = Get-UnixTimestamp
     $NormalizedSleepTime  = $SleepTime - ($EndTime - $StartTime)
