@@ -8,13 +8,13 @@ $MetricGroup      = ''
 
 $SleepTime        = 0
 
-$Instance         = ''
-
 $Username         = ''
 
 $Password         = ''
 
 $Hostname         = ''
+
+$HostAddress      = ''
 
 $SystemIdentifier = ''
 
@@ -44,18 +44,29 @@ function Get-UnixTimestamp
   return $ED=[Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 }
 
+function Get-UserCreds()
+{
+  if($env:computername -eq $Hostname)
+  {
+    return ''
+  }
+  $pass = $Password|ConvertTo-SecureString -AsPlainText -Force
+  $creds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $Username, $pass
+  return $creds
+}
+
 function Initialize-VariablesFromConfig($ServerConfig)
 {
-  $script:Instance         = [string]$ServerConfig.InstanceName.trim()
   $script:SystemIdentifier = [string]$ServerConfig.SystemIdentifier.trim()
   $script:Username         = [string]$ServerConfig.Username.trim()
   $script:Password         = [string]$ServerConfig.Password.trim()
   $script:Hostname         = [string]$ServerConfig.Hostname.trim()
+  $script:HostAddress      = [string]$ServerConfig.HostAddress.trim()
   $script:Site             = [string]$ServerConfig.SiteName.trim()
   $script:MetricIdentifier = $SystemIdentifier + '_' + $($Site.replace(' ', '_'))
 
-  Write-Log "Parsed Argument from config ==> IIS Instance name : '$Instance'"
-  Write-Log "Parsed Argument from config ==> IIS Hostname : '$Hostname'"
+  Write-Log "Parsed Argument from config ==> IIS Instance Hostname : '$Hostname'"
+  Write-Log "Parsed Argument from config ==> IIS Host Address : '$HostAddress'"
   Write-Log "Parsed Argument from config ==> System's Unique Name : '$SystemIdentifier'"
   Write-Log "Parsed Argument from config ==> Site's Name : '$Site'"
   Write-Log "Parsed Argument from config ==> Custom Metric Object's Name : '$MetricIdentifier'"
@@ -108,10 +119,31 @@ function Get-PerformanceMetrics
 {
   Try
   {
-    if($env:computername -eq $Hostname) {
+    if($IsLocalSystem) {
       $samples = Get-Counter -Counter $QueryMetrics
     } else {
-      $samples = Get-Counter -ComputerName $Hostname -Counter $QueryMetrics
+
+      $samples = Invoke-Command  -ComputerName $HostAddress -Credential $cred {
+        Import-Module WebAdministration;
+        $samples = Get-Counter -Counter $args;
+        $metric_data = new-object @{};
+        foreach($counter in $samples){
+          foreach($sample in $counter.CounterSamples){
+            [string]$path = $sample.Path.ToString()
+            if ($path.StartsWith('\\') -eq 'True'){
+              [int]$off = $path.IndexOfAny('\', 2)
+              [string]$path = $path.Substring($off).ToString()
+            }
+            if ($path.StartsWith('\\') -eq 'True'){
+              [string]$path = $path.Substring(1).ToString()
+            }
+            [int]$off = $path.IndexOfAny('\', 1)
+            [string]$cepath = $path.Substring($off+1).ToString()
+            $metric_data.Add( $cepath, $sample.CookedValue )
+          }
+        }
+        return [pscustomobject]@{MetricsData=$metric_data}
+      } -ArgumentList $QueryMetrics
     }
     return $samples
   }
@@ -140,7 +172,7 @@ function Send-PerformanceMetrics($Data)
   }
   Catch [system.exception]
   {
-    Write-Log "Exception in sending metric information to Uptime Cloud Monitor for instance $InstanceName"
+    Write-Log "Exception in sending metric information to Uptime Cloud Monitor for instance $SystemIdentifier"
     Write-Log "Exception name => $($_.Exception.GetType().Name) - $($_.Exception.Message), at line number $($_.InvocationInfo.ScriptLineNumber)"
     Write-Log "More information about error (if any) => $($error[0] | out-string)"
   }
@@ -178,6 +210,9 @@ $QueryMetrics = @(
             "\Web Service($Site)\Current NonAnonymous Users"
             );
 
+$cred = Get-UserCreds
+$IsLocalSystem = ($env:computername -eq $Hostname)
+
 while($TRUE)
 {
   $StartTime = Get-UnixTimestamp
@@ -187,14 +222,26 @@ while($TRUE)
   $QueryResult = Get-PerformanceMetrics
   if($QueryResult)
   {
-    $Data = Process-PerformanceMetrics($QueryResult)
+    if($IsLocalSystem)
+    {
+      $Data = Process-PerformanceMetrics($QueryResult)
+    }
+    else
+    {
+      $Data = @{
+          timestamp  = Get-UnixTimestamp
+          identifier = $MetricIdentifier
+          values     = $QueryResult.MetricsData
+        }
+    }
+
     Send-PerformanceMetrics($Data)
     $EndTime = Get-UnixTimestamp
     $NormalizedSleepTime  = $SleepTime - ($EndTime - $StartTime)
   }
   else
   {
-    Write-log "Error getting/sending performance metrics for instance $Instance"
+    Write-log "Error getting/sending performance metrics for instance $SystemIdentifier"
     $NormalizedSleepTime = 5
   }
 

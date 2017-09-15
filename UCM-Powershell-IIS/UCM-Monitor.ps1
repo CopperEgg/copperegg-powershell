@@ -9,12 +9,12 @@ function ParseServerNodeToXML($server)
 {
   [string]$Username = $server.Username
   [string]$Password = $server.Password
-  [string]$SystemIdentifier = $server.systemidentifier
+  [string]$SystemIdentifier = $server.SystemIdentifier
   [string]$Hostname = $server.Hostname
-  [string]$InstanceName = $server.InstanceName
+  [string]$HostAddress = $server.HostAddress
   $hash = @{
     "Username" = "$Username"; "Password" = "$Password" ; "SystemIdentifier" = "$SystemIdentifier" ;
-    "Hostname" = "$Hostname" ; "InstanceName" = "$InstanceName"
+    "Hostname" = "$Hostname" ; "HostAddress" = "$HostAddress"
   }
   return $hash
 }

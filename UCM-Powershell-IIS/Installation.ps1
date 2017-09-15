@@ -7,7 +7,7 @@ param (
 
 $service = 'Web_Service'
 $InstanceNumber='1'
-$ConfigDirectory = "$env:programfiles\UCM-Powershell\IIS\"
+$ConfigDirectory = "$env:programfiles\UCM-Powershell\IIS"
 $XmlfilePath = "$ConfigDirectory\config.xml"
 $MetricGroup = @{
   'MetricGroupName' = "IIS";
@@ -26,10 +26,12 @@ $MetricGroupNameHintText   = "Hint : This is the name which appears in 'Custom T
 $MetricGroupLabelHintText  = "Hint : This is the label which appears in 'Custom Tab -> Metric Groups -> Label field' in Uptime Cloud Monitor UI."
 $DashboardNameHintText     = "Hint : This is the name of dashboard which appears in 'Dashboards' tab and will show all your Monitored Instances at one place."
 $UniqueNameHintText        = "Hint : Unique name represents this particular instance and is visible at Custom -> Custom Objects -> Identifier."
-
-$HostnameHintText          = "Hint : Hostname is the name of the server instance where the Web Service is running.`
-                              For a local instance, you can leave this as blank. "
-$InstanceNameHintText      = "Hint : This is usually the 'Servername' in your connection string (server IP or hostname, Default is localhost)."
+$HostNameHintText          = "Hint : Hostname is the 'computer name' of the server instance where the Web Service is running.`
+For a local instance, you can leave this as blank in case this is first system you have configured for monitoring.`
+If you have multiple servers with same 'computer name' then keep this field as blank if IIS is running on current system else, mention any random name here"
+$HostAddressHintText       = "Hint : This is usually the 'Servername' in your connection string (server IP/hostname/public DNS)."
+$UserNameHintText          = "Hint : Username (with domain, if any) for user which have access to Powershell Monitoring Group on the remote system."
+$PassWordHintText          = "Hint : Password for the above mentioned user."
 
 
 $LogFile = "$PSScriptRoot\ucm-metrics.log"
@@ -42,37 +44,84 @@ function Write-Log($Message)
 
 function MakeStartupService
 {
-  Write-Host "Creating Startup job"
-  $StartupString = "powershell -file `"$ConfigDirectory\start-ucm-monitor.ps1`""
-  $StartupDir = [Environment]::GetFolderPath("Startup")
-  $StartupFile = "$StartupDir\startup-ucm-msiis.cmd"
   Try
   {
-    Register-ScheduledJob –Name AtStartup –FilePath $ConfigDirectory\start-ucm-monitor.ps1 -ScheduledJobOption (New-ScheduledJobOption –DoNotAllowDemandStart) -Trigger (New-JobTrigger –AtStartup)
+    Write-Host "Creating Startup job"
+
+    $jobName = "UCM_IIS"
+    $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
+
+    if ($job -ne $null)
+    {
+      Write-Host "Un-registering existing job"
+      Unregister-ScheduledJob -Name $jobName -Confirm:$false
+    }
+
+    $filePath = "$ConfigDirectory\Start-Ucm-Monitor.ps1"
+    $jobTrigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
+    $jobSchedule = New-ScheduledJobOption -RunElevated -WakeToRun
+    Write-Host "Enter credentials for Admin account which is added to local policy 'Logon as batch user'"
+    Start-Sleep -Seconds 2
+    $cred = Get-Credential -UserName MyDomain\MyAccount -Message "Scheduled job credentials for admin user."
+    if ($cred) {
+      $user = $cred.username
+      $pass = $cred.GetNetworkCredential().password
+    }
+    else
+    {
+      Write-Host "Credentials are not valid for scheduled job user mentioned!"
+      Throw "No valid credentials for scheduled job user mentioned!"
+    }
+
+    $sb = {
+      param([string]$path)
+      PowerShell -NoLogo -NonInteractive -File $path
+    }
+
+    Register-ScheduledJob -Name $jobName -ScriptBlock $sb -ArgumentList ("$filePath") -Credential $cred -ScheduledJobOption $jobSchedule -Trigger $jobTrigger
+    $job = Get-ScheduledJob -Name $jobName -ErrorAction SilentlyContinue
+    if ($job -ne $null)
+    {
+      Write-Output "Created scheduled job: '$($job.ToString())'."
+    }
+    else
+    {
+      Write-Output "Failed creating scheduled job"
+    }
   }
   Catch [system.exception]
   {
-    Write-Host "Overwriting existing startup job"
-    Remove-Item $StartupFile -ErrorAction SilentlyContinue
-    New-Item $StartupFile -Type File
+    Write-Host "Failed creating scheduled job"
   }
-  Add-Content $StartupFile -value "$StartupString"
-  return $StartupFile
 }
 
 function CreateDashboard
 {
-   . "$ConfigDirectory/Create-Dashboards.ps1"
+   . "$ConfigDirectory\Create-Dashboards.ps1"
    $DashboardName = $MetricGroup.DashboardName
    $MetricGroupName = $MetricGroup.MetricGroupName
 
    cat "$ConfigDirectory\dashboard.json" | % { $_ -replace "metric_group_name",$MetricGroupName } > "$ConfigDirectory\temp.json"
    cat "$ConfigDirectory\temp.json" | % { $_ -replace "dashboard_name",$DashboardName } > "$ConfigDirectory\temp2.json"
-   Remove-Item "$ConfigDirectory/dashboard.json" -ErrorAction SilentlyContinue
-   Remove-Item "$ConfigDirectory/temp.json" -ErrorAction SilentlyContinue
-   Rename-Item "$ConfigDirectory/temp2.json" "$ConfigDirectory/dashboard.json"
+   Remove-Item "$ConfigDirectory\dashboard.json" -ErrorAction SilentlyContinue
+   Remove-Item "$ConfigDirectory\temp.json" -ErrorAction SilentlyContinue
+   Rename-Item "$ConfigDirectory\temp2.json" "$ConfigDirectory\dashboard.json"
    Write-Host "Creating dashboard '$DashboardName' on Uptime Cloud Monitor interface for MS Web Server"
    Create-Dashboard $ApiHost $UserAPIKey $service $DashboardName
+}
+
+function GetUserCreds ($InstanceDetails)
+{
+  $username = [string]$InstanceDetails.Username.trim()
+  $password = [string]$InstanceDetails.Password.trim()
+  $password = $password|ConvertTo-SecureString -AsPlainText -Force
+  $creds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $password
+  return $creds
+}
+
+function TestIfLocalSystem ($serverName)
+{
+  return ($env:computername -eq $serverName)
 }
 
 function CreateXML
@@ -112,13 +161,24 @@ function CreateXML
       ForEach ($Server in $MetricGroup.Servers)
       {
         $XMLWriter.WriteStartElement("Server$Index")
-        $XMLWriter.WriteElementString("InstanceName",$Server.InstanceName)
+        $XMLWriter.WriteElementString("SystemIdentifier",$Server.UniqueName)
         $XMLWriter.WriteElementString("Hostname",$Server.Hostname)
+        $XMLWriter.WriteElementString("HostAddress",$Server.HostAddress)
         $XMLWriter.WriteElementString("Username",$Server.Username)
         $XMLWriter.WriteElementString("Password",$Server.Password)
-        $XMLWriter.WriteElementString("SystemIdentifier",$Server.UniqueName)
         $XMLWriter.WriteStartElement("Sites")
-        $Sites = get-website
+
+        if ( TestIfLocalSystem $Server.Hostname )
+        {
+          $Sites = Get-Website
+        }
+        else
+        {
+          $cred = GetUserCreds($Server)
+          $Sites = Invoke-Command -ComputerName $Server.HostAddress -credential $cred { Import-Module WebAdministration;
+                   Get-Website}
+        }
+
         $SiteList = [System.Collections.ArrayList]@()
         foreach($Site in $Sites) {
           $Counter = $SiteList.Add($Site.name) + 1
@@ -176,13 +236,13 @@ function SaveIncorrectHost ($Reason)
   if ($Reason -eq 'ServerUnreachable')
   {
     # If we are not able to connect then, the Hostname mentioned is incorrect/unreachable
-    Write-Host -ForegroundColor YELLOW "Not able to fetch connect to the server."
-    Write-Host -ForegroundColor YELLOW "Hostname mentioned is incorrect/unreachable"
+    Write-Host -ForegroundColor YELLOW "Not able to connect to the server. Please check server details/your firewall settings."
+    Write-Host -ForegroundColor YELLOW "Also, check WinRM settings on system."
   }
   elseif ($Reason -eq 'PermissionIssue')
   {
     Write-Host -ForegroundColor YELLOW "Not able to fetch stats for the system specified."
-    Write-Host -ForegroundColor YELLOW "Probably issue with admin access to the server/firewall setting issues."
+    Write-Host -ForegroundColor YELLOW "Probably issue with user credentials/trusted WINRM machines/firewall settings."
   }
   Write-Host
   Write-Host "Are you sure you want to save these settings ? [Y/N] [Default=No]"
@@ -201,8 +261,19 @@ function TestConnection ($InstanceDetails)
 {
   Try
   {
+    $ServerType = 'remote'
+    $Server = ''
+    if ( TestIfLocalSystem $InstanceDetails.Hostname )
+    {
+      $ServerType = 'local'
+      $Server = $InstanceDetails.Hostname
+    }
+    else
+    {
+      $Server = $InstanceDetails.HostAddress
+    }
     # Try to connect to the server specified
-    $result = Test-Connection -ComputerName $InstanceDetails.HostName -Count 1
+    $result = Test-WSMan -ComputerName $Server
   }
   Catch [system.exception]
   {
@@ -214,7 +285,16 @@ function TestConnection ($InstanceDetails)
     if($result)
     {
       # If the script reaches here it means connection is successful. Now let's check if we can access stats
-      $result = Get-Counter -ComputerName $InstanceDetails.HostName -listset *
+      if ( $SeverType -eq 'remote')
+      {
+        $cred = GetUserCreds($InstanceDetails)
+        $result = Invoke-Command  -ComputerName $Server -credential $cred { Import-Module WebAdministration;
+                  Get-Counter -listset * }
+      }
+      else
+      {
+        $result = Get-Counter -listset *
+      }
       if ([string]::IsNullOrEmpty($result))
       {
         return SaveIncorrectHost('PermissionIssue')
@@ -235,7 +315,7 @@ function TestConnection ($InstanceDetails)
   }
 }
 
-function ConfigureInstanceSpecificDetails($InstanceNumber)
+function ConfigureInstanceSpecificDetails($InstanceNumber, $DefaultHostName, $DefaultHostAddress)
 {
   Write-Host "Unique name for this instance ? [Default = Instance$InstanceNumber]"
   PrintHintText $script:UniqueNameHintText
@@ -245,19 +325,45 @@ function ConfigureInstanceSpecificDetails($InstanceNumber)
     $UniqueName = "Instance$InstanceNumber"
   }
 
-  Write-Host "Servername ?[Default = $env:computername]"
-  PrintHintText $script:InstanceNameHintText
+  Write-Host "Servername ? [Default = $DefaultHostName]"
+  PrintHintText $script:HostNameHintText
   $InstanceName = Read-Host
   if ($InstanceName -eq "")
   {
-    $InstanceName = "$env:computername"
+    $InstanceName = "$DefaultHostName"
+  }
+
+  Write-Host "Server Address ? [Default = $DefaultHostAddress]"
+  PrintHintText $script:HostAddressHintText
+  $InstanceAddress = Read-Host
+  if ($InstanceAddress -eq "")
+  {
+    $InstanceAddress = "$DefaultHostAddress"
+  }
+
+  if ( TestIfLocalSystem $InstanceName )
+  {
+     $UserName = ""
+     $Password = ""
+  }
+  else
+  {
+    Write-Host
+    Write-Host "Add credentials for user on remote system with access to Powershell Monitoring Group"
+    Write-Host "Username ?"
+    PrintHintText $script:UserNameHintText
+    $UserName = Read-Host
+
+    Write-Host "Password ?"
+    PrintHintText $script:PassWordHintText
+    $Password = Read-Host
   }
 
   $InstanceDetails = @{ "Hostname" = "$InstanceName" ;
-    "Username" = "" ;
-    "Password" = "" ;
+    "HostAddress" = "$InstanceAddress";
+    "Username" = "$UserName" ;
+    "Password" = "$Password" ;
     "UniqueName" = "$UniqueName" ;
-    "InstanceName" = "$InstanceName"
   }
 
   Write-Host "Attempting to connect to instance with given settings...."
@@ -266,7 +372,6 @@ function ConfigureInstanceSpecificDetails($InstanceNumber)
   {
     # $Index is not used anywhere but if we don't store the result of .Add method somewhere,
     # it will be echoed to the powershell console and we don't want that.
-
     Write-Host "Connection successful"
     $Index = $script:MetricGroup.Servers.Add($InstanceDetails)
     Write-Host "Instance details saved."
@@ -321,8 +426,15 @@ function ConfigureDetails()
 
   while ($ConfigureMoreInstances)
   {
-    ConfigureInstanceSpecificDetails "$InstanceNumber"
-    Write-Host "Add more instances ?[Default = No]"
+    if ($InstanceNumber -eq 1)
+    {
+      ConfigureInstanceSpecificDetails "$InstanceNumber" "$env:computername" "localhost"
+    }
+    else
+    {
+      ConfigureInstanceSpecificDetails "$InstanceNumber" "MyComputer" "local"
+    }
+    Write-Host "Add more instances ? [Y/N] [Default = No]"
     $ConfigureMoreInstances = Read-Host
     if ($ConfigureMoreInstances -eq 'Y')
     {
@@ -336,7 +448,7 @@ function ConfigureDetails()
 
 }
 
-function PostInstallationMessage ($StartupFilePath)
+function PostInstallationMessage()
 {
   Write-Host
   Write-Host "Completed installation and configuration for UCM-Powershell. Starting Job"
@@ -351,7 +463,6 @@ function PostInstallationMessage ($StartupFilePath)
   Write-Host "Stop job               : $env:programfiles\UCM-Powershell\IIS\Stop-UCM-Monitor.ps1"
   Write-Host "Configuration file     : $env:programfiles\UCM-Powershell\IIS\config.xml"
   Write-Host "Logfile path           : $env:programfiles\UCM-Powershell\IIS\ucm-metrics.log"
-  Write-Host "Startup job path       : $StartupFilePath"
   Write-Host
   Write-Host "In case you want to start/stop the job manually, you can open the respective start/stop job files with powershell."
   Write-Host "Thank you for installing Uptime Cloud Monitor Metric Agent. Please press a key to exit..."
@@ -367,5 +478,5 @@ ConfigureDetails
 CreateXML
 CreateDashboard
 
-$StartupFilePath = MakeStartupService
-PostInstallationMessage $StartupFilePath
+MakeStartupService
+PostInstallationMessage
