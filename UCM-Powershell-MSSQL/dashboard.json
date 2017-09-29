@@ -2,6 +2,7 @@
   "MSSQL" : {
     "name": "SQL-Server",
     "is_database": true,
+    "service": "mssql",
     "data": {
       "widgets": {
         "0": {
@@ -301,6 +302,7 @@
   "AzureSQL" : {
     "name": "AzureSQL-Server",
     "is_database": true,
+    "service": "azure_sql",
     "data": {
       "widgets": {
         "0": {
