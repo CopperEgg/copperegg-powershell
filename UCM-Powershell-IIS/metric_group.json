@@ -63,7 +63,7 @@
         "name": "service uptime",
         "label": "Service Uptime",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       },
       {
         "name": "current anonymous users",

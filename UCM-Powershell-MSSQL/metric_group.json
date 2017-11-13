@@ -91,7 +91,7 @@
         "name": "page_life_expectancy",
         "label": "Page Life Expectancy",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "page_lookups_sec",
         "label": "Page Lookups/Sec",
@@ -136,12 +136,12 @@
         "name": "transaction_delay",
         "label": "Transaction Delay",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "transaction_ownership_waits",
         "label": "Transaction Ownership Waits",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "transactions",
         "label": "Transactions",
@@ -247,7 +247,7 @@
         "name": "page_life_expectancy",
         "label": "Page Life Expectancy",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "page_lookups_sec",
         "label": "Page Lookups/Sec",
@@ -292,12 +292,12 @@
         "name": "transaction_delay",
         "label": "Transaction Delay",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "transaction_ownership_waits",
         "label": "Transaction Ownership Waits",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       }, {
         "name": "transactions",
         "label": "Transactions",
