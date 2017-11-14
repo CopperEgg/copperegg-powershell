@@ -15,7 +15,7 @@ function Initialize-MetricGroups {
         @{"type"="ce_counter";  "name"="ASPNET_Requests_Queued";           "label"="ASP.NET Requests Queued";            "unit"="Requests"},
         @{"type"="ce_gauge";    "name"="ASPNET_Worker_Processes_Running";  "label"="ASP.NET Worker Processes Running";          "unit"="Processes"},
         @{"type"="ce_counter";  "name"="ASPNET_Worker_Process_Restarts";   "label"="ASP.NET Worker Process Restarts";          "unit"="Restarts"},
-        @{"type"="ce_gauge_f";  "name"="ASPNET_Request_Wait_Time";         "label"="ASP.NET Request Wait Time";           "unit"="seconds"},
+        @{"type"="ce_gauge_f";  "name"="ASPNET_Request_Wait_Time";         "label"="ASP.NET Request Wait Time";           "unit"="s"},
         @{"type"="ce_gauge";    "name"="ASPNET_Requests_Current";          "label"="ASP.NET Requests Current";           "unit"="Requests"},
         @{"type"="ce_counter";  "name"="ASPNET_Error_Events_Raised";       "label"="ASP.NET Error Events";              "unit"="Total Errors"},
         @{"type"="ce_counter";  "name"="ASPNET_Request_Error_Events_Raised";   "label"="ASP.NET Request Error Events";      "unit"="Request Errors"},
@@ -56,8 +56,8 @@ function Initialize-MetricGroups {
         @{"type"="ce_counter";   "name"="NET_CLR_Exceptions_global_Number_of_Exceps_Thrown";           "label"=".NET Global Number of Exceptions";  "unit"="Exceptions"},
         @{"type"="ce_gauge_f";   "name"="NET_CLR_Exceptions_global_Number_of_Exceps_Thrown_per_sec";  "label"=".NET Global Exceptions / sec";     "unit"="Exceptions / sec"},
         @{"type"="ce_gauge";     "name"="NET_CLR_Memory_global_Number_GC_Handles";        "label"=".NET Global GC Handles";        "unit"="Handles"},
-        @{"type"="ce_gauge_f";   "name"="NET_CLR_Memory_global_Allocated_Bytes_per_sec";     "label"=".NET Global Allocated Bytes / sec";      "unit"="Bytes / sec"},
-        @{"type"="ce_gauge";     "name"="NET_CLR_Memory_global_Number_Total_committed_Bytes"; "label"=".NET Global Total Committed Bytes";       "unit"="Bytes"}
+        @{"type"="ce_gauge_f";   "name"="NET_CLR_Memory_global_Allocated_Bytes_per_sec";     "label"=".NET Global Allocated Bytes / sec";      "unit"="bps"},
+        @{"type"="ce_gauge";     "name"="NET_CLR_Memory_global_Number_Total_committed_Bytes"; "label"=".NET Global Total Committed Bytes";       "unit"="b"}
       )
       $gname = $global:cuconfig.$metricgroup_id.group_name
       $glabel = $global:cuconfig.$metricgroup_id.group_label
@@ -92,7 +92,7 @@ function Initialize-MetricGroups {
       $marray = @(
         @{"type"="ce_gauge_f";   "name"="Buffer_Manager_Buffer_cache_hit_ratio"; "label"="MSSQL Buffer cache hit ratio";   },
         @{"type"="ce_gauge_f";   "name"="Buffer_Manager_Checkpoint_pages_per_sec";  "label"="MSSQL Checkpoint pages / sec";   "unit"="Pages / sec"},
-        @{"type"="ce_gauge_f";   "name"="Buffer_Manager_Page_life_expectancy";     "label"="MSSQL Page life expectancy";    "unit"="Seconds"},
+        @{"type"="ce_gauge_f";   "name"="Buffer_Manager_Page_life_expectancy";     "label"="MSSQL Page life expectancy";    "unit"="s"},
         @{"type"="ce_gauge";     "name"="General_Statistics_User_Connections";     "label"="MSSQL User Connections";    "unit"="Connections"},
         @{"type"="ce_gauge_f";   "name"="Access_Methods_Page_Splits_per_sec";       "label"="MSSQL Page Splits / sec";   "unit"="Page_splits / sec"},
         @{"type"="ce_gauge";     "name"="General_Statistics_Processes_blocked";     "label"="MSSQL Processes blocked";  "unit"="Processes"},
@@ -201,9 +201,9 @@ function Initialize-MetricGroups {
       Write-CuEggLog "Creating metric group $metricgroup_id"
       $marray = @(
         @{"type"="ce_gauge_f";   "name"="Memory_Page_Faults_per_sec";   "label"="Memory Page Faults / sec";          "unit"="Page faults / sec"  },
-        @{"type"="ce_gauge";     "name"="Memory_Available_Bytes";       "label"="Memory Available Bytes";         "unit"="Bytes"},
-        @{"type"="ce_gauge";     "name"="Memory_Committed_Bytes";         "label"="Memory Committed Bytes";        "unit"="Bytes"},
-        @{"type"="ce_gauge";     "name"="Memory_Commit_Limit";            "label"="Memory Commit Limit";       "unit"="Bytes"},
+        @{"type"="ce_gauge";     "name"="Memory_Available_Bytes";       "label"="Memory Available Bytes";         "unit"="b"},
+        @{"type"="ce_gauge";     "name"="Memory_Committed_Bytes";         "label"="Memory Committed Bytes";        "unit"="b"},
+        @{"type"="ce_gauge";     "name"="Memory_Commit_Limit";            "label"="Memory Commit Limit";       "unit"="b"},
         @{"type"="ce_gauge_f";   "name"="Memory_Write_Copies_per_sec";      "label"="Memory Write Copies / sec";      "unit"="Copies / sec"},
         @{"type"="ce_gauge_f";   "name"="Memory_Cache_Faults_per_sec";       "label"="Memory Cache Faults / sec";     "unit"="Cache faults / sec"}
       )
@@ -249,7 +249,7 @@ function Initialize-MetricGroups {
         @{"type"="ce_gauge_f";   "name"="System_File_Control_Operations_per_sec";    "label"="System File Control Ops / sec";    "unit"="File Control Ops / sec"},
         @{"type"="ce_gauge_f";   "name"="System_Context_Switches_per_sec";          "label"="System Context Switches / sec";      "unit"="Context Switches / sec"},
         @{"type"="ce_gauge_f";     "name"="System_System_Calls_per_sec";             "label"="System Calls / sec";            "unit"="Sys calls / sec"},
-        @{"type"="ce_counter";   "name"="System_System_Up_Time";                      "label"="System Uptime";                "unit"="seconds"},
+        @{"type"="ce_counter";   "name"="System_System_Up_Time";                      "label"="System Uptime";                "unit"="s"},
         @{"type"="ce_gauge";   "name"="System_Processor_Queue_Length";                "label"="System Processor Q Length";   "unit"="Queued threads"},
         @{"type"="ce_gauge";   "name"="System_Processes";                              "label"="System Processes";           "unit"="processes"},
         @{"type"="ce_gauge";   "name"="System_Threads";                                "label"="System Threads";              "unit"="Threads"},

@@ -27,19 +27,19 @@
         "name": "bytes received/sec",
         "label": "Bytes Recieved",
         "type": "ce_gauge",
-        "unit": "Bytes"
+        "unit": "bps"
       },
       {
         "name": "bytes sent/sec",
         "label": "Bytes Sent",
         "type": "ce_gauge",
-        "unit": "Bytes"
+        "unit": "bps"
       },
       {
         "name": "bytes total/sec",
         "label": "Total Bytes ",
         "type": "ce_gauge",
-        "unit": "Bytes"
+        "unit": "bps"
       },
       {
         "name": "current connections",
@@ -63,7 +63,7 @@
         "name": "service uptime",
         "label": "Service Uptime",
         "type": "ce_gauge",
-        "unit": "Seconds"
+        "unit": "s"
       },
       {
         "name": "current anonymous users",

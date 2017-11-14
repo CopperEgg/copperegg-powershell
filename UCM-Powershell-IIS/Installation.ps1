@@ -23,7 +23,6 @@ $SelectedServices = [System.Collections.ArrayList]@()
 # Hint texts for user, for the sake of verbosity
 $SampleRateHintText        = "Hint : Monitoring Frequency of 15 seconds means that a sample is sent to us after 15 seconds."
 $MetricGroupNameHintText   = "Hint : This is the name which appears in 'Custom Tab -> Metric Groups -> Name field' in Uptime Cloud Monitor UI."
-$MetricGroupLabelHintText  = "Hint : This is the label which appears in 'Custom Tab -> Metric Groups -> Label field' in Uptime Cloud Monitor UI."
 $DashboardNameHintText     = "Hint : This is the name of dashboard which appears in 'Dashboards' tab and will show all your Monitored Instances at one place."
 $UniqueNameHintText        = "Hint : Unique name represents this particular instance and is visible at Custom -> Custom Objects -> Identifier."
 $HostNameHintText          = "Hint : Hostname is the 'computer name' of the server instance where the Web Service is running.`
@@ -379,6 +378,42 @@ function ConfigureInstanceSpecificDetails($InstanceNumber, $DefaultHostName, $De
   }
 }
 
+function ValidateDashboardName($name, $service)
+{
+  $URI = "$ApiHost/v2/revealmetrics/validate_dashboard_name?service=$service&name=$name"
+  $AuthInfo = $UserAPIKey + ':U'
+  $AuthObject = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($AuthInfo))
+
+  $Request = New-Object System.Net.WebClient
+  $Request.Headers.Add('Authorization', $AuthObject)
+  $Request.Headers.Add('Accept', 'application/json')
+  $Request.Headers.Add("User-Agent", "PowerShell")
+  $Request.Headers.Add('Content-Type', 'application/json')
+  [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+  [System.Net.ServicePointManager]::Expect100Continue = $false
+
+  $Result = $Request.DownloadString($URI)
+  return $Result
+}
+
+function ValidateMetricGroupName($name, $service)
+{
+  $URI = "$ApiHost/v2/revealmetrics/validate_metric_group_name?service=$service&name=$name"
+  $AuthInfo = $UserAPIKey + ':U'
+  $AuthObject = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($AuthInfo))
+
+  $Request = New-Object System.Net.WebClient
+  $Request.Headers.Add('Authorization', $AuthObject)
+  $Request.Headers.Add('Accept', 'application/json')
+  $Request.Headers.Add("User-Agent", "PowerShell")
+  $Request.Headers.Add('Content-Type', 'application/json')
+  [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+  [System.Net.ServicePointManager]::Expect100Continue = $false
+
+  $Result = $Request.DownloadString($URI)
+  return $Result
+}
+
 function ConfigureDetails()
 {
   $Frequencies = 15, 60, 300, 900, 3600
@@ -394,29 +429,56 @@ function ConfigureDetails()
 
   Write-Host "Metric group name ? [Default = $($MetricGroup.MetricGroupName)]"
   PrintHintText $script:MetricGroupNameHintText
-  $name = Read-Host
-  if ($name -eq "")
+
+  while ($TRUE)
   {
-    $name = "IIS"
+    $name = Read-Host
+    if ($name -eq "")
+    {
+      $name = $MetricGroup.MetricGroupName
+    }
+
+    $nameValid = ValidateMetricGroupName $name "iis"
+
+    if ($nameValid -eq "invalid")
+    {
+      Write-Host "This metric group name is already in use for a different service. Enter a different name:"
+    }
+    else
+    {
+      $name = $nameValid
+      break
+    }
   }
+
   $script:MetricGroup.MetricGroupName = $name
 
-  Write-Host "Metric group label ? [Default = $($MetricGroup.MetricGroupLabel)]"
-  PrintHintText $script:MetricGroupLabelHintText
-  $label = Read-Host
-  if ($label -eq "")
-  {
-    $label = $MetricGroup.MetricGroupLabel
-  }
+  $label = $script:MetricGroup.MetricGroupName
   $script:MetricGroup.MetricGroupLabel = $label
 
   Write-Host "Dashboard name ? [Default = $($MetricGroup.DashboardName)]"
   PrintHintText $script:DashboardNameHintText
-  $dashboard_name = Read-Host
-  if ($dashboard_name -eq "")
+
+  while ($TRUE)
   {
-    $dashboard_name = $MetricGroup.DashboardName
+    $dashboard_name = Read-Host
+    if ($dashboard_name -eq "")
+    {
+      $dashboard_name = $MetricGroup.DashboardName
+    }
+
+    $nameValid = ValidateDashboardName $dashboard_name "iis"
+
+    if ($nameValid -eq "invalid")
+    {
+      Write-Host "This dashboard name is already in use for a different service. Enter a different name:"
+    }
+    else
+    {
+      break
+    }
   }
+
   $script:MetricGroup.DashboardName = $dashboard_name
   Write-Host "Completed general setup. Now configuring Instance specific details :"
   Write-Host

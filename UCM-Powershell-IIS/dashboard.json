@@ -1,6 +1,7 @@
 {
   "Web_Service" : {
     "name": "dashboard_name",
+    "service": "iis",
     "data": {
       "widgets": {
         "0": {
