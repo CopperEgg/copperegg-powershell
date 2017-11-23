@@ -9,73 +9,85 @@
         "name": "lock requests/sec",
         "label": "Lock Requests",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 0
       },
       {
         "name": "locked errors/sec",
         "label": "Locked Errors",
         "type": "ce_gauge",
-        "unit": "Errors"
+        "unit": "Errors",
+        "position": 1
       },
       {
         "name": "not found errors/sec",
         "label": "NotFound Errors",
         "type": "ce_gauge",
-        "unit": "Errors"
+        "unit": "Errors",
+        "position": 2
       },
       {
         "name": "bytes received/sec",
         "label": "Bytes Recieved",
         "type": "ce_gauge",
-        "unit": "bps"
+        "unit": "bps",
+        "position": 3
       },
       {
         "name": "bytes sent/sec",
         "label": "Bytes Sent",
         "type": "ce_gauge",
-        "unit": "bps"
+        "unit": "bps",
+        "position": 4
       },
       {
         "name": "bytes total/sec",
         "label": "Total Bytes ",
         "type": "ce_gauge",
-        "unit": "bps"
+        "unit": "bps",
+        "position": 5
       },
       {
         "name": "current connections",
         "label": "Current Connections",
         "type": "ce_gauge",
-        "unit": "Connections"
+        "unit": "Connections",
+        "position": 6
       },
       {
         "name": "cgi requests/sec",
         "label": "CGI Request",
         "type": "ce_gauge",
-        "unit": "Request"
+        "unit": "Request",
+        "position": 7
       },
       {
         "name": "isapi extension requests/sec",
         "label": "Isapi Extension Requests",
         "type": "ce_counter",
-        "unit": "Request"
+        "unit": "Request",
+        "position": 8
       },
       {
         "name": "service uptime",
         "label": "Service Uptime",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 9
       },
       {
         "name": "current anonymous users",
         "label": "Current Anonymous Users",
         "type": "ce_gauge",
-        "unit": "Users"
+        "unit": "Users",
+        "position": 10
       },
       {
         "name": "current nonanonymous users",
         "label": "Current NonAnonymous Users",
         "type": "ce_gauge",
-        "unit": "Users"
+        "unit": "Users",
+        "position": 11
       }
     ]
   }

@@ -11,147 +11,176 @@
         "name": "active_parallel_threads",
         "label": "Active Parallel Threads",
         "type": "ce_gauge",
-        "unit": "Threads"
+        "unit": "Threads",
+        "position": 0
       }, {
         "name": "active_requests",
         "label": "Active Requests",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 1
       }, {
         "name": "active_transactions",
         "label": "Active Transactions",
         "type": "ce_gauge",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 2
       }, {
         "name": "backup_restore_throughput_sec",
         "label": "Backup Restore Throughput/Sec",
         "type": "ce_gauge",
-        "unit": ""
+        "unit": "",
+        "position": 3
       }, {
         "name": "batch_requests_sec",
         "label": "Batch Requests/Sec",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 4
       }, {
         "name": "blocked_tasks",
         "label": "Blocked Tasks",
         "type": "ce_gauge",
-        "unit": "Tasks"
+        "unit": "Tasks",
+        "position": 5
       }, {
         "name": "cache_hit_ratio",
         "label": "Cache Hit Ratio",
         "type": "ce_gauge",
-        "unit": "Hits"
+        "unit": "Hits",
+        "position": 6
       }, {
         "name": "cache_object_counts",
         "label": "Cache Object Counts",
         "type": "ce_counter",
-        "unit": "Objects"
+        "unit": "Objects",
+        "position": 7
       }, {
         "name": "checkpoint_pages_sec",
         "label": "Checkpoint Pages/Sec",
         "type": "ce_gauge",
-        "unit": "Pages"
+        "unit": "Pages",
+        "position": 8
       }, {
         "name": "cpu_usage",
         "label": "CPU Usage (%)",
         "type": "ce_gauge",
-        "unit": "Percent"
+        "unit": "Percent",
+        "position": 9
       }, {
         "name": "dropped_messages_total",
         "label": "Dropped Messages Total",
         "type": "ce_counter",
-        "unit": "Messages"
+        "unit": "Messages",
+        "position": 10
       }, {
         "name": "errors_sec",
         "label": "Errors/Sec",
         "type": "ce_gauge",
-        "unit": "Errors"
+        "unit": "Errors",
+        "position": 11
       }, {
         "name": "free_memory",
         "label": "Free Memory",
         "type": "ce_gauge",
-        "unit": "KB"
+        "unit": "KB",
+        "position": 12
       }, {
         "name": "lock_wait",
         "label": "Lock Wait",
         "type": "ce_gauge",
-        "unit": "Locks"
+        "unit": "Locks",
+        "position": 13
       }, {
         "name": "number_of_deadlocks_sec",
         "label": "No. of Deadlocks/Sec",
         "type": "ce_gauge",
-        "unit": "Deadlocks"
+        "unit": "Deadlocks",
+        "position": 14
       }, {
         "name": "open_connection_count",
         "label": "Open Connections Count",
         "type": "ce_gauge",
-        "unit": "connections"
+        "unit": "connections",
+        "position": 15
       }, {
         "name": "page_life_expectancy",
         "label": "Page Life Expectancy",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 16
       }, {
         "name": "page_lookups_sec",
         "label": "Page Lookups/Sec",
         "type": "ce_gauge",
-        "unit": "Lookups"
+        "unit": "Lookups",
+        "position": 17
       }, {
         "name": "page_reads_sec",
         "label": "Page Reads/Sec",
         "type": "ce_gauge",
-        "unit": "Reads"
+        "unit": "Reads",
+        "position": 18
       }, {
         "name": "page_splits_sec",
         "label": "Access Page Splits",
         "type": "ce_gauge",
-        "unit": "Splits"
+        "unit": "Splits",
+        "position": 19
       }, {
         "name": "page_writes_sec",
         "label": "Page Writes/Sec",
         "type": "ce_gauge",
-        "unit": "Writes"
+        "unit": "Writes",
+        "position": 20
       }, {
         "name": "processes_blocked",
         "label": "Processes Blocked",
         "type": "ce_gauge",
-        "unit": "Processes"
+        "unit": "Processes",
+        "position": 21
       }, {
         "name": "queued_requests",
         "label": "Queued Requests",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 22
       }, {
         "name": "sql_compilations_sec",
         "label": "SQL Compilations/Sec",
         "type": "ce_gauge",
-        "unit": "Compilations"
+        "unit": "Compilations",
+        "position": 23
       }, {
         "name": "sql_re_compilations_sec",
         "label": "SQL Recompilations/Sec",
         "type": "ce_gauge",
-        "unit": "Recompilations"
+        "unit": "Recompilations",
+        "position": 24
       }, {
         "name": "transaction_delay",
         "label": "Transaction Delay",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 25
       }, {
         "name": "transaction_ownership_waits",
         "label": "Transaction Ownership Waits",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 26
       }, {
         "name": "transactions",
         "label": "Transactions",
         "type": "ce_counter",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 27
       }, {
         "name": "write_transactions_sec",
         "label": "Write Transactions/Sec",
         "type": "ce_gauge",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 28
       }
     ]
   },
@@ -167,147 +196,176 @@
         "name": "active_parallel_threads",
         "label": "Active Parallel Threads",
         "type": "ce_gauge",
-        "unit": "Threads"
+        "unit": "Threads",
+        "position": 0
       }, {
         "name": "active_requests",
         "label": "Active Requests",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 1
       }, {
         "name": "active_transactions",
         "label": "Active Transactions",
         "type": "ce_gauge",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 2
       }, {
         "name": "backup_restore_throughput_sec",
         "label": "Backup Restore Throughput/Sec",
         "type": "ce_gauge",
-        "unit": ""
+        "unit": "",
+        "position": 3
       }, {
         "name": "batch_requests_sec",
         "label": "Batch Requests/Sec",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 4
       }, {
         "name": "blocked_tasks",
         "label": "Blocked Tasks",
         "type": "ce_gauge",
-        "unit": "Tasks"
+        "unit": "Tasks",
+        "position": 5
       }, {
         "name": "cache_hit_ratio",
         "label": "Cache Hit Ratio",
         "type": "ce_gauge",
-        "unit": "Hits"
+        "unit": "Hits",
+        "position": 6
       }, {
         "name": "cache_object_counts",
         "label": "Cache Object Counts",
         "type": "ce_counter",
-        "unit": "Objects"
+        "unit": "Objects",
+        "position": 7
       }, {
         "name": "checkpoint_pages_sec",
         "label": "Checkpoint Pages/Sec",
         "type": "ce_gauge",
-        "unit": "Pages"
+        "unit": "Pages",
+        "position": 8
       }, {
         "name": "cpu_usage",
         "label": "CPU Usage (%)",
         "type": "ce_gauge",
-        "unit": "Percent"
+        "unit": "Percent",
+        "position": 9
       }, {
         "name": "dropped_messages_total",
         "label": "Dropped Messages Total",
         "type": "ce_counter",
-        "unit": "Messages"
+        "unit": "Messages",
+        "position": 10
       }, {
         "name": "errors_sec",
         "label": "Errors/Sec",
         "type": "ce_gauge",
-        "unit": "Errors"
+        "unit": "Errors",
+        "position": 11
       }, {
         "name": "free_memory",
         "label": "Free Memory",
         "type": "ce_gauge",
-        "unit": "KB"
+        "unit": "KB",
+        "position": 12
       }, {
         "name": "lock_wait",
         "label": "Lock Wait",
         "type": "ce_gauge",
-        "unit": "Locks"
+        "unit": "Locks",
+        "position": 13
       }, {
         "name": "number_of_deadlocks_sec",
         "label": "No. of Deadlocks/Sec",
         "type": "ce_gauge",
-        "unit": "Deadlocks"
+        "unit": "Deadlocks",
+        "position": 14
       }, {
         "name": "open_connection_count",
         "label": "Open Connections Count",
         "type": "ce_gauge",
-        "unit": "connections"
+        "unit": "connections",
+        "position": 15
       }, {
         "name": "page_life_expectancy",
         "label": "Page Life Expectancy",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 16
       }, {
         "name": "page_lookups_sec",
         "label": "Page Lookups/Sec",
         "type": "ce_gauge",
-        "unit": "Lookups"
+        "unit": "Lookups",
+        "position": 17
       }, {
         "name": "page_reads_sec",
         "label": "Page Reads/Sec",
         "type": "ce_gauge",
-        "unit": "Reads"
+        "unit": "Reads",
+        "position": 18
       }, {
         "name": "page_splits_sec",
         "label": "Access Page Splits",
         "type": "ce_gauge",
-        "unit": "Splits"
+        "unit": "Splits",
+        "position": 19
       }, {
         "name": "page_writes_sec",
         "label": "Page Writes/Sec",
         "type": "ce_gauge",
-        "unit": "Writes"
+        "unit": "Writes",
+        "position": 20
       }, {
         "name": "processes_blocked",
         "label": "Processes Blocked",
         "type": "ce_gauge",
-        "unit": "Processes"
+        "unit": "Processes",
+        "position": 21
       }, {
         "name": "queued_requests",
         "label": "Queued Requests",
         "type": "ce_gauge",
-        "unit": "Requests"
+        "unit": "Requests",
+        "position": 22
       }, {
         "name": "sql_compilations_sec",
         "label": "SQL Compilations/Sec",
         "type": "ce_gauge",
-        "unit": "Compilations"
+        "unit": "Compilations",
+        "position": 23
       }, {
         "name": "sql_re_compilations_sec",
         "label": "SQL Recompilations/Sec",
         "type": "ce_gauge",
-        "unit": "Recompilations"
+        "unit": "Recompilations",
+        "position": 24
       }, {
         "name": "transaction_delay",
         "label": "Transaction Delay",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 25
       }, {
         "name": "transaction_ownership_waits",
         "label": "Transaction Ownership Waits",
         "type": "ce_gauge",
-        "unit": "s"
+        "unit": "s",
+        "position": 26
       }, {
         "name": "transactions",
         "label": "Transactions",
         "type": "ce_counter",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 27
       }, {
         "name": "write_transactions_sec",
         "label": "Write Transactions/Sec",
         "type": "ce_gauge",
-        "unit": "Transactions"
+        "unit": "Transactions",
+        "position": 28
       }
     ]
   }
